@@ -10,14 +10,21 @@
         <activity
             android:name="com.EDA397.Navigator.Navigator.MainActivity"
             android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="com.EDA397.Navigator.Navigator.MainActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name="com.EDA397.Navigator.Navigator.LoginActivity"
             android:label="@string/title_activity_login" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.EDA397.Navigator.Navigator.LoginActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
     </application>

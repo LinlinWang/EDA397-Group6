@@ -5,8 +5,14 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.content.Intent;
 import android.view.View;
-
+import android.widget.CheckBox;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.widget.EditText;
+import android.text.InputType;
 
 public class LoginActivity extends ActionBarActivity {
 
@@ -37,9 +43,32 @@ public class LoginActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void Login(View view) {
-        Intent myIntent = new Intent(LoginActivity.this, MainActivity.class);
-        LoginActivity.this.startActivity(myIntent);
+    public void login(View view) {
+        AlertDialog.Builder alertDialog= new AlertDialog.Builder(LoginActivity.this);
+        alertDialog.setMessage("Do you want to save this account?");
+        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startActivity(new Intent("com.EDA397.Navigator.Navigator.MainActivity"));
+            }
+        });
+        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startActivity(new Intent("com.EDA397.Navigator.Navigator.MainActivity"));
+            }
+        });
+        alertDialog.show();
     }
+    public void pwCheckbox(View view) {
+        boolean checked = ((CheckBox) view).isChecked();
+        EditText e = (EditText)findViewById(R.id.password);
 
+        if (checked){
+            e.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+        }
+        else{
+            e.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        }
+    }
 }
