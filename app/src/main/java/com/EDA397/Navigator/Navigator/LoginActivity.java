@@ -1,8 +1,10 @@
 package com.EDA397.Navigator.Navigator;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
@@ -13,15 +15,27 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.widget.EditText;
 import android.text.InputType;
+import android.widget.Toast;
 
 public class LoginActivity extends ActionBarActivity {
+
+   private SharedPreferences accounts;
+   private SharedPreferences current;
+   private SharedPreferences.Editor accEdit;
+   private SharedPreferences.Editor currEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        accounts = getSharedPreferences("StoredAccounts", MODE_PRIVATE);
+        current = getSharedPreferences("CurrentAccount", MODE_PRIVATE);
+        accEdit = accounts.edit();
+        currEdit = current.edit();
+        if (!(current.getString("name", "").equals(""))){
+            startActivity(new Intent("com.EDA397.Navigator.Navigator.MainActivity"));
+        }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -44,21 +58,60 @@ public class LoginActivity extends ActionBarActivity {
     }
 
     public void login(View view) {
-        AlertDialog.Builder alertDialog= new AlertDialog.Builder(LoginActivity.this);
-        alertDialog.setMessage("Do you want to save this account?");
-        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                startActivity(new Intent("com.EDA397.Navigator.Navigator.MainActivity"));
-            }
-        });
-        alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                startActivity(new Intent("com.EDA397.Navigator.Navigator.MainActivity"));
-            }
-        });
-        alertDialog.show();
+        final String name = ((EditText)findViewById(R.id.account)).getText().toString();
+        final String pw = ((EditText)findViewById(R.id.password)).getText().toString();
+        final String value = accounts.getString(name, "");
+
+        if(name.length() < 1 || pw.length() < 1){
+            //Error handling too short/blank field.
+            Toast toast = Toast.makeText(getApplicationContext(),
+            "Field(s) too short/unfilled", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.TOP| Gravity.LEFT, 0, 0);
+            toast.show();
+        }
+        else if (value.equals("")) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(LoginActivity.this);
+            alertDialog.setMessage("Do you want to save this account?");
+            alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //Account remembered even if app is force stopped.
+                    accEdit.putString(name, pw);
+                    accEdit.commit();
+                    currEdit.clear();
+                    currEdit.putString("name", name);
+                    currEdit.putString("pw", pw);
+                    currEdit.commit();
+                    startActivity(new Intent("com.EDA397.Navigator.Navigator.MainActivity"));
+                }
+            });
+            alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //Only stored while app is "alive".
+                    Intent i = new Intent("com.EDA397.Navigator.Navigator.MainActivity");
+                    i.putExtra("name", name);
+                    i.putExtra("pw", pw);
+                    startActivity(i);
+                }
+            });
+            alertDialog.show();
+        }
+        else if(value.equals(pw)){
+            //Logging in with existing account.
+            currEdit.clear();
+            currEdit.putString("name", name);
+            currEdit.putString("pw", pw);
+            currEdit.commit();
+            startActivity(new Intent("com.EDA397.Navigator.Navigator.MainActivity"));
+        }
+        else{
+            //Error handling wrong password.
+            Toast toast = Toast.makeText(getApplicationContext(),
+            "Missmatch with stored password", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.TOP|Gravity.LEFT, 0, 0);
+            toast.show();
+        }
     }
     public void pwCheckbox(View view) {
         boolean checked = ((CheckBox) view).isChecked();

@@ -7,5 +7,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_login">loginActivity</string>
     <string name="login">Login</string>
+    <string name = "stored_accounts">StoredAccounts</string>
+    <string name = "current_account">CurrentAccount</string>
 
 </resources>

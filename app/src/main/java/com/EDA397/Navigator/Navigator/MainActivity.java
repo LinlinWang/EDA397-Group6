@@ -1,6 +1,7 @@
 package com.EDA397.Navigator.Navigator;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,10 +10,15 @@ import android.view.MenuItem;
 
 public class MainActivity extends ActionBarActivity {
 
+    private SharedPreferences current;
+    private SharedPreferences.Editor currEdit;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        current = getSharedPreferences("CurrentAccount", MODE_PRIVATE);
+        currEdit = current.edit();
     }
 
 
@@ -31,6 +37,8 @@ public class MainActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_logout) {
+            currEdit.clear();
+            currEdit.commit();
             startActivity(new Intent("com.EDA397.Navigator.Navigator.LoginActivity"));
             return true;
         }
