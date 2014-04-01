@@ -17,12 +17,16 @@ import android.widget.EditText;
 import android.text.InputType;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.Set;
+
 public class LoginActivity extends ActionBarActivity {
 
    private SharedPreferences accounts;
    private SharedPreferences current;
    private SharedPreferences.Editor accEdit;
    private SharedPreferences.Editor currEdit;
+   private boolean checked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,7 @@ public class LoginActivity extends ActionBarActivity {
         current = getSharedPreferences("CurrentAccount", MODE_PRIVATE);
         accEdit = accounts.edit();
         currEdit = current.edit();
+        checked = false;
         if (!(current.getString("name", "").equals(""))){
             startActivity(new Intent("com.EDA397.Navigator.Navigator.MainActivity"));
         }
@@ -70,32 +75,27 @@ public class LoginActivity extends ActionBarActivity {
             toast.show();
         }
         else if (value.equals("")) {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(LoginActivity.this);
-            alertDialog.setMessage("Do you want to save this account?");
-            alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    //Account remembered even if app is force stopped.
-                    accEdit.putString(name, pw);
-                    accEdit.commit();
-                    currEdit.clear();
-                    currEdit.putString("name", name);
-                    currEdit.putString("pw", pw);
-                    currEdit.commit();
-                    startActivity(new Intent("com.EDA397.Navigator.Navigator.MainActivity"));
+            if (checked) {
+                //Logging in with new account
+                //Account remembered even if app is force stopped.
+                Set<String> acc_list = accounts.getStringSet("names", (Set) new ArrayList<String>());
+                acc_list.add(name);
+                accEdit.putStringSet("names", acc_list);
+                accEdit.putString(name, pw);
+                accEdit.commit();
+                currEdit.clear();
+                currEdit.putString("name", name);
+                currEdit.putString("pw", pw);
+                currEdit.commit();
+                startActivity(new Intent("com.EDA397.Navigator.Navigator.MainActivity"));
                 }
-            });
-            alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    //Only stored while app is "alive".
-                    Intent i = new Intent("com.EDA397.Navigator.Navigator.MainActivity");
-                    i.putExtra("name", name);
-                    i.putExtra("pw", pw);
-                    startActivity(i);
-                }
-            });
-            alertDialog.show();
+            else{
+                //Only stored while app is "alive".
+                Intent i = new Intent("com.EDA397.Navigator.Navigator.MainActivity");
+                i.putExtra("name", name);
+                i.putExtra("pw", pw);
+                startActivity(i);
+            }
         }
         else if(value.equals(pw)){
             //Logging in with existing account.
@@ -113,15 +113,7 @@ public class LoginActivity extends ActionBarActivity {
             toast.show();
         }
     }
-    public void pwCheckbox(View view) {
-        boolean checked = ((CheckBox) view).isChecked();
-        EditText e = (EditText)findViewById(R.id.password);
-
-        if (checked){
-            e.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-        }
-        else{
-            e.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        }
+    public void remCheckbox(View view) {
+        checked = ((CheckBox) view).isChecked();
     }
 }
