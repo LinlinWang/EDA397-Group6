@@ -10,15 +10,8 @@ import android.view.MenuItem;
 import android.content.Intent;
 import android.view.View;
 import android.widget.CheckBox;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.widget.EditText;
-import android.text.InputType;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.Set;
 
 public class LoginActivity extends ActionBarActivity {
 
@@ -78,9 +71,6 @@ public class LoginActivity extends ActionBarActivity {
             if (checked) {
                 //Logging in with new account
                 //Account remembered even if app is force stopped.
-                Set<String> acc_list = accounts.getStringSet("names", (Set) new ArrayList<String>());
-                acc_list.add(name);
-                accEdit.putStringSet("names", acc_list);
                 accEdit.putString(name, pw);
                 accEdit.commit();
                 currEdit.clear();
