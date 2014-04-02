@@ -53,6 +53,7 @@
         android:id="@+id/pick_account"
         android:src="@android:drawable/arrow_down_float"
         android:layout_above="@+id/password"
+        android:onClick="pickAcc"
         android:layout_toRightOf="@+id/account" />
 
 </RelativeLayout>

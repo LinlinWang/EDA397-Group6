@@ -69,7 +69,7 @@ public class LoginActivity extends ActionBarActivity {
         }
         else if (value.equals("")) {
             if (checked) {
-                //Logging in with new account
+                //Logging in with new account. Should be linked to successful github login.
                 //Account remembered even if app is force stopped.
                 accEdit.putString(name, pw);
                 accEdit.commit();
@@ -88,7 +88,7 @@ public class LoginActivity extends ActionBarActivity {
             }
         }
         else if(value.equals(pw)){
-            //Logging in with existing account.
+            //Logging in with existing account. Should be linked to successful github login.
             currEdit.clear();
             currEdit.putString("name", name);
             currEdit.putString("pw", pw);
@@ -105,5 +105,8 @@ public class LoginActivity extends ActionBarActivity {
     }
     public void remCheckbox(View view) {
         checked = ((CheckBox) view).isChecked();
+    }
+    public void pickAcc(View view) {
+        startActivity(new Intent("com.EDA397.Navigator.Navigator.AccountPickerActivity"));
     }
 }
