@@ -45,5 +45,10 @@ public class MainActivity extends ActionBarActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
+    @Override
+    public void onBackPressed() {
+        currEdit.clear();
+        currEdit.commit();
+        super.onBackPressed();
+    }
 }

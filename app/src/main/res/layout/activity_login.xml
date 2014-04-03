@@ -20,22 +20,21 @@
     <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Show Password"
-        android:id="@+id/showPW"
-        android:layout_above="@+id/button"
-        android:layout_alignRight="@+id/button"
-        android:layout_alignEnd="@+id/button"
-        android:checked="false"
-        android:onClick="pwCheckbox"/>
+        android:text="Remember me"
+        android:id="@+id/remember_account"
+        android:checked="true"
+        android:onClick="remCheckbox"
+        android:layout_below="@+id/button"
+        android:layout_alignLeft="@+id/password"
+        android:layout_alignStart="@+id/password" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/account"
-        android:layout_above="@+id/showPW"
-        android:layout_alignLeft="@+id/showPW"
-        android:layout_alignStart="@+id/showPW"
-        android:layout_marginBottom="42dp"
+        android:layout_above="@+id/password"
+        android:layout_alignLeft="@+id/password"
+        android:layout_alignStart="@+id/password"
         android:layout_alignRight="@+id/password"
         android:layout_alignEnd="@+id/password" />
 
@@ -45,6 +44,16 @@
         android:inputType="textPassword"
         android:ems="10"
         android:id="@+id/password"
-        android:layout_above="@+id/showPW"
+        android:layout_above="@+id/button"
         android:layout_centerHorizontal="true" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pick_account"
+        android:src="@android:drawable/arrow_down_float"
+        android:layout_above="@+id/password"
+        android:onClick="pickAcc"
+        android:layout_toRightOf="@+id/account" />
+
 </RelativeLayout>
