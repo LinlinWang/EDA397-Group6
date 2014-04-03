@@ -1,4 +1,4 @@
-package com.EDA397.Navigator.NaviGitator.Activities;
+package com.EDA397.Navigator.Navigator;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,15 +7,11 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.content.Intent;
 import android.view.View;
 import android.widget.CheckBox;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.widget.EditText;
-import android.text.InputType;
 import android.widget.Toast;
-
-import com.EDA397.Navigator.NaviGitator.R;
 
 public class LoginActivity extends ActionBarActivity {
 
@@ -23,6 +19,7 @@ public class LoginActivity extends ActionBarActivity {
    private SharedPreferences current;
    private SharedPreferences.Editor accEdit;
    private SharedPreferences.Editor currEdit;
+   private boolean checked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +29,9 @@ public class LoginActivity extends ActionBarActivity {
         current = getSharedPreferences("CurrentAccount", MODE_PRIVATE);
         accEdit = accounts.edit();
         currEdit = current.edit();
+        checked = false;
         if (!(current.getString("name", "").equals(""))){
-            startActivity(new Intent("com.EDA397.Navigator.Navigator.Activities.MainActivity"));
+            startActivity(new Intent("com.EDA397.Navigator.Navigator.MainActivity"));
         }
     }
 
@@ -70,40 +68,32 @@ public class LoginActivity extends ActionBarActivity {
             toast.show();
         }
         else if (value.equals("")) {
-            AlertDialog.Builder alertDialog = new AlertDialog.Builder(LoginActivity.this);
-            alertDialog.setMessage("Do you want to save this account?");
-            alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    //Account remembered even if app is force stopped.
-                    accEdit.putString(name, pw);
-                    accEdit.commit();
-                    currEdit.clear();
-                    currEdit.putString("name", name);
-                    currEdit.putString("pw", pw);
-                    currEdit.commit();
-                    startActivity(new Intent("com.EDA397.Navigator.Navigator.Activities.MainActivity"));
+            if (checked) {
+                //Logging in with new account. Should be linked to successful github login.
+                //Account remembered even if app is force stopped.
+                accEdit.putString(name, pw);
+                accEdit.commit();
+                currEdit.clear();
+                currEdit.putString("name", name);
+                currEdit.putString("pw", pw);
+                currEdit.commit();
+                startActivity(new Intent("com.EDA397.Navigator.Navigator.MainActivity"));
                 }
-            });
-            alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    //Only stored while app is "alive".
-                    Intent i = new Intent("com.EDA397.Navigator.Navigator.Activities.MainActivity");
-                    i.putExtra("name", name);
-                    i.putExtra("pw", pw);
-                    startActivity(i);
-                }
-            });
-            alertDialog.show();
+            else{
+                //Only stored while app is "alive".
+                Intent i = new Intent("com.EDA397.Navigator.Navigator.MainActivity");
+                i.putExtra("name", name);
+                i.putExtra("pw", pw);
+                startActivity(i);
+            }
         }
         else if(value.equals(pw)){
-            //Logging in with existing account.
+            //Logging in with existing account. Should be linked to successful github login.
             currEdit.clear();
             currEdit.putString("name", name);
             currEdit.putString("pw", pw);
             currEdit.commit();
-            startActivity(new Intent("com.EDA397.Navigator.Navigator.Activities.MainActivity"));
+            startActivity(new Intent("com.EDA397.Navigator.Navigator.MainActivity"));
         }
         else{
             //Error handling wrong password.
@@ -113,15 +103,10 @@ public class LoginActivity extends ActionBarActivity {
             toast.show();
         }
     }
-    public void pwCheckbox(View view) {
-        boolean checked = ((CheckBox) view).isChecked();
-        EditText e = (EditText)findViewById(R.id.password);
-
-        if (checked){
-            e.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-        }
-        else{
-            e.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        }
+    public void remCheckbox(View view) {
+        checked = ((CheckBox) view).isChecked();
+    }
+    public void pickAcc(View view) {
+        startActivity(new Intent("com.EDA397.Navigator.Navigator.AccountPickerActivity"));
     }
 }
