@@ -64,8 +64,4 @@ public class AccountPickerActivity extends Activity implements AdapterView.OnIte
         }
         return super.onOptionsItemSelected(item);
     }
-    public void deleteAcc(String s){
-        accEdit.remove(s);
-        accEdit.commit();
-    }
 }

@@ -29,7 +29,7 @@ public class LoginActivity extends ActionBarActivity {
         current = getSharedPreferences("CurrentAccount", MODE_PRIVATE);
         accEdit = accounts.edit();
         currEdit = current.edit();
-        checked = false;
+        checked = true;
         if (!(current.getString("name", "").equals(""))){
             startActivity(new Intent("com.EDA397.Navigator.Navigator.MainActivity"));
         }
