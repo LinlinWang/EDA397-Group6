@@ -1,4 +1,4 @@
-package com.EDA397.Navigator.Navigator;
+package com.EDA397.Navigator.NaviGitator.Activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,15 +7,15 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.content.Intent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.widget.EditText;
 import android.text.InputType;
 import android.widget.Toast;
+
+import com.EDA397.Navigator.NaviGitator.R;
 
 public class LoginActivity extends ActionBarActivity {
 
@@ -33,7 +33,7 @@ public class LoginActivity extends ActionBarActivity {
         accEdit = accounts.edit();
         currEdit = current.edit();
         if (!(current.getString("name", "").equals(""))){
-            startActivity(new Intent("com.EDA397.Navigator.Navigator.MainActivity"));
+            startActivity(new Intent("com.EDA397.Navigator.Navigator.Activities.MainActivity"));
         }
     }
 
@@ -82,14 +82,14 @@ public class LoginActivity extends ActionBarActivity {
                     currEdit.putString("name", name);
                     currEdit.putString("pw", pw);
                     currEdit.commit();
-                    startActivity(new Intent("com.EDA397.Navigator.Navigator.MainActivity"));
+                    startActivity(new Intent("com.EDA397.Navigator.Navigator.Activities.MainActivity"));
                 }
             });
             alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     //Only stored while app is "alive".
-                    Intent i = new Intent("com.EDA397.Navigator.Navigator.MainActivity");
+                    Intent i = new Intent("com.EDA397.Navigator.Navigator.Activities.MainActivity");
                     i.putExtra("name", name);
                     i.putExtra("pw", pw);
                     startActivity(i);
@@ -103,7 +103,7 @@ public class LoginActivity extends ActionBarActivity {
             currEdit.putString("name", name);
             currEdit.putString("pw", pw);
             currEdit.commit();
-            startActivity(new Intent("com.EDA397.Navigator.Navigator.MainActivity"));
+            startActivity(new Intent("com.EDA397.Navigator.Navigator.Activities.MainActivity"));
         }
         else{
             //Error handling wrong password.

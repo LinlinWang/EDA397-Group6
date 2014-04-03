@@ -1,4 +1,4 @@
-package com.EDA397.Navigator.Navigator;
+package com.EDA397.Navigator.NaviGitator.Activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -6,6 +6,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.EDA397.Navigator.NaviGitator.R;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -39,7 +41,7 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.action_logout) {
             currEdit.clear();
             currEdit.commit();
-            startActivity(new Intent("com.EDA397.Navigator.Navigator.LoginActivity"));
+            startActivity(new Intent("com.EDA397.Navigator.Navigator.Activities.LoginActivity"));
             return true;
         }
         return super.onOptionsItemSelected(item);
