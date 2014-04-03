@@ -41,7 +41,7 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.action_logout) {
             currEdit.clear();
             currEdit.commit();
-            startActivity(new Intent("com.EDA397.Navigator.Navigator.Activities.LoginActivity"));
+            startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.LoginActivity"));
             return true;
         }
         return super.onOptionsItemSelected(item);

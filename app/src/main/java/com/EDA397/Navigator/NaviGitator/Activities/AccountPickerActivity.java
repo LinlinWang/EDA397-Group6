@@ -1,9 +1,8 @@
-package com.EDA397.Navigator.Navigator;
+package com.EDA397.Navigator.NaviGitator.Activities;
 
 import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +10,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.EDA397.Navigator.NaviGitator.R;
 
 import java.util.Set;
 
@@ -57,7 +58,7 @@ public class AccountPickerActivity extends ListActivity implements AdapterView.O
         currEdit.putString("name", s);
         currEdit.putString("pw", accounts.getString(s, ""));
         currEdit.commit();
-        startActivity(new Intent("com.EDA397.Navigator.Navigator.MainActivity"));
+        startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.MainActivity"));
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

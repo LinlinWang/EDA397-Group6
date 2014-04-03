@@ -1,4 +1,4 @@
-package com.EDA397.Navigator.Navigator;
+package com.EDA397.Navigator.NaviGitator.Activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,11 +7,12 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.content.Intent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.EDA397.Navigator.NaviGitator.R;
 
 public class LoginActivity extends ActionBarActivity {
 
@@ -31,7 +32,7 @@ public class LoginActivity extends ActionBarActivity {
         currEdit = current.edit();
         checked = false;
         if (!(current.getString("name", "").equals(""))){
-            startActivity(new Intent("com.EDA397.Navigator.Navigator.MainActivity"));
+            startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.AccountPickerActivity"));
         }
     }
 
@@ -77,11 +78,11 @@ public class LoginActivity extends ActionBarActivity {
                 currEdit.putString("name", name);
                 currEdit.putString("pw", pw);
                 currEdit.commit();
-                startActivity(new Intent("com.EDA397.Navigator.Navigator.MainActivity"));
+                startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.AccountPickerActivity"));
                 }
             else{
                 //Only stored while app is "alive".
-                Intent i = new Intent("com.EDA397.Navigator.Navigator.MainActivity");
+                Intent i = new Intent("com.EDA397.Navigator.NaviGitator.Activities.AccountPickerActivity");
                 i.putExtra("name", name);
                 i.putExtra("pw", pw);
                 startActivity(i);
@@ -93,7 +94,7 @@ public class LoginActivity extends ActionBarActivity {
             currEdit.putString("name", name);
             currEdit.putString("pw", pw);
             currEdit.commit();
-            startActivity(new Intent("com.EDA397.Navigator.Navigator.MainActivity"));
+            startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.AccountPickerActivity"));
         }
         else{
             //Error handling wrong password.
@@ -107,6 +108,6 @@ public class LoginActivity extends ActionBarActivity {
         checked = ((CheckBox) view).isChecked();
     }
     public void pickAcc(View view) {
-        startActivity(new Intent("com.EDA397.Navigator.Navigator.AccountPickerActivity"));
+        startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.AccountPickerActivity"));
     }
 }
