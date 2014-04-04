@@ -1,4 +1,4 @@
-package com.EDA397.Navigator.Navigator;
+package com.EDA397.Navigator.NaviGitator.Activities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import java.util.ArrayList;
+
+import com.EDA397.Navigator.NaviGitator.R;
 
 public class AccountAdapter extends ArrayAdapter<String> {
 
