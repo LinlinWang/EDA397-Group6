@@ -32,7 +32,7 @@ public class LoginActivity extends ActionBarActivity {
         currEdit = current.edit();
         checked = true;
         if (!(current.getString("name", "").equals(""))){
-            startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.AccountPickerActivity"));
+            startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.MainActivity"));
         }
     }
 
@@ -78,7 +78,7 @@ public class LoginActivity extends ActionBarActivity {
                 currEdit.putString("name", name);
                 currEdit.putString("pw", pw);
                 currEdit.commit();
-                startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.AccountPickerActivity"));
+                startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.MainActivity"));
                 }
             else{
                 //Only stored while app is "alive".
@@ -94,7 +94,7 @@ public class LoginActivity extends ActionBarActivity {
             currEdit.putString("name", name);
             currEdit.putString("pw", pw);
             currEdit.commit();
-            startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.AccountPickerActivity"));
+            startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.MainActivity"));
         }
         else{
             //Error handling wrong password.
