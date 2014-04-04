@@ -70,6 +70,9 @@ public class LoginActivity extends ActionBarActivity {
         }
         else if (value.equals("")) {
             if (checked) {
+                //temp test
+                GitLogin g = new GitLogin();
+                g.execute();
                 //Logging in with new account. Should be linked to successful github login.
                 //Account remembered even if app is force stopped.
                 accEdit.putString(name, pw);
