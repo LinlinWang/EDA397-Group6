@@ -82,7 +82,7 @@ public class LoginActivity extends ActionBarActivity {
                 }
             else{
                 //Only stored while app is "alive".
-                Intent i = new Intent("com.EDA397.Navigator.NaviGitator.Activities.AccountPickerActivity");
+                Intent i = new Intent("com.EDA397.Navigator.NaviGitator.Activities.MainActivity");
                 i.putExtra("name", name);
                 i.putExtra("pw", pw);
                 startActivity(i);
