@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import com.EDA397.Navigator.NaviGitator.R;
 
 
+
 public class MainActivity extends ActionBarActivity {
 
     private SharedPreferences current;
