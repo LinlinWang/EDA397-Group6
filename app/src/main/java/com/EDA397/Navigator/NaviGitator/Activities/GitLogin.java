@@ -1,4 +1,4 @@
-package com.EDA397.Navigator.Navigator;
+package com.EDA397.Navigator.NaviGitator.Activities;
 
 
 /**
