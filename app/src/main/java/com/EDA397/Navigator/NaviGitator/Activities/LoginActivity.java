@@ -31,9 +31,6 @@ public class LoginActivity extends ActionBarActivity {
         accEdit = accounts.edit();
         currEdit = current.edit();
         checked = true;
-        if (!(current.getString("name", "").equals(""))){
-            startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.MainActivity"));
-        }
     }
 
     @Override
@@ -69,41 +66,47 @@ public class LoginActivity extends ActionBarActivity {
             toast.show();
         }
         else if (value.equals("")) {
-            if (checked) {
-                //temp test
-                GitLogin g = new GitLogin();
-                g.execute();
-                //Logging in with new account. Should be linked to successful github login.
-                //Account remembered even if app is force stopped.
-                accEdit.putString(name, pw);
-                accEdit.commit();
-                currEdit.clear();
-                currEdit.putString("name", name);
-                currEdit.putString("pw", pw);
-                currEdit.commit();
-                startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.MainActivity"));
+            // Logging in with New/Unsaved account.
+            if (verifyAcc(name,pw)) {
+                if (checked) {
+                    //Account remembered even if app is force stopped.
+                    accEdit.putString(name, pw);
+                    accEdit.commit();
+                    currEdit.clear();
+                    currEdit.putString("name", name);
+                    currEdit.putString("pw", pw);
+                    currEdit.commit();
+                    startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.MainActivity"));
                 }
+                else {
+                    //Only stored while app is "alive".
+                    Intent i = new Intent("com.EDA397.Navigator.NaviGitator.Activities.MainActivity");
+                    i.putExtra("name", name);
+                    i.putExtra("pw", pw);
+                    startActivity(i);
+                }
+            }
             else{
-                //Only stored while app is "alive".
-                Intent i = new Intent("com.EDA397.Navigator.NaviGitator.Activities.MainActivity");
-                i.putExtra("name", name);
-                i.putExtra("pw", pw);
-                startActivity(i);
+                //Invalid GitHub account.
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        "Not a valid GitHub account", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.TOP | Gravity.LEFT, 0, 0);
+                toast.show();
             }
         }
-        else if(value.equals(pw)){
-            //Logging in with existing account. Should be linked to successful github login.
-            currEdit.clear();
-            currEdit.putString("name", name);
-            currEdit.putString("pw", pw);
-            currEdit.commit();
-            startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.MainActivity"));
+        else if (value.equals(pw)) {
+             //Logging in with existing account. Should be linked to successful github login.
+             currEdit.clear();
+             currEdit.putString("name", name);
+             currEdit.putString("pw", pw);
+             currEdit.commit();
+             startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.MainActivity"));
         }
-        else{
+        else {
             //Error handling wrong password.
             Toast toast = Toast.makeText(getApplicationContext(),
-            "Missmatch with stored password", Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.TOP|Gravity.LEFT, 0, 0);
+                    "Missmatch with stored password", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.TOP | Gravity.LEFT, 0, 0);
             toast.show();
         }
     }
@@ -112,5 +115,13 @@ public class LoginActivity extends ActionBarActivity {
     }
     public void pickAcc(View view) {
         startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.AccountPickerActivity"));
+    }
+    private Boolean verifyAcc(String name, String pw){
+        try{
+            return (new GitLogin().execute(name,pw)).get();
+        }
+        catch(Exception e){
+            return false;
+        }
     }
 }

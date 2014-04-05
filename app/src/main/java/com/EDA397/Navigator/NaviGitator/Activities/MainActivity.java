@@ -22,6 +22,11 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         current = getSharedPreferences("CurrentAccount", MODE_PRIVATE);
         currEdit = current.edit();
+
+        if (this.getIntent().getStringExtra("name") == null &&
+           (current.getString("name", "").equals(""))){
+            startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.LoginActivity"));
+        }
     }
 
 
