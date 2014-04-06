@@ -12,13 +12,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.EDA397.Navigator.NaviGitator.R;
-
-import org.eclipse.egit.github.core.Repository;
-
 import java.util.ArrayList;
-import java.util.Set;
 
 
 public class MainActivity extends ActionBarActivity implements AdapterView.OnItemClickListener {
@@ -37,15 +32,27 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         currEdit = current.edit();
         repoList = getSharedPreferences("Repositories", MODE_PRIVATE);
         repoEdit = repoList.edit();
+        boolean b1 = this.getIntent().getStringExtra("name") == null;
+        boolean b2 = current.getString("name", "").equals("");
 
-        if (this.getIntent().getStringExtra("name") == null &&
-           (current.getString("name", "").equals(""))){
+        if (b1 && b2){
             startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.LoginActivity"));
         }
         else{
+            String temp;
             ArrayList<String> columns = new ArrayList<String>();
-            Set<String> c = repoList.getAll().keySet();
-            columns.addAll(c);
+            if(b1) {
+                temp = (repoList.getString(current.getString("name", ""), ""));
+            }
+            else{
+                temp = (repoList.getString(this.getIntent().getStringExtra("name"), ""));
+            }
+            if (!temp.equals("")) {//If user has repos.
+                String[] c = temp.split(",");
+                for (int i = 0; i < c.length; i++) {
+                    columns.add(c[i]);
+                }
+            }
             listView = (ListView) findViewById(R.id.repo_list);
             listView.setClickable(true);
             listView.setOnItemClickListener(this);

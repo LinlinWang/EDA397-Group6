@@ -54,6 +54,7 @@ public class GitLogin extends AsyncTask<String, Void, Boolean> {
     public Boolean getRepo() {
         RepositoryService service = new RepositoryService(this.client);
         OrganizationService org = new OrganizationService(this.client);
+        String s = "";
         try{
 
             List<Repository> l = service.getRepositories();
@@ -63,9 +64,14 @@ public class GitLogin extends AsyncTask<String, Void, Boolean> {
             }
             for (Repository repo : l) {
                 Log.v("nav", repo.getName());
-                repoEdit.putInt(repo.getName(), repo.getWatchers());
-                repoEdit.commit();
+                if (s.equals("")) {
+                    s = repo.getName();
+                } else{
+                    s += "," + repo.getName();
+                }
             }
+            repoEdit.putString(this.username, s);
+            repoEdit.commit();
             return true;
         }
         catch(Exception e){

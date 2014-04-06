@@ -55,7 +55,7 @@ public class LoginActivity extends ActionBarActivity {
     }
 
     public void login(View view) {
-        final String name = ((EditText)findViewById(R.id.account)).getText().toString();
+        final String name = ((EditText)findViewById(R.id.account)).getText().toString().toLowerCase();
         final String pw = ((EditText)findViewById(R.id.password)).getText().toString();
         final String value = accounts.getString(name, "");
 
