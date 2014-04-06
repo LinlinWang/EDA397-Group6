@@ -11,6 +11,7 @@ import android.util.Log;
 
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.client.GitHubClient;
+import org.eclipse.egit.github.core.service.OAuthService;
 import org.eclipse.egit.github.core.service.RepositoryService;
 
 import java.util.ArrayList;
@@ -36,9 +37,8 @@ public class GitFunctionality {
         }
     }
 
-    protected GitHubClient getClient(){
-        return client;
-    }
+    protected GitHubClient getClient(){ return client; }
+    protected String getUserName(){ return username; }
 
     public static GitFunctionality getInstance() {
         Log.d("GitFunctionality", "Instance Returned");
@@ -46,32 +46,57 @@ public class GitFunctionality {
     }
 
     public Boolean gitLogin(String userName, String password) {
-        try {
-            this.client.setCredentials(userName, password);
-            this.username = userName;
-
-        } catch (Exception e) {
+        try{
+            username = userName;
+            Authenticate task = new Authenticate();
+            task.execute(userName, password);
+            return task.get();
+        } catch ( Exception e) {
             e.printStackTrace();
-            Log.d("GitFunctionality", "Login failed");
             return false;
         }
-        Log.d("GitFunctionality", "User logged in");
-        return true;
     }
 
     public ArrayList<String> getRepos() {
-        getRepos task = new getRepos();
-        task.execute();
-        return task.getRepos();
+        try{
+            getRepos task = new getRepos();
+            task.execute();
+            return task.get();
+        } catch ( Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
+
+    private class Authenticate extends AsyncTask<String, Void, Boolean> {
+        Boolean authenticate = false;
+        @Override
+        protected Boolean doInBackground(String... str) {
+            try {
+                getClient().setCredentials(str[0], str[1]);
+                OAuthService oAuth = new OAuthService(client);
+                oAuth.getAuthorizations();
+                Log.d("GitFunctionality", "User logged in");
+                authenticate = true;
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.d("GitFunctionality", "Login failed");
+                authenticate = false;
+                return false;
+            }
+        }
+    }
+
     private class getRepos extends AsyncTask<Void, Void, ArrayList<String>> {
         ArrayList<String> repoList = new ArrayList<String>();
+
         @Override
         protected ArrayList<String> doInBackground(Void... arg0) {
             try {
                 GitFunctionality git = GitFunctionality.getInstance();
                 RepositoryService repoService = new RepositoryService(git.getClient());
-                List<Repository> repos = repoService.getRepositories(username);
+                List<Repository> repos = repoService.getRepositories(git.getUserName());
                 for (Repository repo : repos) {
                     repoList.add(repo.getName());
                     Log.d("GitFunctionality", repo.getName());
@@ -81,6 +106,5 @@ public class GitFunctionality {
             }
             return repoList;
         }
-        public ArrayList<String> getRepos(){ return repoList; }
     }
 }

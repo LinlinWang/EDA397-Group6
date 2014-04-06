@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:text="Remember me"
         android:id="@+id/remember_account"
-        android:checked="true"
+        android:checked="false"
         android:onClick="remCheckbox"
         android:layout_below="@+id/button"
         android:layout_alignLeft="@+id/password"
