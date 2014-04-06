@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,7 +12,11 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.EDA397.Navigator.NaviGitator.R;
+
+import org.eclipse.egit.github.core.Repository;
+
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity implements AdapterView.OnItemClickListener {
@@ -43,7 +48,8 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
             GitFunctionality git = GitFunctionality.getInstance();
 
             String temp;
-            ArrayList<String> columns = git.getRepos();
+            List<Repository> columns = git.getRepos();
+            Log.d("MainActivity", "number of repos: " + columns.size());
             if(b1) {
                 temp = (repoList.getString(current.getString("name", ""), ""));
             }
@@ -53,7 +59,7 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
             if (!temp.equals("")) {//If user has repos.
                 String[] c = temp.split(",");
                 for (int i = 0; i < c.length; i++) {
-                    columns.add(c[i]);
+                    //columns.add(c[i]);
                 }
             }
             listView = (ListView) findViewById(R.id.repo_list);

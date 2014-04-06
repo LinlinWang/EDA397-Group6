@@ -10,8 +10,10 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.OAuthService;
+import org.eclipse.egit.github.core.service.OrganizationService;
 import org.eclipse.egit.github.core.service.RepositoryService;
 
 import java.util.ArrayList;
@@ -47,6 +49,7 @@ public class GitFunctionality {
 
     public Boolean gitLogin(String userName, String password) {
         try{
+            Log.d("GitFunctionality", "Login");
             username = userName;
             Authenticate task = new Authenticate();
             task.execute(userName, password);
@@ -57,8 +60,9 @@ public class GitFunctionality {
         }
     }
 
-    public ArrayList<String> getRepos() {
+    public List<Repository> getRepos() {
         try{
+            Log.d("GitFunctionality", "Repos");
             getRepos task = new getRepos();
             task.execute();
             return task.get();
@@ -88,23 +92,24 @@ public class GitFunctionality {
         }
     }
 
-    private class getRepos extends AsyncTask<Void, Void, ArrayList<String>> {
-        ArrayList<String> repoList = new ArrayList<String>();
-
+    private class getRepos extends AsyncTask<Void, Void, List<Repository>> {
+        List<Repository> repos = new ArrayList<Repository>();
         @Override
-        protected ArrayList<String> doInBackground(Void... arg0) {
+        protected List<Repository> doInBackground(Void... arg0) {
             try {
+                Log.d("GitFunctionality", "Repo thread");
                 GitFunctionality git = GitFunctionality.getInstance();
                 RepositoryService repoService = new RepositoryService(git.getClient());
-                List<Repository> repos = repoService.getRepositories(git.getUserName());
+
+                List<Repository> repos = repoService.getRepositories();
                 for (Repository repo : repos) {
-                    repoList.add(repo.getName());
                     Log.d("GitFunctionality", repo.getName());
                 }
+                return repos;
             } catch (Exception e) {
                 e.printStackTrace();
+                return null;
             }
-            return repoList;
         }
     }
 }

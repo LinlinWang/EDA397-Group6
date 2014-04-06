@@ -31,7 +31,7 @@ public class LoginActivity extends ActionBarActivity {
         current = getSharedPreferences("CurrentAccount", MODE_PRIVATE);
         accEdit = accounts.edit();
         currEdit = current.edit();
-        checked = true;
+        checked = false;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class LoginActivity extends ActionBarActivity {
 
     public void login(View view) {
         final String name = ((EditText)findViewById(R.id.account)).getText().toString().toLowerCase();
-        final String pw = ((EditText)findViewById(R.id.password)).getText().toString();
+        final String pw = ((EditText)findViewById(R.id.password)).getText().toString().trim();
         final String value = accounts.getString(name, "");
         GitFunctionality git = GitFunctionality.getInstance();
 
