@@ -56,4 +56,15 @@
         android:onClick="pickAcc"
         android:layout_toRightOf="@+id/account" />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:background="@drawable/navigitator"
+        android:layout_alignBottom="@+id/account"
+        android:layout_alignLeft="@+id/account"
+        android:layout_alignStart="@+id/account"
+        android:layout_alignRight="@+id/pick_account"
+        android:layout_alignEnd="@+id/pick_account" />
+
 </RelativeLayout>
