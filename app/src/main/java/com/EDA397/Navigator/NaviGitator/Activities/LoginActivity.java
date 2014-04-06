@@ -58,6 +58,7 @@ public class LoginActivity extends ActionBarActivity {
         final String name = ((EditText)findViewById(R.id.account)).getText().toString().toLowerCase();
         final String pw = ((EditText)findViewById(R.id.password)).getText().toString();
         final String value = accounts.getString(name, "");
+        GitFunctionality git = GitFunctionality.getInstance();
 
         if(name.length() < 1 || pw.length() < 1){
             //Error handling too short/blank field.
@@ -68,7 +69,7 @@ public class LoginActivity extends ActionBarActivity {
         }
         else if (value.equals("")) {
             // Logging in with New/Unsaved account.
-            if (verifyAcc(name,pw)) {
+            if (git.gitLogin(name,pw)) {
                 if (checked) {
                     //Account remembered even if app is force stopped.
                     accEdit.putString(name, pw);
@@ -116,13 +117,5 @@ public class LoginActivity extends ActionBarActivity {
     }
     public void pickAcc(View view) {
         startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.AccountPickerActivity"));
-    }
-    private Boolean verifyAcc(String name, String pw){
-        try{
-            return (new GitLogin(getApplicationContext()).execute(name,pw)).get();
-        }
-        catch(Exception e){
-            return false;
-        }
     }
 }
