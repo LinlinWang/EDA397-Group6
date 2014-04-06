@@ -48,28 +48,21 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
             GitFunctionality git = GitFunctionality.getInstance();
 
             String temp;
-            List<Repository> columns = git.getRepos();
-            Log.d("MainActivity", "number of repos: " + columns.size());
-            if(b1) {
-                temp = (repoList.getString(current.getString("name", ""), ""));
-            }
-            else{
-                temp = (repoList.getString(this.getIntent().getStringExtra("name"), ""));
-            }
-            if (!temp.equals("")) {//If user has repos.
-                String[] c = temp.split(",");
-                for (int i = 0; i < c.length; i++) {
-                    //columns.add(c[i]);
-                }
+            List<Repository> repos = git.getRepos();
+            ArrayList<String> repoNames = new ArrayList<String>();
+            Log.d("MainActivity", "number of repos: " + repos.size());
+
+            for (Repository repo: repos) {
+                repoNames.add(repo.getName());
             }
             listView = (ListView) findViewById(R.id.repo_list);
             listView.setClickable(true);
             listView.setOnItemClickListener(this);
 
             //setting adapter
-            //listView.setAdapter(new ArrayAdapter<String>(this, R.layout.simple_list_item_1, columns));
-            //listView.setAdapter(new RepoAdapter(getApplicationContext(),R.layout.repo_item,
-            //        R.id.repo_text, columns));
+            //listView.setAdapter(new ArrayAdapter<String>(this, R.layout.repo_item, repoNames));
+            listView.setAdapter(new RepoAdapter(getApplicationContext(),R.layout.repo_item,
+                    R.id.repo_text, repoNames));
         }
     }
 
