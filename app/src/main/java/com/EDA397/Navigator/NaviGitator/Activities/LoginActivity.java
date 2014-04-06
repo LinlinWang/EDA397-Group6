@@ -16,11 +16,12 @@ import com.EDA397.Navigator.NaviGitator.R;
 
 public class LoginActivity extends ActionBarActivity {
 
-   private SharedPreferences accounts;
-   private SharedPreferences current;
-   private SharedPreferences.Editor accEdit;
-   private SharedPreferences.Editor currEdit;
-   private boolean checked;
+    private SharedPreferences accounts;
+    private SharedPreferences current;
+    private SharedPreferences.Editor accEdit;
+    private SharedPreferences.Editor currEdit;
+    private boolean checked;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +119,7 @@ public class LoginActivity extends ActionBarActivity {
     }
     private Boolean verifyAcc(String name, String pw){
         try{
-            return (new GitLogin().execute(name,pw)).get();
+            return (new GitLogin(getApplicationContext()).execute(name,pw)).get();
         }
         catch(Exception e){
             return false;

@@ -6,6 +6,8 @@ package com.EDA397.Navigator.NaviGitator.Activities;
  * https://developer.github.com/v3/oauth/
  */
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -26,6 +28,14 @@ public class GitLogin extends AsyncTask<String, Void, Boolean> {
     GitHubClient client;
     private String username;
     private String password;
+    private SharedPreferences repoList;
+    private SharedPreferences.Editor repoEdit;
+
+    public GitLogin(Context c){
+        super();
+        repoList = c.getSharedPreferences("Repositories", c.MODE_PRIVATE);
+        repoEdit = repoList.edit();
+    }
 
     @Override
     protected Boolean doInBackground(String... s) {
@@ -53,6 +63,8 @@ public class GitLogin extends AsyncTask<String, Void, Boolean> {
             }
             for (Repository repo : l) {
                 Log.v("nav", repo.getName());
+                repoEdit.putInt(repo.getName(), repo.getWatchers());
+                repoEdit.commit();
             }
             return true;
         }

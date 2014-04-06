@@ -17,6 +17,8 @@ public class AccountAdapter extends ArrayAdapter<String> {
     private Context context;
     private SharedPreferences accounts;
     private SharedPreferences.Editor accEdit;
+    private SharedPreferences repoList;
+    private SharedPreferences.Editor repoEdit;
     private ArrayList<String> names;
 
     public AccountAdapter(Context c, int r, int tv, ArrayList<String> l) {
@@ -24,17 +26,19 @@ public class AccountAdapter extends ArrayAdapter<String> {
         this.context = c;
         this.names = l;
         accounts = c.getSharedPreferences("StoredAccounts", c.MODE_PRIVATE);
+        repoList = c.getSharedPreferences("Repositories", c.MODE_PRIVATE);
         accEdit = accounts.edit();
+        repoEdit = repoList.edit();
     }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-            final String s = names.get(position);
-            if (convertView == null) {
-                LayoutInflater inflater = (LayoutInflater) context
-                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.account_item, null);
-            }
+        final String s = names.get(position);
+        if (convertView == null) {
+            LayoutInflater inflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.account_item, null);
+        }
         TextView tv = (TextView) convertView.findViewById(R.id.account_text);
         tv.setText(s);
         ImageButton delete = (ImageButton) convertView.findViewById(R.id.delete_button);
@@ -46,6 +50,8 @@ public class AccountAdapter extends ArrayAdapter<String> {
                 public void onClick(View v) {
                 accEdit.remove(s);
                 accEdit.commit();
+                repoEdit.remove(s);
+                repoEdit.commit();
                 names.remove(position);
                 remove(s);
                 }
