@@ -7,18 +7,18 @@
     android:paddingRight="8dp"
     android:id="@+id/item_layout">
 
-    <ImageButton
+    <CheckBox
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/delete_button"
+        android:id="@+id/watch_check"
         android:layout_gravity="right"
-        android:src="@android:drawable/ic_delete"/>
+        android:text="Watch?"
+        android:checked="true"/>
 
     <TextView
-    android:id="@+id/account_text"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:textColor="@android:color/black"
-    android:padding="10dp" />
+        android:id="@+id/repo_text"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:textColor="@android:color/black"
+        android:padding="10dp" />
 </LinearLayout>
-

@@ -16,11 +16,12 @@ import com.EDA397.Navigator.NaviGitator.R;
 
 public class LoginActivity extends ActionBarActivity {
 
-   private SharedPreferences accounts;
-   private SharedPreferences current;
-   private SharedPreferences.Editor accEdit;
-   private SharedPreferences.Editor currEdit;
-   private boolean checked;
+    private SharedPreferences accounts;
+    private SharedPreferences current;
+    private SharedPreferences.Editor accEdit;
+    private SharedPreferences.Editor currEdit;
+    private boolean checked;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +32,6 @@ public class LoginActivity extends ActionBarActivity {
         accEdit = accounts.edit();
         currEdit = current.edit();
         checked = false;
-        if (!(current.getString("name", "").equals(""))){
-            startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.AccountPickerActivity"));
-        }
     }
 
     @Override
@@ -57,9 +55,10 @@ public class LoginActivity extends ActionBarActivity {
     }
 
     public void login(View view) {
-        final String name = ((EditText)findViewById(R.id.account)).getText().toString();
-        final String pw = ((EditText)findViewById(R.id.password)).getText().toString();
+        final String name = ((EditText)findViewById(R.id.account)).getText().toString().toLowerCase();
+        final String pw = ((EditText)findViewById(R.id.password)).getText().toString().trim();
         final String value = accounts.getString(name, "");
+        GitFunctionality git = GitFunctionality.getInstance();
 
         if(name.length() < 1 || pw.length() < 1){
             //Error handling too short/blank field.
@@ -69,38 +68,47 @@ public class LoginActivity extends ActionBarActivity {
             toast.show();
         }
         else if (value.equals("")) {
-            if (checked) {
-                //Logging in with new account. Should be linked to successful github login.
-                //Account remembered even if app is force stopped.
-                accEdit.putString(name, pw);
-                accEdit.commit();
-                currEdit.clear();
-                currEdit.putString("name", name);
-                currEdit.putString("pw", pw);
-                currEdit.commit();
-                startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.AccountPickerActivity"));
+            // Logging in with New/Unsaved account.
+            if (git.gitLogin(name,pw)) {
+                if (checked) {
+                    //Account remembered even if app is force stopped.
+                    accEdit.putString(name, pw);
+                    accEdit.commit();
+                    currEdit.clear();
+                    currEdit.putString("name", name);
+                    currEdit.putString("pw", pw);
+                    currEdit.commit();
+                    startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.MainActivity"));
                 }
+                else {
+                    //Only stored while app is "alive".
+                    Intent i = new Intent("com.EDA397.Navigator.NaviGitator.Activities.MainActivity");
+                    i.putExtra("name", name);
+                    i.putExtra("pw", pw);
+                    startActivity(i);
+                }
+            }
             else{
-                //Only stored while app is "alive".
-                Intent i = new Intent("com.EDA397.Navigator.NaviGitator.Activities.AccountPickerActivity");
-                i.putExtra("name", name);
-                i.putExtra("pw", pw);
-                startActivity(i);
+                //Invalid GitHub account.
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        "Not a valid GitHub account", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.TOP | Gravity.LEFT, 0, 0);
+                toast.show();
             }
         }
-        else if(value.equals(pw)){
-            //Logging in with existing account. Should be linked to successful github login.
-            currEdit.clear();
-            currEdit.putString("name", name);
-            currEdit.putString("pw", pw);
-            currEdit.commit();
-            startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.AccountPickerActivity"));
+        else if (value.equals(pw)) {
+             //Logging in with existing account. Should be linked to successful github login.
+             currEdit.clear();
+             currEdit.putString("name", name);
+             currEdit.putString("pw", pw);
+             currEdit.commit();
+             startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.MainActivity"));
         }
-        else{
+        else {
             //Error handling wrong password.
             Toast toast = Toast.makeText(getApplicationContext(),
-            "Missmatch with stored password", Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.TOP|Gravity.LEFT, 0, 0);
+                    "Missmatch with stored password", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.TOP | Gravity.LEFT, 0, 0);
             toast.show();
         }
     }
