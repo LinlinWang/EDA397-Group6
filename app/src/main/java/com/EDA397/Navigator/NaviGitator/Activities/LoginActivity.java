@@ -17,9 +17,7 @@ import com.EDA397.Navigator.NaviGitator.R;
 public class LoginActivity extends ActionBarActivity {
 
     private SharedPreferences accounts;
-    private SharedPreferences current;
     private SharedPreferences.Editor accEdit;
-    private SharedPreferences.Editor currEdit;
     private boolean checked;
 
 
@@ -28,9 +26,7 @@ public class LoginActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         accounts = getSharedPreferences("StoredAccounts", MODE_PRIVATE);
-        current = getSharedPreferences("CurrentAccount", MODE_PRIVATE);
         accEdit = accounts.edit();
-        currEdit = current.edit();
         checked = false;
     }
 
@@ -55,7 +51,7 @@ public class LoginActivity extends ActionBarActivity {
     }
 
     public void login(View view) {
-        final String name = ((EditText)findViewById(R.id.account)).getText().toString().toLowerCase();
+        final String name = ((EditText)findViewById(R.id.account)).getText().toString().trim().toLowerCase();
         final String pw = ((EditText)findViewById(R.id.password)).getText().toString().trim();
         final String value = accounts.getString(name, "");
         GitFunctionality git = GitFunctionality.getInstance();
@@ -72,19 +68,15 @@ public class LoginActivity extends ActionBarActivity {
             if (git.gitLogin(name,pw)) {
                 if (checked) {
                     //Account remembered even if app is force stopped.
-                    accEdit.putString(name, pw);
+                    accEdit.putString(name, Encrypter.encrypt(pw));
                     accEdit.commit();
-                    currEdit.clear();
-                    currEdit.putString("name", name);
-                    currEdit.putString("pw", pw);
-                    currEdit.commit();
                     startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.MainActivity"));
                 }
                 else {
                     //Only stored while app is "alive".
                     Intent i = new Intent("com.EDA397.Navigator.NaviGitator.Activities.MainActivity");
                     i.putExtra("name", name);
-                    i.putExtra("pw", pw);
+                    i.putExtra("pw", Encrypter.encrypt(pw));
                     startActivity(i);
                 }
             }
@@ -96,13 +88,18 @@ public class LoginActivity extends ActionBarActivity {
                 toast.show();
             }
         }
-        else if (value.equals(pw)) {
-             //Logging in with existing account. Should be linked to successful github login.
-             currEdit.clear();
-             currEdit.putString("name", name);
-             currEdit.putString("pw", pw);
-             currEdit.commit();
-             startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.MainActivity"));
+        else if (Encrypter.decrypt(value).equals(pw)) {
+             if (git.gitLogin(name,pw)) {
+                 //Logging in with existing account. Should be linked to successful github login.
+                 startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.MainActivity"));
+             }
+            else{
+                 //Password has ben changed via github website.
+                 Toast toast = Toast.makeText(getApplicationContext(),
+                         "Password is no longer valid", Toast.LENGTH_SHORT);
+                 toast.setGravity(Gravity.TOP | Gravity.LEFT, 0, 0);
+                 toast.show();
+             }
         }
         else {
             //Error handling wrong password.

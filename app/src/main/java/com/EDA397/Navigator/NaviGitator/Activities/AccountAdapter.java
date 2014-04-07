@@ -17,8 +17,6 @@ public class AccountAdapter extends ArrayAdapter<String> {
     private Context context;
     private SharedPreferences accounts;
     private SharedPreferences.Editor accEdit;
-    private SharedPreferences repoList;
-    private SharedPreferences.Editor repoEdit;
     private ArrayList<String> names;
 
     public AccountAdapter(Context c, int r, int tv, ArrayList<String> l) {
@@ -26,9 +24,7 @@ public class AccountAdapter extends ArrayAdapter<String> {
         this.context = c;
         this.names = l;
         accounts = c.getSharedPreferences("StoredAccounts", c.MODE_PRIVATE);
-        repoList = c.getSharedPreferences("Repositories", c.MODE_PRIVATE);
         accEdit = accounts.edit();
-        repoEdit = repoList.edit();
     }
 
     @Override
@@ -50,8 +46,6 @@ public class AccountAdapter extends ArrayAdapter<String> {
                 public void onClick(View v) {
                 accEdit.remove(s);
                 accEdit.commit();
-                repoEdit.remove(s);
-                repoEdit.commit();
                 names.remove(position);
                 remove(s);
                 }

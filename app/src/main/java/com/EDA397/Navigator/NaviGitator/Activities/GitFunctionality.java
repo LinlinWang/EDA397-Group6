@@ -27,24 +27,21 @@ public class GitFunctionality {
     private static GitFunctionality instance;
 
     private static GitHubClient client;
-    private String username;
+    private static String username;
 
-    public GitFunctionality() {
-        super();
-    }
-
-    public static void initInstance() {
-        if (instance == null) {
-            instance = new GitFunctionality();
+    private GitFunctionality() {
             client = new GitHubClient();
-            Log.d("GitFunctionality", "Instance Created");
-        }
+            username = "";
     }
 
     protected GitHubClient getClient(){ return client; }
     protected String getUserName(){ return username; }
 
     public static GitFunctionality getInstance() {
+        if (instance == null) {
+            instance = new GitFunctionality();
+            Log.d("GitFunctionality", "Instance Created");
+        }
         Log.d("GitFunctionality", "Instance Returned");
         return instance;
     }
@@ -107,15 +104,21 @@ public class GitFunctionality {
     }
 
     private class getRepos extends AsyncTask<Void, Void, List<Repository>> {
-        List<Repository> repos = new ArrayList<Repository>();
         @Override
         protected List<Repository> doInBackground(Void... arg0) {
             try {
                 Log.d("GitFunctionality", "Repo thread");
                 GitFunctionality git = GitFunctionality.getInstance();
                 RepositoryService repoService = new RepositoryService(git.getClient());
-
+                OrganizationService org = new OrganizationService(git.getClient());
+                //repos user owns/is member of.
                 List<Repository> repos = repoService.getRepositories();
+                //repos owned by organizations this user is a member of.
+                List<User> organisations = org.getOrganizations();
+
+                for (User orgz : organisations) {
+                    repos.addAll(repoService.getOrgRepositories(orgz.getLogin()));
+                }
                 for (Repository repo : repos) {
                     Log.d("GitFunctionality", repo.getName());
                 }
@@ -128,7 +131,6 @@ public class GitFunctionality {
     }
 
     private class getRepoCommits extends AsyncTask<Repository, Void, List<RepositoryCommit>> {
-        List<Repository> commits = new ArrayList<Repository>();
         protected List<RepositoryCommit> doInBackground(Repository... repo) {
             try {
                 Log.d("GitFunctionality", "Commit thread");
@@ -137,7 +139,7 @@ public class GitFunctionality {
 
                 List<RepositoryCommit> commits = commitService.getCommits(repo[0]);
                 for (RepositoryCommit comm : commits) {
-                    Log.d("GitFunctionality", comm.getCommitter().getName() + " : " + comm.getCommit().getMessage());
+                    Log.d("GitFunctionality", /*comm.getCommitter().getName() +**/ " : " + comm.getCommit().getMessage());
                 }
                 return commits;
 

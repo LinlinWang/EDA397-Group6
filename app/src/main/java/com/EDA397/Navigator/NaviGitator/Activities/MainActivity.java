@@ -25,51 +25,32 @@ import java.util.List;
 
 public class MainActivity extends ActionBarActivity implements AdapterView.OnItemClickListener {
 
-    private SharedPreferences current;
-    private SharedPreferences.Editor currEdit;
-    private SharedPreferences repoList;
-    private SharedPreferences.Editor repoEdit;
     private ListView listView;
     private ViewSwitcher switcher;
+    private ArrayList<Repository> repos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        current = getSharedPreferences("CurrentAccount", MODE_PRIVATE);
-        currEdit = current.edit();
-        repoList = getSharedPreferences("Repositories", MODE_PRIVATE);
-        repoEdit = repoList.edit();
-
+        repos = new ArrayList<Repository>();
         switcher = (ViewSwitcher) findViewById(R.id.listSwitcher);
-        boolean b1 = this.getIntent().getStringExtra("name") == null;
-        boolean b2 = current.getString("name", "").equals("");
+        GitFunctionality git = GitFunctionality.getInstance();
 
         // Instanciate GitFunctionality
-        GitFunctionality.initInstance();
+        //GitFunctionality.initInstance();
 
-        if (b1 && b2){
+        if (git.getUserName().equals("")){
             startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.LoginActivity"));
         }
         else{
-            GitFunctionality git = GitFunctionality.getInstance();
-
-            String temp;
-            List<Repository> repos = git.getRepos();
-            ArrayList<String> repoNames = new ArrayList<String>();
+            repos.addAll(git.getRepos());
             Log.d("MainActivity", "number of repos: " + repos.size());
-
-            for (Repository repo: repos) {
-                repoNames.add(repo.getName());
-            }
             listView = (ListView) findViewById(R.id.repo_list);
             listView.setClickable(true);
             listView.setOnItemClickListener(this);
-
-            //setting adapter
-            //listView.setAdapter(new ArrayAdapter<String>(this, R.layout.repo_item, repoNames));
             listView.setAdapter(new RepoAdapter(getApplicationContext(),R.layout.repo_item,
-                    R.id.repo_text, repoNames));
+                    R.id.repo_text, repos));
         }
     }
 
@@ -79,19 +60,20 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
             case R.id.repo_list:
                 Log.d("onItemClick", "RepoListItem: " + position);
                 GitFunctionality git = GitFunctionality.getInstance();
-                List<Repository> repList = git.getRepos();
-                List<RepositoryCommit> repoCommits = git.getRepoCommits(repList.get(position));
+                List<RepositoryCommit> repoCommits = git.getRepoCommits(repos.get(position));
                 ArrayList<String> commitMsg = new ArrayList<String>();
 
                 for(RepositoryCommit repComm: repoCommits){
-                    commitMsg.add("Author: " + repComm.getCommitter().getLogin() + " Message: " + repComm.getCommit().getMessage());
+                    commitMsg.add("Author: " /*+ repComm.getCommitter().getLogin()**/ + " Message: " + repComm.getCommit().getMessage());
                 }
 
                 listView = (ListView) findViewById(R.id.repoComment_list);
                 listView.setClickable(true);
                 listView.setOnItemClickListener(this);
+                //Consider making a custom adapter for commits (if we want to extend the ListItems to hold multiple things).
                 listView.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1, commitMsg.toArray()));
                 switcher.showNext();
+                break;
             case R.id.repoComment_list:
                 Log.d("onItemClick", "RepoCommentListItem: " + position);
                 switcher.showPrevious();
@@ -114,8 +96,6 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_logout) {
-            currEdit.clear();
-            currEdit.commit();
             startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.LoginActivity"));
             return true;
         }
@@ -123,8 +103,6 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     }
     @Override
     public void onBackPressed() {
-        currEdit.clear();
-        currEdit.commit();
         super.onBackPressed();
     }
 }
