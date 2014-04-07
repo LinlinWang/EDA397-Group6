@@ -10,8 +10,6 @@ import android.widget.TextView;
 
 import com.EDA397.Navigator.NaviGitator.R;
 
-import org.eclipse.egit.github.core.Repository;
-
 import java.util.ArrayList;
 
 /**
