@@ -10,8 +10,10 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
+import org.eclipse.egit.github.core.service.CommitService;
 import org.eclipse.egit.github.core.service.OAuthService;
 import org.eclipse.egit.github.core.service.OrganizationService;
 import org.eclipse.egit.github.core.service.RepositoryService;
@@ -72,6 +74,18 @@ public class GitFunctionality {
         }
     }
 
+    public List<RepositoryCommit> getRepoCommits(Repository repo) {
+        try{
+            Log.d("GitFunctionality", "RepoCommits");
+            getRepoCommits task = new getRepoCommits();
+            task.execute(repo);
+            return task.get();
+        } catch ( Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     private class Authenticate extends AsyncTask<String, Void, Boolean> {
         Boolean authenticate = false;
         @Override
@@ -112,4 +126,25 @@ public class GitFunctionality {
             }
         }
     }
-}
+
+    private class getRepoCommits extends AsyncTask<Repository, Void, List<RepositoryCommit>> {
+        List<Repository> commits = new ArrayList<Repository>();
+        protected List<RepositoryCommit> doInBackground(Repository... repo) {
+            try {
+                Log.d("GitFunctionality", "Commit thread");
+                GitFunctionality git = GitFunctionality.getInstance();
+                CommitService commitService = new CommitService(git.getClient());
+
+                List<RepositoryCommit> commits = commitService.getCommits(repo[0]);
+                for (RepositoryCommit comm : commits) {
+                    Log.d("GitFunctionality", comm.getCommitter().getName() + " : " + comm.getCommit().getMessage());
+                }
+                return commits;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+            }
+        }
+    }
