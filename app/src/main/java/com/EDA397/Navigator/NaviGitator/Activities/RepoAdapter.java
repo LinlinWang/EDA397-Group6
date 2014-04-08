@@ -10,17 +10,19 @@ import android.widget.TextView;
 
 import com.EDA397.Navigator.NaviGitator.R;
 
+import org.eclipse.egit.github.core.Repository;
+
 import java.util.ArrayList;
 
 /**
  * Created by Eric on 2014-04-05.
  */
-public class RepoAdapter extends ArrayAdapter<String> {
+public class RepoAdapter extends ArrayAdapter<Repository> {
 
     private Context context;
-    private ArrayList<String> repos;
+    private ArrayList<Repository> repos;
 
-    public RepoAdapter(Context c, int r, int tv, ArrayList<String> l) {
+    public RepoAdapter(Context c, int r, int tv, ArrayList<Repository> l) {
         super(c,r,tv,l);
         this.context = c;
         this.repos = l;
@@ -28,7 +30,7 @@ public class RepoAdapter extends ArrayAdapter<String> {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        final String s = repos.get(position);
+        final String s = repos.get(position).getName();
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -36,9 +38,6 @@ public class RepoAdapter extends ArrayAdapter<String> {
         }
         TextView tv = (TextView) convertView.findViewById(R.id.repo_text);
         tv.setText(s);
-        final CheckBox check = (CheckBox) convertView.findViewById(R.id.watch_check);
-        check.setFocusableInTouchMode(false);
-        check.setFocusable(false);
         return (convertView);
     }
 }

@@ -10,5 +10,8 @@
     <string name="stored_accounts">StoredAccounts</string>
     <string name="current_account">CurrentAccount</string>
     <string name="title_activity_account_picker">AccountPickerActivity</string>
-
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="remember_me">Remember me</string>
+    <string name="watch">Watch?</string>
 </resources>
