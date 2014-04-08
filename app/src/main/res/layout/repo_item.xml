@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/watch_check"
         android:layout_gravity="right"
-        android:text="Watch?"
+        android:text="@string/watch"
         android:checked="true"/>
 
     <TextView

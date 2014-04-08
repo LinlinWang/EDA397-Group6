@@ -69,8 +69,8 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         //final String repoName = ((TextView)view.findViewById(R.id.repo_text)).getText().toString();
-        GitFunctionality git = GitFunctionality.getInstance();
-        git.getRepos();
+        //GitFunctionality git = GitFunctionality.getInstance();
+        //git.getRepos();
     }
 
     @Override
