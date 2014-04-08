@@ -19,7 +19,9 @@ import org.eclipse.egit.github.core.service.RepositoryService;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ *  Class containing functionality to communicate with GitHub
+ */
 public class GitFunctionality {
 
     private static GitFunctionality instance;
@@ -31,6 +33,9 @@ public class GitFunctionality {
         super();
     }
 
+    /**
+     *  Initiate the GitHub Connection
+     */
     public static void initInstance() {
         if (instance == null) {
             instance = new GitFunctionality();
@@ -39,14 +44,33 @@ public class GitFunctionality {
         }
     }
 
+    /**
+     * Function to return the GitHub client
+     * @return The GitHub client
+     */
     protected GitHubClient getClient(){ return client; }
+
+    /**
+     * Function to return the username
+     * @return The current username
+     */
     protected String getUserName(){ return username; }
 
+    /**
+     * Return the current instance of GitFunctionality
+     * @return The current instance of GitFunctionality
+     */
     public static GitFunctionality getInstance() {
         Log.d("GitFunctionality", "Instance Returned");
         return instance;
     }
 
+    /**
+     * Function to login to GitHub
+     * @param userName The username to be logged in
+     * @param password The users password
+     * @return the result of the login
+     */
     public Boolean gitLogin(String userName, String password) {
         try{
             Log.d("GitFunctionality", "Login");
@@ -60,6 +84,10 @@ public class GitFunctionality {
         }
     }
 
+    /**
+     * Function to get a list of all the repositories connected to the current user.
+     * @return A list with the repositories connected to the current user.
+     */
     public List<Repository> getRepos() {
         try{
             Log.d("GitFunctionality", "Repos");
@@ -72,6 +100,9 @@ public class GitFunctionality {
         }
     }
 
+    /**
+     * Async task to Authenticate a user against GitHub
+     */
     private class Authenticate extends AsyncTask<String, Void, Boolean> {
         Boolean authenticate = false;
         @Override
@@ -92,6 +123,9 @@ public class GitFunctionality {
         }
     }
 
+    /**
+     * Async task to get all the repositories for the current user
+     */
     private class getRepos extends AsyncTask<Void, Void, List<Repository>> {
         List<Repository> repos = new ArrayList<Repository>();
         @Override
