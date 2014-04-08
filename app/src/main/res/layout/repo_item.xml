@@ -7,14 +7,6 @@
     android:paddingRight="8dp"
     android:id="@+id/item_layout">
 
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/watch_check"
-        android:layout_gravity="right"
-        android:text="Watch?"
-        android:checked="true"/>
-
     <TextView
         android:id="@+id/repo_text"
         android:layout_width="fill_parent"

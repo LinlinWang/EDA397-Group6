@@ -38,9 +38,6 @@ public class RepoAdapter extends ArrayAdapter<Repository> {
         }
         TextView tv = (TextView) convertView.findViewById(R.id.repo_text);
         tv.setText(s);
-        final CheckBox check = (CheckBox) convertView.findViewById(R.id.watch_check);
-        check.setFocusableInTouchMode(false);
-        check.setFocusable(false);
         return (convertView);
     }
 }

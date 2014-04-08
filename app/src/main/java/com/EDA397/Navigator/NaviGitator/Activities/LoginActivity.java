@@ -1,5 +1,6 @@
 package com.EDA397.Navigator.NaviGitator.Activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
@@ -14,7 +15,7 @@ import android.widget.Toast;
 
 import com.EDA397.Navigator.NaviGitator.R;
 
-public class LoginActivity extends ActionBarActivity {
+public class LoginActivity extends Activity {
 
     private SharedPreferences accounts;
     private SharedPreferences.Editor accEdit;
@@ -28,26 +29,6 @@ public class LoginActivity extends ActionBarActivity {
         accounts = getSharedPreferences("StoredAccounts", MODE_PRIVATE);
         accEdit = accounts.edit();
         checked = false;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.login, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     public void login(View view) {
@@ -114,5 +95,8 @@ public class LoginActivity extends ActionBarActivity {
     }
     public void pickAcc(View view) {
         startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.AccountPickerActivity"));
+    }
+    @Override
+    public void onBackPressed() {
     }
 }

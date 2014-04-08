@@ -110,20 +110,32 @@ public class GitFunctionality {
                 Log.d("GitFunctionality", "Repo thread");
                 GitFunctionality git = GitFunctionality.getInstance();
                 RepositoryService repoService = new RepositoryService(git.getClient());
-                OrganizationService org = new OrganizationService(git.getClient());
-                //repos user owns/is member of.
-                List<Repository> repos = repoService.getRepositories();
-                //repos owned by organizations this user is a member of.
-                List<User> organisations = org.getOrganizations();
+                try {
+                    OrganizationService org = new OrganizationService(git.getClient());
+                    //repos user owns/is member of.
+                    List<Repository> repos = repoService.getRepositories();
+                    //repos owned by organizations this user is a member of.
+                    List<User> organisations = org.getOrganizations();
 
-                for (User orgz : organisations) {
-                    repos.addAll(repoService.getOrgRepositories(orgz.getLogin()));
+                    for (User orgz : organisations) {
+                        repos.addAll(repoService.getOrgRepositories(orgz.getLogin()));
+                    }
+                    for (Repository repo : repos) {
+                        Log.d("GitFunctionality", repo.getName());
+                    }
+                    return repos;
                 }
-                for (Repository repo : repos) {
-                    Log.d("GitFunctionality", repo.getName());
+                catch (Exception e){
+                    //repos user owns/is member of.
+                    List<Repository> repos = repoService.getRepositories();
+
+                    for (Repository repo : repos) {
+                        Log.d("GitFunctionality", repo.getName());
+                    }
+                    return repos;
                 }
-                return repos;
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 e.printStackTrace();
                 return null;
             }
