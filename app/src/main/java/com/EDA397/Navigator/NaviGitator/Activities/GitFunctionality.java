@@ -11,12 +11,14 @@ import android.util.Log;
 
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryCommit;
+import org.eclipse.egit.github.core.RepositoryIssue;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.CommitService;
 import org.eclipse.egit.github.core.service.OAuthService;
 import org.eclipse.egit.github.core.service.OrganizationService;
 import org.eclipse.egit.github.core.service.RepositoryService;
+import org.eclipse.egit.github.core.service.IssueService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,6 +110,18 @@ public class GitFunctionality {
         }
     }
 
+    public List<RepositoryIssue> getRepoIssues() {
+        try{
+            Log.d("GitFunctionality", "RepoIssues");
+            GetRepoIssues task = new GetRepoIssues();
+            task.execute();
+            return task.get();
+        } catch ( Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     /**
      * Async task to Authenticate a user against GitHub
      */
@@ -190,6 +204,25 @@ public class GitFunctionality {
                 e.printStackTrace();
                 return null;
             }
+            }
+        }
+
+        private class GetRepoIssues extends AsyncTask<Void, Void, List<RepositoryIssue>> {
+            protected List<RepositoryIssue> doInBackground(Void... arg0) {
+                try {
+                    Log.d("GitFunctionality", "Issues thread");
+                    GitFunctionality git = GitFunctionality.getInstance();
+                    IssueService issueService = new IssueService(git.getClient());
+                    List<RepositoryIssue> issues = issueService.getIssues();    //get all issues for the authenticated user
+                    for (RepositoryIssue i : issues) {
+                        Log.d("GitFunctionality",  " : " + i.getRepository());  //get the repositories for the issues
+                    }
+                    return issues;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
             }
         }
     }

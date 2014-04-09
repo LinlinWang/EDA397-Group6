@@ -79,6 +79,9 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
                 Log.d("onItemClick", "RepoCommentListItem: " + position);
                 switcher.showPrevious();
                 break;
+            case R.id.repoIssues_list:
+                Log.d("onItemClick", "RepoIssuesListItem: " + position);
+                switcher.showPrevious();
         }
     }
     @Override
