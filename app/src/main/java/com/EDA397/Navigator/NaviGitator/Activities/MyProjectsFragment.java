@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.EDA397.Navigator.NaviGitator.R;
+
+import org.eclipse.egit.github.core.CommitFile;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryCommit;
 
@@ -62,10 +64,10 @@ public class MyProjectsFragment extends Fragment implements AdapterView.OnItemCl
                 ArrayList<String> commitMsg = new ArrayList<String>();
                 String temp = "";
                 for(RepositoryCommit repComm: repoCommits){
-                    /*
+
                     for (CommitFile f : repComm.getFiles()){
                         temp += "\n" + f.getFilename();
-                    }**/
+                    }
                     commitMsg.add("Date: " + repComm.getCommit().getAuthor().getDate().toString() +
                             "\nAuthor: " + repComm.getCommit().getAuthor().getName() +
                             "\nMessage: " + "\n" + repComm.getCommit().getMessage() +

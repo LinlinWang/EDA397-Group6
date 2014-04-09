@@ -12,6 +12,7 @@ import org.eclipse.egit.github.core.service.OAuthService;
 import org.eclipse.egit.github.core.service.OrganizationService;
 import org.eclipse.egit.github.core.service.RepositoryService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -181,6 +182,7 @@ public class GitFunctionality {
 
                 List<RepositoryCommit> commits = commitService.getCommits(repo[0]);
                 for (RepositoryCommit comm : commits) {
+                    comm.setFiles(commitService.getCommit(repo[0], comm.getSha()).getFiles());
                     Log.d("GitFunctionality", comm.getCommit().getAuthor().getName() + " : " + comm.getCommit().getMessage());
                 }
                 return commits;
