@@ -62,16 +62,17 @@ public class MyProjectsFragment extends Fragment implements AdapterView.OnItemCl
                 GitFunctionality git = GitFunctionality.getInstance();
                 List<RepositoryCommit> repoCommits = git.getRepoCommits(repos.get(position));
                 ArrayList<String> commitMsg = new ArrayList<String>();
-                String temp = "";
+                String temp1 = "";
                 for(RepositoryCommit repComm: repoCommits){
 
-                    for (CommitFile f : repComm.getFiles()){
-                        temp += "\n" + f.getFilename();
+                    for (String s : git.getFileNames(repComm, repos.get(position))){
+                        String[] temp2 = s.split("/");
+                        temp1 += "\n" + temp2[temp2.length-1];
                     }
                     commitMsg.add("Date: " + repComm.getCommit().getAuthor().getDate().toString() +
                             "\nAuthor: " + repComm.getCommit().getAuthor().getName() +
                             "\nMessage: " + "\n" + repComm.getCommit().getMessage() +
-                            "\nFiles: " + temp);
+                            "\nFiles: " + temp1);
                 }
 
                 listView = (ListView) view.findViewById(R.id.repoComment_list);

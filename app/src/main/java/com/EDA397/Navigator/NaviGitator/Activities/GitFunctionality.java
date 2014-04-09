@@ -3,8 +3,10 @@ package com.EDA397.Navigator.NaviGitator.Activities;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.eclipse.egit.github.core.CommitFile;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryCommit;
+import org.eclipse.egit.github.core.RepositoryCommitCompare;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.service.CommitService;
@@ -24,6 +26,7 @@ public class GitFunctionality {
 
     private static GitHubClient client;
     private static String username;
+    private static Repository current;
 
     private GitFunctionality() {
             client = new GitHubClient();
@@ -106,6 +109,18 @@ public class GitFunctionality {
             return null;
         }
     }
+    public ArrayList<String> getFileNames(RepositoryCommit r, Repository r2) {
+        try{
+            Log.d("GitFunctionality", "FileNames");
+            getFileNames task = new getFileNames();
+            current = r2;
+            task.execute(r);
+            return task.get();
+        } catch ( Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     /**
      * Async task to Authenticate a user against GitHub
@@ -182,7 +197,6 @@ public class GitFunctionality {
 
                 List<RepositoryCommit> commits = commitService.getCommits(repo[0]);
                 for (RepositoryCommit comm : commits) {
-                    comm.setFiles(commitService.getCommit(repo[0], comm.getSha()).getFiles());
                     Log.d("GitFunctionality", comm.getCommit().getAuthor().getName() + " : " + comm.getCommit().getMessage());
                 }
                 return commits;
@@ -193,4 +207,25 @@ public class GitFunctionality {
             }
             }
         }
+    private class getFileNames extends AsyncTask<RepositoryCommit,  Void, ArrayList<String>> {
+        @Override
+        protected ArrayList<String> doInBackground(RepositoryCommit... r) {
+            try {
+                Log.d("GitFunctionality", "FileName thread");
+                GitFunctionality git = GitFunctionality.getInstance();
+                CommitService commitService = new CommitService(git.getClient());
+
+                ArrayList <String> names = new ArrayList<String>();
+                for(CommitFile cf : commitService.getCommit(current, r[0].getSha()).getFiles()){
+                    names.add(cf.getFilename());
+                    Log.d("GitFunctionality", cf.getFilename());
+                }
+                return names;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
     }
