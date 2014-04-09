@@ -7,7 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ViewSwitcher;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +27,7 @@ public class MyProjectsFragment extends Fragment implements AdapterView.OnItemCl
     private ArrayList<Repository> repos;
     private GitFunctionality git;
     private View view;
+    private ViewSwitcher switcher;
 
     public MyProjectsFragment(GitFunctionality git) {
         this.git = git;
@@ -38,7 +42,7 @@ public class MyProjectsFragment extends Fragment implements AdapterView.OnItemCl
         repos = new ArrayList<Repository>();
         repos.addAll(git.getRepos());
         Log.d("MyProjectsFragment", "number of repos: " + repos.size());
-
+        switcher = (ViewSwitcher) view.findViewById(R.id.listSwitcher);
         listView = (ListView) view.findViewById(R.id.repo_list);
         listView.setClickable(true);
         listView.setOnItemClickListener(this);
@@ -49,36 +53,36 @@ public class MyProjectsFragment extends Fragment implements AdapterView.OnItemCl
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
         switch (parent.getId()) {
             case R.id.repo_list:
                 Log.d("onItemClick", "RepoListItem: " + position);
-////                GitFunctionality git = GitFunctionality.getInstance();
-//                List<RepositoryCommit> repoCommits = git.getRepoCommits(repos.get(position));
-//                ArrayList<String> commitMsg = new ArrayList<String>();
-//                String temp = "";
-//                for(RepositoryCommit repComm: repoCommits){
-//                    /*
-//                    for (CommitFile f : repComm.getFiles()){
-//                        temp += "\n" + f.getFilename();
-//                    }**/
-//                    commitMsg.add("Date: " + repComm.getCommit().getAuthor().getDate().toString() +
-//                            "\nAuthor: " + repComm.getCommit().getAuthor().getName() +
-//                            "\nMessage: " + "\n" + repComm.getCommit().getMessage() +
-//                            "\nFiles: " + temp);
-//                }
+                GitFunctionality git = GitFunctionality.getInstance();
+                List<RepositoryCommit> repoCommits = git.getRepoCommits(repos.get(position));
+                ArrayList<String> commitMsg = new ArrayList<String>();
+                String temp = "";
+                for(RepositoryCommit repComm: repoCommits){
+                    /*
+                    for (CommitFile f : repComm.getFiles()){
+                        temp += "\n" + f.getFilename();
+                    }**/
+                    commitMsg.add("Date: " + repComm.getCommit().getAuthor().getDate().toString() +
+                            "\nAuthor: " + repComm.getCommit().getAuthor().getName() +
+                            "\nMessage: " + "\n" + repComm.getCommit().getMessage() +
+                            "\nFiles: " + temp);
+                }
 
-//                listView = (ListView) view.findViewById(R.id.repoComment_list);
-//                listView.setClickable(true);
-//                listView.setOnItemClickListener(this);
-//                //Consider making a custom adapter for commits (if we want to extend the ListItems to hold multiple things).
-//                listView.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1, commitMsg.toArray()));
-//                switcher.showNext();
+                listView = (ListView) view.findViewById(R.id.repoComment_list);
+                listView.setClickable(true);
+                listView.setOnItemClickListener(this);
+                //Consider making a custom adapter for commits (if we want to extend the ListItems to hold multiple things).
+                listView.setAdapter(new ArrayAdapter(view.getContext(), android.R.layout.simple_list_item_1, commitMsg.toArray()));
+                switcher.showNext();
                 break;
-////            case R.id.repoComment_list:
-////                Log.d("onItemClick", "RepoCommentListItem: " + position);
-////                switcher.showPrevious();
-////                break;
+            case R.id.repoComment_list:
+                Log.d("onItemClick", "RepoCommentListItem: " + position);
+                switcher.showPrevious();
+                break;
         }
     }
 }
