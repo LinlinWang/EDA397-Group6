@@ -1,11 +1,5 @@
 package com.EDA397.Navigator.NaviGitator.Activities;
 
-
-/**
- * Created by Mei on 2014-03-31.
- * https://developer.github.com/v3/oauth/
- */
-
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -18,7 +12,6 @@ import org.eclipse.egit.github.core.service.OAuthService;
 import org.eclipse.egit.github.core.service.OrganizationService;
 import org.eclipse.egit.github.core.service.RepositoryService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -96,6 +89,11 @@ public class GitFunctionality {
         }
     }
 
+    /**
+     * Get all commits for a repository
+     * @param repo The repository to get the commits for
+     * @return A list of all commits for the selected repository
+     */
     public List<RepositoryCommit> getRepoCommits(Repository repo) {
         try{
             Log.d("GitFunctionality", "RepoCommits");
@@ -112,7 +110,6 @@ public class GitFunctionality {
      * Async task to Authenticate a user against GitHub
      */
     private class Authenticate extends AsyncTask<String, Void, Boolean> {
-        Boolean authenticate = false;
         @Override
         protected Boolean doInBackground(String... str) {
             try {
@@ -120,12 +117,10 @@ public class GitFunctionality {
                 OAuthService oAuth = new OAuthService(client);
                 oAuth.getAuthorizations();
                 Log.d("GitFunctionality", "User logged in");
-                authenticate = true;
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.d("GitFunctionality", "Login failed");
-                authenticate = false;
                 return false;
             }
         }
@@ -173,7 +168,11 @@ public class GitFunctionality {
         }
     }
 
+    /**
+     * Async task to get all the commits for a selected repository
+     */
     private class getRepoCommits extends AsyncTask<Repository, Void, List<RepositoryCommit>> {
+        @Override
         protected List<RepositoryCommit> doInBackground(Repository... repo) {
             try {
                 Log.d("GitFunctionality", "Commit thread");
