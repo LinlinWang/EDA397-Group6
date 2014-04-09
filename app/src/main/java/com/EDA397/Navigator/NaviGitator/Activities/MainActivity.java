@@ -17,6 +17,7 @@ import android.widget.ViewSwitcher;
 
 import com.EDA397.Navigator.NaviGitator.R;
 
+import org.eclipse.egit.github.core.CommitFile;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryCommit;
 
@@ -63,9 +64,16 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
                 GitFunctionality git = GitFunctionality.getInstance();
                 List<RepositoryCommit> repoCommits = git.getRepoCommits(repos.get(position));
                 ArrayList<String> commitMsg = new ArrayList<String>();
-
+                String temp = "";
                 for(RepositoryCommit repComm: repoCommits){
-                    commitMsg.add("Author: " /*+ repComm.getCommitter().getLogin()**/ + " Message: " + repComm.getCommit().getMessage());
+                    /*
+                    for (CommitFile f : repComm.getFiles()){
+                        temp += "\n" + f.getFilename();
+                    }**/
+                    commitMsg.add("Date: " + repComm.getCommit().getAuthor().getDate().toString() +
+                    "\nAuthor: " + repComm.getCommit().getAuthor().getName() +
+                    "\nMessage: " + "\n" + repComm.getCommit().getMessage() +
+                    "\nFiles: " + temp);
                 }
 
                 listView = (ListView) findViewById(R.id.repoComment_list);

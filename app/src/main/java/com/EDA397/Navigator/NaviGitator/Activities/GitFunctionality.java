@@ -182,7 +182,7 @@ public class GitFunctionality {
 
                 List<RepositoryCommit> commits = commitService.getCommits(repo[0]);
                 for (RepositoryCommit comm : commits) {
-                    Log.d("GitFunctionality", /*comm.getCommitter().getName() +**/ " : " + comm.getCommit().getMessage());
+                    Log.d("GitFunctionality", comm.getCommit().getAuthor().getName() + " : " + comm.getCommit().getMessage());
                 }
                 return commits;
 
