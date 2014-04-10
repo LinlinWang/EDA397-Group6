@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.EDA397.Navigator.NaviGitator.R;
@@ -37,10 +39,8 @@ public class BranchFragment extends Fragment {
         Log.d("BranchFragment", "number of branches:" + bList.size());
 
         view = inflater.inflate(R.layout.fragment_branch, container, false);
-
-        TextView tv = (TextView) view.findViewById(R.id.branch_text);
-        tv.setText("branches:" + bList.get(0));
-
+        ListView listView = (ListView) view.findViewById(R.id.listbranch);
+        listView.setAdapter(new ArrayAdapter(view.getContext(), android.R.layout.simple_expandable_list_item_1,bList.toArray()));
         return view;
     }
 
