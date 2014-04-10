@@ -66,11 +66,11 @@ public class MyProjectsFragment extends Fragment implements AdapterView.OnItemCl
                     for (CommitFile f : repComm.getFiles()){
                         temp += "\n" + f.getFilename();
                     }**/
-                    commitMsg.add("Date: " + repComm.getCommit().getAuthor().getDate().toString() +
-                            "\nAuthor: " + repComm.getCommit().getAuthor().getName() +
-                            "\nMessage: " + "\n" + repComm.getCommit().getMessage() +
-                            "\nFiles: " + temp);
-                }
+                commitMsg.add("Date: " + repComm.getCommit().getAuthor().getDate().toString() +
+                        "\nAuthor: " + repComm.getCommit().getAuthor().getName() +
+                        "\nMessage: " + "\n" + repComm.getCommit().getMessage() +
+                        "\nFiles: " + temp);
+            }
 
                 listView = (ListView) view.findViewById(R.id.repoComment_list);
                 listView.setClickable(true);
