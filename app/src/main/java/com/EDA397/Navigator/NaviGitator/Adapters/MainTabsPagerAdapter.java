@@ -4,21 +4,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
-import com.EDA397.Navigator.NaviGitator.Activities.MyProjectsFragment;
-import com.EDA397.Navigator.NaviGitator.Activities.NewsFragment;
-import com.EDA397.Navigator.NaviGitator.Activities.SettingsFragment;
+import com.EDA397.Navigator.NaviGitator.Fragments.MyProjectsFragment;
+import com.EDA397.Navigator.NaviGitator.Fragments.NewsFragment;
+import com.EDA397.Navigator.NaviGitator.Fragments.SettingsFragment;
 
 /**
  * Created by QuattroX on 2014-04-09.
  */
-public class MainTabsPagerAdapter  extends FragmentPagerAdapter {
+public class MainTabsPagerAdapter extends FragmentPagerAdapter {
 
-    private GitFunctionality git;
-
-    public MainTabsPagerAdapter(FragmentManager fm, GitFunctionality git) {
+    public MainTabsPagerAdapter(FragmentManager fm) {
         super(fm);
-        this.git = git;
     }
 
     @Override
@@ -26,13 +22,13 @@ public class MainTabsPagerAdapter  extends FragmentPagerAdapter {
 
         switch (index) {
             case 0:
-                // Top Rated fragment activity
+                // News fragment activity
                 return new NewsFragment();
             case 1:
-                // Games fragment activity
-                return new MyProjectsFragment(git);
+                // MyProjects fragment activity
+                return new MyProjectsFragment();
             case 2:
-                // Movies fragment activity
+                // Settings fragment activity
                 return new SettingsFragment();
         }
 

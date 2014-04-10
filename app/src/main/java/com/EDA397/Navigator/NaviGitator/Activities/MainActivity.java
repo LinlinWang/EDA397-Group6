@@ -32,7 +32,7 @@ public class MainActivity extends FragmentActivity implements
             // Initilization
             viewPager = (ViewPager) findViewById(R.id.viewpager);
             actionBar = getActionBar();
-            mAdapter = new MainTabsPagerAdapter(getSupportFragmentManager(), git);
+            mAdapter = new MainTabsPagerAdapter(getSupportFragmentManager());
 
             viewPager.setAdapter(mAdapter);
 //            actionBar.setHomeButtonEnabled(false);
