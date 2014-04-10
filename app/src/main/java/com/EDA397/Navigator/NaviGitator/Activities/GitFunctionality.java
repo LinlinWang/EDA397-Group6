@@ -3,6 +3,7 @@ package com.EDA397.Navigator.NaviGitator.Activities;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.CommitFile;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryCommit;
@@ -121,7 +122,17 @@ public class GitFunctionality {
             return null;
         }
     }
-
+    public ArrayList<String> getCommitComments(RepositoryCommit r) {
+        try{
+            Log.d("GitFunctionality", "CommitComments");
+            getCommitComments task = new getCommitComments();
+            task.execute(r);
+            return task.get();
+        } catch ( Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     /**
      * Async task to Authenticate a user against GitHub
      */
@@ -221,6 +232,27 @@ public class GitFunctionality {
                     Log.d("GitFunctionality", cf.getFilename());
                 }
                 return names;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+    private class getCommitComments extends AsyncTask<RepositoryCommit,  Void, ArrayList<String>> {
+        @Override
+        protected ArrayList<String> doInBackground(RepositoryCommit... r) {
+            try {
+                Log.d("GitFunctionality", "CommitComments thread");
+                GitFunctionality git = GitFunctionality.getInstance();
+                CommitService commitService = new CommitService(git.getClient());
+
+                ArrayList <String> comments = new ArrayList<String>();
+                for(CommitComment cc : commitService.getComments(current, r[0].getSha())){
+                    comments.add(cc.getUser().getLogin() + ":\n" + cc.getBody());
+                    Log.d("GitFunctionality", cc.getUser().getLogin());
+                }
+                return comments;
 
             } catch (Exception e) {
                 e.printStackTrace();

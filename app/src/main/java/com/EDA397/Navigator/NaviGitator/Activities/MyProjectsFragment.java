@@ -64,10 +64,15 @@ public class MyProjectsFragment extends Fragment implements AdapterView.OnItemCl
                 GitFunctionality git = GitFunctionality.getInstance();
                 repoCommits = git.getRepoCommits(repos.get(position));
                 ArrayList<String> commitMsg = new ArrayList<String>();
-                for(RepositoryCommit repComm: repoCommits){
 
-                    commitMsg.add("Date: " + repComm.getCommit().getAuthor().getDate().toString() +
-                            "\nAuthor: " + repComm.getCommit().getAuthor().getName());
+                for(RepositoryCommit repComm: repoCommits){
+                    String title = repComm.getCommit().getMessage();
+                    if(title.length() > 40){
+                        title = title.substring(0,36) + "...";
+                    }
+                    commitMsg.add("Author: " + repComm.getCommit().getAuthor().getName() +
+                            "\nDate:" + repComm.getCommit().getAuthor().getDate().toString() +
+                            "\n" + title);
                 }
                 listView = (ListView) view.findViewById(R.id.repoCommit_list);
                 listView.setClickable(true);
@@ -82,10 +87,13 @@ public class MyProjectsFragment extends Fragment implements AdapterView.OnItemCl
                 ArrayList<String> commitMsg2 = new ArrayList<String>();
                 commitMsg2.add("Message: " + "\n" + repoCommits.get(position).getCommit().getMessage());
 
-                    for (String s : git2.getFileNames(repoCommits.get(position))){
-                        String[] temp = s.split("/");
-                        commitMsg2.add("Modified File:\n" + temp[temp.length-1]);
-                    }
+                for (String s : git2.getFileNames(repoCommits.get(position))){
+                    String[] temp = s.split("/");
+                    commitMsg2.add("Modified File:\n" + temp[temp.length-1]);
+                }
+                for (String s : git2.getCommitComments(repoCommits.get(position))){
+                    commitMsg2.add("Comment by " + s);
+                }
 
                 listView = (ListView) view.findViewById(R.id.commitInfo_list);
                 listView.setClickable(true);
