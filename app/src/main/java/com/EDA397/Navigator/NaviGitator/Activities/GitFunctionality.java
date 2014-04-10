@@ -30,7 +30,8 @@ public class GitFunctionality {
 
     private static GitHubClient client;
     private static String username;
-    private static Repository current;
+    private static Repository currentRepo;
+    private static RepositoryCommit currentCommit;
 
     private GitFunctionality() {
             client = new GitHubClient();
@@ -61,7 +62,12 @@ public class GitFunctionality {
         Log.d("GitFunctionality", "Instance Returned");
         return instance;
     }
-    protected Repository getCurrent(){ return current; }
+    //Used in current solution, cannot be protected since fragments are not
+    //in same folder anymore.
+    protected Repository getCurrentRepo(){ return currentRepo; }
+    public void setCurrentRepo(Repository r){ currentRepo = r; }
+    public RepositoryCommit getCurrentCommit(){ return currentCommit; }
+    public void setCurrentCommit(RepositoryCommit r){ currentCommit = r; }
 
     /**
      * Function to login to GitHub
@@ -97,40 +103,37 @@ public class GitFunctionality {
             return null;
         }
     }
-
     /**
      * Get all commits for a repository
-     * @param repo The repository to get the commits for
      * @return A list of all commits for the selected repository
      */
-    public List<RepositoryCommit> getRepoCommits(Repository repo) {
+    public List<RepositoryCommit> getRepoCommits() {
         try{
             Log.d("GitFunctionality", "RepoCommits");
-            current = repo;
             getRepoCommits task = new getRepoCommits();
-            task.execute(repo);
+            task.execute(currentRepo);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
             return null;
         }
     }
-    public ArrayList<String> getFileNames(RepositoryCommit r) {
+    public ArrayList<String> getFileNames() {
         try{
             Log.d("GitFunctionality", "FileNames");
             getFileNames task = new getFileNames();
-            task.execute(r);
+            task.execute(currentCommit);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
             return null;
         }
     }
-    public ArrayList<String> getCommitComments(RepositoryCommit r) {
+    public ArrayList<String> getCommitComments() {
         try{
             Log.d("GitFunctionality", "CommitComments");
             getCommitComments task = new getCommitComments();
-            task.execute(r);
+            task.execute(currentCommit);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -254,7 +257,7 @@ public class GitFunctionality {
                 CommitService commitService = new CommitService(git.getClient());
 
                 ArrayList <String> names = new ArrayList<String>();
-                for(CommitFile cf : commitService.getCommit(current, r[0].getSha()).getFiles()){
+                for(CommitFile cf : commitService.getCommit(currentRepo, r[0].getSha()).getFiles()){
                     names.add(cf.getFilename());
                     Log.d("GitFunctionality", cf.getFilename());
                 }
@@ -275,7 +278,7 @@ public class GitFunctionality {
                 CommitService commitService = new CommitService(git.getClient());
 
                 ArrayList <String> comments = new ArrayList<String>();
-                for(CommitComment cc : commitService.getComments(current, r[0].getSha())){
+                for(CommitComment cc : commitService.getComments(currentRepo, r[0].getSha())){
                     comments.add(cc.getUser().getLogin() + ":\n" + cc.getBody());
                     Log.d("GitFunctionality", cc.getUser().getLogin());
                 }
@@ -316,7 +319,7 @@ public class GitFunctionality {
                 Log.d("GitFunctionality", "Events thread");
                 GitFunctionality git = GitFunctionality.getInstance();
                 EventService evService = new EventService(git.getClient());
-                PageIterator<Event> events = evService.pageEvents(current);
+                PageIterator<Event> events = evService.pageEvents(currentRepo);
                 ArrayList <String> news = new ArrayList<String>();
                 for(Event e : events.next()){
                     String s = e.getActor().getLogin() + " " + e.getType();

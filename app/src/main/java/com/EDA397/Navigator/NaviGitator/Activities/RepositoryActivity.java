@@ -78,4 +78,9 @@ public class RepositoryActivity extends FragmentActivity implements
     @Override
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
     }
+    public void onBackPressed() {
+        GitFunctionality git = GitFunctionality.getInstance();
+        git.setCurrentCommit(null);
+        super.onBackPressed();
+    }
 }

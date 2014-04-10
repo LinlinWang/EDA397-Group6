@@ -83,5 +83,7 @@ public class MainActivity extends FragmentActivity implements
     @Override
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
     }
-
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }
