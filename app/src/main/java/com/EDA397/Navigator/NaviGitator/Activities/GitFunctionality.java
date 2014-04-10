@@ -91,6 +91,21 @@ public class GitFunctionality {
     }
 
     /**
+     * Function to get a list of all the branches connected to the current user.
+     * @return A list with the branches connected to the current user.
+     */
+    public List<RepositoryBranch> getBranches() {
+        try{
+            Log.d("GitFunctionality", "Repos");
+            GetRepoBranches task = new GetRepoBranches();
+            task.execute();
+            return task.get();
+        } catch ( Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    /**
      * Get all commits for a repository
      * @param repo The repository to get the commits for
      * @return A list of all commits for the selected repository
