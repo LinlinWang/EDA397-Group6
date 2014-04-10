@@ -101,6 +101,7 @@ public class GitFunctionality {
     public List<RepositoryCommit> getRepoCommits(Repository repo) {
         try{
             Log.d("GitFunctionality", "RepoCommits");
+            current = repo;
             getRepoCommits task = new getRepoCommits();
             task.execute(repo);
             return task.get();
@@ -109,11 +110,10 @@ public class GitFunctionality {
             return null;
         }
     }
-    public ArrayList<String> getFileNames(RepositoryCommit r, Repository r2) {
+    public ArrayList<String> getFileNames(RepositoryCommit r) {
         try{
             Log.d("GitFunctionality", "FileNames");
             getFileNames task = new getFileNames();
-            current = r2;
             task.execute(r);
             return task.get();
         } catch ( Exception e) {

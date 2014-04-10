@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ViewFlipper;
 import android.widget.ViewSwitcher;
 
 import java.util.ArrayList;
@@ -27,9 +28,10 @@ public class MyProjectsFragment extends Fragment implements AdapterView.OnItemCl
 
     private ListView listView;
     private ArrayList<Repository> repos;
+    private List<RepositoryCommit> repoCommits;
     private GitFunctionality git;
     private View view;
-    private ViewSwitcher switcher;
+    private ViewFlipper switcher;
 
     public MyProjectsFragment(GitFunctionality git) {
         this.git = git;
@@ -40,11 +42,11 @@ public class MyProjectsFragment extends Fragment implements AdapterView.OnItemCl
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_myprojects, container, false);
-
+        repoCommits = new ArrayList<RepositoryCommit>();
         repos = new ArrayList<Repository>();
         repos.addAll(git.getRepos());
         Log.d("MyProjectsFragment", "number of repos: " + repos.size());
-        switcher = (ViewSwitcher) view.findViewById(R.id.listSwitcher);
+        switcher = (ViewFlipper) view.findViewById(R.id.listSwitcher);
         listView = (ListView) view.findViewById(R.id.repo_list);
         listView.setClickable(true);
         listView.setOnItemClickListener(this);
@@ -60,31 +62,40 @@ public class MyProjectsFragment extends Fragment implements AdapterView.OnItemCl
             case R.id.repo_list:
                 Log.d("onItemClick", "RepoListItem: " + position);
                 GitFunctionality git = GitFunctionality.getInstance();
-                List<RepositoryCommit> repoCommits = git.getRepoCommits(repos.get(position));
+                repoCommits = git.getRepoCommits(repos.get(position));
                 ArrayList<String> commitMsg = new ArrayList<String>();
-                String temp1 = "";
                 for(RepositoryCommit repComm: repoCommits){
 
-                    for (String s : git.getFileNames(repComm, repos.get(position))){
-                        String[] temp2 = s.split("/");
-                        temp1 += "\n" + temp2[temp2.length-1];
-                    }
                     commitMsg.add("Date: " + repComm.getCommit().getAuthor().getDate().toString() +
-                            "\nAuthor: " + repComm.getCommit().getAuthor().getName() +
-                            "\nMessage: " + "\n" + repComm.getCommit().getMessage() +
-                            "\nFiles: " + temp1);
+                            "\nAuthor: " + repComm.getCommit().getAuthor().getName());
                 }
-
-                listView = (ListView) view.findViewById(R.id.repoComment_list);
+                listView = (ListView) view.findViewById(R.id.repoCommit_list);
                 listView.setClickable(true);
                 listView.setOnItemClickListener(this);
                 //Consider making a custom adapter for commits (if we want to extend the ListItems to hold multiple things).
                 listView.setAdapter(new ArrayAdapter(view.getContext(), android.R.layout.simple_list_item_1, commitMsg.toArray()));
                 switcher.showNext();
                 break;
-            case R.id.repoComment_list:
-                Log.d("onItemClick", "RepoCommentListItem: " + position);
-                switcher.showPrevious();
+            case R.id.repoCommit_list:
+                Log.d("onItemClick", "CommitListItem: " + position);
+                GitFunctionality git2 = GitFunctionality.getInstance();
+                ArrayList<String> commitMsg2 = new ArrayList<String>();
+                commitMsg2.add("Message: " + "\n" + repoCommits.get(position).getCommit().getMessage());
+
+                    for (String s : git2.getFileNames(repoCommits.get(position))){
+                        String[] temp = s.split("/");
+                        commitMsg2.add("Modified File:\n" + temp[temp.length-1]);
+                    }
+
+                listView = (ListView) view.findViewById(R.id.commitInfo_list);
+                listView.setClickable(true);
+                listView.setOnItemClickListener(this);
+                listView.setAdapter(new ArrayAdapter(view.getContext(), android.R.layout.simple_list_item_1, commitMsg2.toArray()));
+                switcher.showNext();
+                break;
+            case R.id.commitInfo_list:
+                Log.d("onItemClick", "CommitInfoListItem: " + position);
+                switcher.showNext();
                 break;
         }
     }
