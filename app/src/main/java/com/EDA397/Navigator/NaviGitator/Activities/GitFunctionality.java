@@ -94,11 +94,11 @@ public class GitFunctionality {
      * Function to get a list of all the branches connected to the current user.
      * @return A list with the branches connected to the current user.
      */
-    public List<RepositoryBranch> getBranches() {
+    public List<RepositoryBranch> getBranches(Repository repo) {
         try{
-            Log.d("GitFunctionality", "Repos");
+            Log.d("GitFunctionality", "Branches");
             GetRepoBranches task = new GetRepoBranches();
-            task.execute();
+            task.execute(repo);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();

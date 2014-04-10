@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.EDA397.Navigator.NaviGitator.Activities.BranchFragment;
 import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
 import com.EDA397.Navigator.NaviGitator.Activities.MyProjectsFragment;
 import com.EDA397.Navigator.NaviGitator.Activities.NewsFragment;
@@ -34,6 +35,9 @@ public class MainTabsPagerAdapter  extends FragmentPagerAdapter {
             case 2:
                 // Movies fragment activity
                 return new SettingsFragment();
+            case 3:
+                // Branches fragment activity
+                return new BranchFragment(git);
         }
 
         return null;
@@ -42,7 +46,7 @@ public class MainTabsPagerAdapter  extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         // get item count - equal to number of tabs
-        return 3;
+        return 4;
     }
 
 }
