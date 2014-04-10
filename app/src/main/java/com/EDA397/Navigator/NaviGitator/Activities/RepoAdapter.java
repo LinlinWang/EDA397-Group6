@@ -30,7 +30,8 @@ public class RepoAdapter extends ArrayAdapter<Repository> {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        final String s = repos.get(position).getName();
+        final String s = repos.get(position).getName() + "\nLast Updated:\n" +
+                         repos.get(position).getPushedAt();
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);

@@ -175,6 +175,7 @@ public class GitFunctionality {
                     }
                     for (Repository repo : repos) {
                         Log.d("GitFunctionality", repo.getName());
+                                //repo.getName());
                     }
                     return repos;
                 }
