@@ -58,6 +58,7 @@ public class GitFunctionality {
         Log.d("GitFunctionality", "Instance Returned");
         return instance;
     }
+    protected Repository getCurrent(){ return current; }
 
     /**
      * Function to login to GitHub
