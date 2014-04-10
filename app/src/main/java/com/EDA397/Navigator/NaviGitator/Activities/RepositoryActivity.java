@@ -14,7 +14,7 @@ import com.EDA397.Navigator.NaviGitator.R;
  */
 public class RepositoryActivity extends FragmentActivity implements
         ActionBar.TabListener{
-    private ViewPager viewPager;
+    public ViewPager viewPager;
     private RepoTabsPagerAdapter rAdapter;
     private ActionBar actionBar;
 

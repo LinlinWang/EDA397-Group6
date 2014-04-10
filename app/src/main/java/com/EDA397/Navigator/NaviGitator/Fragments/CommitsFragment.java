@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
+import com.EDA397.Navigator.NaviGitator.Activities.RepositoryActivity;
 import com.EDA397.Navigator.NaviGitator.R;
 
 import org.eclipse.egit.github.core.RepositoryCommit;
@@ -57,6 +58,8 @@ public class CommitsFragment extends Fragment implements AdapterView.OnItemClick
     public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
         git = GitFunctionality.getInstance();
         git.setCurrentCommit(repoCommits.get(position));
+        RepositoryActivity r = (RepositoryActivity) getActivity();
+        r.viewPager.setCurrentItem(3);
 
     }
 }
