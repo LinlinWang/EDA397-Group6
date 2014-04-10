@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import org.eclipse.egit.github.core.Repository;
+import org.eclipse.egit.github.core.RepositoryBranch;
 import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
@@ -190,5 +191,33 @@ public class GitFunctionality {
                 return null;
             }
             }
+    }
+
+
+    /**
+     * Async task to get all the branches that belongs to the repository
+     */
+    //https://github.com/eclipse/egit-github/blob/master/org.eclipse.egit.github.core/src/org/eclipse/egit/github/core/service/RepositoryService.java
+    private class GetRepoBranches extends AsyncTask<Repository, Void, List<RepositoryBranch>> {
+        @Override
+        protected List<RepositoryBranch> doInBackground(Repository... repo) {
+            try {
+                Log.d("GitFunctionality", "Branch thread");
+                GitFunctionality git = GitFunctionality.getInstance();
+                RepositoryService repService = new RepositoryService();
+
+                List<RepositoryBranch> bList = repService.getBranches(repo[0]);
+                for (RepositoryBranch b : bList) {
+                    Log.d("GitFunctionality", b.getName());
+                }
+                return bList;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
         }
     }
+
+
+}
