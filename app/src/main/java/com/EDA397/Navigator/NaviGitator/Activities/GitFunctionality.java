@@ -10,7 +10,10 @@ import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.github.core.RepositoryCommitCompare;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
+import org.eclipse.egit.github.core.client.PageIterator;
+import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.service.CommitService;
+import org.eclipse.egit.github.core.service.EventService;
 import org.eclipse.egit.github.core.service.OAuthService;
 import org.eclipse.egit.github.core.service.OrganizationService;
 import org.eclipse.egit.github.core.service.RepositoryService;
@@ -128,6 +131,28 @@ public class GitFunctionality {
             Log.d("GitFunctionality", "CommitComments");
             getCommitComments task = new getCommitComments();
             task.execute(r);
+            return task.get();
+        } catch ( Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public ArrayList<String> getUserEvents() {
+        try{
+            Log.d("GitFunctionality", "UserEvents");
+            getUserEvents task = new getUserEvents();
+            task.execute();
+            return task.get();
+        } catch ( Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public ArrayList<String> getRepoEvents() {
+        try{
+            Log.d("GitFunctionality", "RepoEvents");
+            getRepoEvents task = new getRepoEvents();
+            task.execute();
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -262,4 +287,48 @@ public class GitFunctionality {
             }
         }
     }
+    private class getUserEvents extends AsyncTask<Void,  Void, ArrayList<String>> {
+        @Override
+        protected ArrayList<String> doInBackground(Void... v) {
+            try {
+                Log.d("GitFunctionality", "Events thread");
+                GitFunctionality git = GitFunctionality.getInstance();
+                EventService evService = new EventService(git.getClient());
+                PageIterator<Event> events = evService.pageUserReceivedEvents(username);
+                ArrayList <String> news = new ArrayList<String>();
+                for(Event e : events.next()){
+                    String s = e.getActor().getLogin() + " " + e.getType() + " " + e.getRepo().getName();
+                    Log.d("GitFunctionality", s);
+                    news.add(s);
+                }
+                return news;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
     }
+    private class getRepoEvents extends AsyncTask<Void,  Void, ArrayList<String>> {
+        @Override
+        protected ArrayList<String> doInBackground(Void... v) {
+            try {
+                Log.d("GitFunctionality", "Events thread");
+                GitFunctionality git = GitFunctionality.getInstance();
+                EventService evService = new EventService(git.getClient());
+                PageIterator<Event> events = evService.pageEvents(current);
+                ArrayList <String> news = new ArrayList<String>();
+                for(Event e : events.next()){
+                    String s = e.getActor().getLogin() + " " + e.getType();
+                    Log.d("GitFunctionality", s);
+                    news.add(s);
+                }
+                return news;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+}
