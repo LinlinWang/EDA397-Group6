@@ -9,6 +9,7 @@ package com.EDA397.Navigator.NaviGitator.Activities;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.github.core.RepositoryIssue;
@@ -89,7 +90,7 @@ public class GitFunctionality {
     public List<Repository> getRepos() {
         try{
             Log.d("GitFunctionality", "Repos");
-            getRepos task = new getRepos();
+            GetRepos task = new GetRepos();
             task.execute();
             return task.get();
         } catch ( Exception e) {
@@ -101,7 +102,7 @@ public class GitFunctionality {
     public List<RepositoryCommit> getRepoCommits(Repository repo) {
         try{
             Log.d("GitFunctionality", "RepoCommits");
-            getRepoCommits task = new getRepoCommits();
+            GetRepoCommits task = new GetRepoCommits();
             task.execute(repo);
             return task.get();
         } catch ( Exception e) {
@@ -110,11 +111,11 @@ public class GitFunctionality {
         }
     }
 
-    public List<RepositoryIssue> getRepoIssues() {
+    public List<Issue> getRepoIssues(Repository repo) {
         try{
             Log.d("GitFunctionality", "RepoIssues");
             GetRepoIssues task = new GetRepoIssues();
-            task.execute();
+            task.execute(repo);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -148,7 +149,7 @@ public class GitFunctionality {
     /**
      * Async task to get all the repositories for the current user
      */
-    private class getRepos extends AsyncTask<Void, Void, List<Repository>> {
+    private class GetRepos extends AsyncTask<Void, Void, List<Repository>> {
         @Override
         protected List<Repository> doInBackground(Void... arg0) {
             try {
@@ -187,7 +188,7 @@ public class GitFunctionality {
         }
     }
 
-    private class getRepoCommits extends AsyncTask<Repository, Void, List<RepositoryCommit>> {
+    private class GetRepoCommits extends AsyncTask<Repository, Void, List<RepositoryCommit>> {
         protected List<RepositoryCommit> doInBackground(Repository... repo) {
             try {
                 Log.d("GitFunctionality", "Commit thread");
@@ -207,22 +208,26 @@ public class GitFunctionality {
             }
         }
 
-        private class GetRepoIssues extends AsyncTask<Void, Void, List<RepositoryIssue>> {
-            protected List<RepositoryIssue> doInBackground(Void... arg0) {
-                try {
-                    Log.d("GitFunctionality", "Issues thread");
-                    GitFunctionality git = GitFunctionality.getInstance();
-                    IssueService issueService = new IssueService(git.getClient());
-                    List<RepositoryIssue> issues = issueService.getIssues();    //get all issues for the authenticated user
-                    for (RepositoryIssue i : issues) {
-                        Log.d("GitFunctionality",  " : " + i.getRepository());  //get the repositories for the issues
-                    }
-                    return issues;
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
+    private class GetRepoIssues extends AsyncTask<Repository, Void, List<Issue>> {
+        protected List<Issue> doInBackground(Repository... repo) {
+            try {
+                Log.d("GitFunctionality", "Issues thread");
+                GitFunctionality git = GitFunctionality.getInstance();
+                IssueService issueService = new IssueService(git.getClient());
+                List<Issue> issues = issueService.getIssues(repo[0], null); //get all issues for the repository
+
+                for (Issue i : issues) {
+                    Log.d("GitFunctionality",  " : " + i.getTitle());  //get the titles of the issues for the current repository
                 }
+
+                return issues;
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
             }
         }
+    }
     }
