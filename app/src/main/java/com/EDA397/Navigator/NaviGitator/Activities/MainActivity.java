@@ -1,96 +1,87 @@
 package com.EDA397.Navigator.NaviGitator.Activities;
 
-import android.app.Activity;
+import android.app.ActionBar;
+import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.ViewSwitcher;
 
+import com.EDA397.Navigator.NaviGitator.Adapters.MainTabsPagerAdapter;
 import com.EDA397.Navigator.NaviGitator.R;
 
-import org.eclipse.egit.github.core.CommitFile;
-import org.eclipse.egit.github.core.Repository;
-import org.eclipse.egit.github.core.RepositoryCommit;
+public class MainActivity extends FragmentActivity implements
+        ActionBar.TabListener {
 
-import java.util.ArrayList;
-import java.util.List;
-
-
-public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
-
-    private ListView listView;
-    private ViewSwitcher switcher;
-    private ArrayList<Repository> repos;
+    private ViewPager viewPager;
+    private MainTabsPagerAdapter mAdapter;
+    private ActionBar actionBar;
+    // Tab titles
+    private String[] tabs = { "News", "My Projects", "Settings" };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        repos = new ArrayList<Repository>();
-        switcher = (ViewSwitcher) findViewById(R.id.listSwitcher);
         GitFunctionality git = GitFunctionality.getInstance();
-
-        // Instanciate GitFunctionality
-        //GitFunctionality.initInstance();
 
         if (git.getUserName().equals("")){
             startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.LoginActivity"));
         }
         else{
-            repos.addAll(git.getRepos());
-            Log.d("MainActivity", "number of repos: " + repos.size());
-            listView = (ListView) findViewById(R.id.repo_list);
-            listView.setClickable(true);
-            listView.setOnItemClickListener(this);
-            listView.setAdapter(new RepoAdapter(getApplicationContext(),R.layout.repo_item,
-                    R.id.repo_text, repos));
-        }
-    }
+            // Initilization
+            viewPager = (ViewPager) findViewById(R.id.viewpager);
+            actionBar = getActionBar();
+            mAdapter = new MainTabsPagerAdapter(getSupportFragmentManager(), git);
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        switch (parent.getId()) {
-            case R.id.repo_list:
-                Log.d("onItemClick", "RepoListItem: " + position);
-                GitFunctionality git = GitFunctionality.getInstance();
-                List<RepositoryCommit> repoCommits = git.getRepoCommits(repos.get(position));
-                ArrayList<String> commitMsg = new ArrayList<String>();
-                String temp = "";
-                for(RepositoryCommit repComm: repoCommits){
-                    /*
-                    for (CommitFile f : repComm.getFiles()){
-                        temp += "\n" + f.getFilename();
-                    }**/
-                    commitMsg.add("Date: " + repComm.getCommit().getAuthor().getDate().toString() +
-                    "\nAuthor: " + repComm.getCommit().getAuthor().getName() +
-                    "\nMessage: " + "\n" + repComm.getCommit().getMessage() +
-                    "\nFiles: " + temp);
+            viewPager.setAdapter(mAdapter);
+//            actionBar.setHomeButtonEnabled(false);
+            actionBar.setDisplayShowHomeEnabled(false);
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+            // Adding Tabs
+            for (String tab_name : tabs) {
+                actionBar.addTab(actionBar.newTab().setText(tab_name)
+                        .setTabListener(this));
+            }
+
+            /**
+             * on swiping the viewpager make respective tab selected
+             * */
+            viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+                @Override
+                public void onPageSelected(int position) {
+                    // on changing the page
+                    // make respected tab selected
+                    actionBar.setSelectedNavigationItem(position);
                 }
 
-                listView = (ListView) findViewById(R.id.repoComment_list);
-                listView.setClickable(true);
-                listView.setOnItemClickListener(this);
-                //Consider making a custom adapter for commits (if we want to extend the ListItems to hold multiple things).
-                listView.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1, commitMsg.toArray()));
-                switcher.showNext();
-                break;
-            case R.id.repoComment_list:
-                Log.d("onItemClick", "RepoCommentListItem: " + position);
-                switcher.showPrevious();
-                break;
+                @Override
+                public void onPageScrolled(int arg0, float arg1, int arg2) {
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int arg0) {
+                }
+            });
         }
     }
+
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
     }
+
+    @Override
+    public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+        // on tab selected
+        // show respected fragment view
+        viewPager.setCurrentItem(tab.getPosition());
+    }
+
+    @Override
+    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+    }
+
 }
