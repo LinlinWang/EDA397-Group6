@@ -37,8 +37,9 @@ public class IssuesFragment extends Fragment implements AdapterView.OnItemClickL
         repoIssues = git.getRepoIssues();
         ArrayList<String> issueMsg = new ArrayList<String>();
 
-        issueMsg.add("Title: " + repoIssues.get(0).getTitle() + " Body: " + repoIssues.get(0).getBody());
-
+        for(Issue i : repoIssues) {
+            issueMsg.add("Title: " + i.getTitle() + " Body: " + i.getBody());
+        }
         listView = (ListView) view.findViewById(R.id.issues_list);
         listView.setClickable(true);
         listView.setOnItemClickListener(this);
