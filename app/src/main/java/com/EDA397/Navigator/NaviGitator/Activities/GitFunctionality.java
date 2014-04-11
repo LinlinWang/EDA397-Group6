@@ -110,11 +110,11 @@ public class GitFunctionality {
      * Function to get a list of all the branches connected to the current user.
      * @return A list with the branches connected to the current user.
      */
-    public List<RepositoryBranch> getBranches(Repository repo) {
+    public List<RepositoryBranch> getBranches() {
         try{
             Log.d("GitFunctionality", "Branches");
             GetRepoBranches task = new GetRepoBranches();
-            task.execute(repo);
+            task.execute(currentRepo);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -288,7 +288,7 @@ public class GitFunctionality {
             try {
                 Log.d("GitFunctionality", "Branch thread");
                 GitFunctionality git = GitFunctionality.getInstance();
-                RepositoryService repService = new RepositoryService();
+                RepositoryService repService = new RepositoryService(git.getClient());
 
                 List<RepositoryBranch> bList = repService.getBranches(repo[0]);
                 for (RepositoryBranch b : bList) {
@@ -301,7 +301,7 @@ public class GitFunctionality {
                 return null;
             }
         }
-
+    }
         private class getFileNames extends AsyncTask<RepositoryCommit, Void, ArrayList<String>> {
             @Override
             protected ArrayList<String> doInBackground(RepositoryCommit... r) {
