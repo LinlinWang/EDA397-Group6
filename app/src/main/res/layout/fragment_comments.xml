@@ -11,6 +11,16 @@
         android:text="Additional Commit Info"
         android:textSize="20dp"/>
 
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Add a new comment"
+        android:id="@+id/comment_button"
+        android:layout_gravity="center_horizontal"
+        android:textColor="#ffffff"
+        android:background="#24c056"
+        android:textSize="20dp" />
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

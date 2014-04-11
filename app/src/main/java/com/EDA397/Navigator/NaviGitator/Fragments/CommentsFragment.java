@@ -1,5 +1,8 @@
 package com.EDA397.Navigator.NaviGitator.Fragments;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
@@ -26,8 +31,10 @@ public class CommentsFragment extends Fragment implements AdapterView.OnItemClic
 
     private ListView listView;
     private GitFunctionality git;
+    private Context context;
     private ArrayList<String> info;
     private View view;
+    Button commentButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,7 +42,9 @@ public class CommentsFragment extends Fragment implements AdapterView.OnItemClic
 
         view = inflater.inflate(R.layout.fragment_comments, container, false);
         git = GitFunctionality.getInstance();
+        addListenerOnButton();
         info = new ArrayList<String>();
+        context = container.getContext();
         if(git.getCurrentCommit() != null) {
             info.add("Message: " + "\n" + git.getCurrentCommit().getCommit().getMessage());
 
@@ -54,6 +63,59 @@ public class CommentsFragment extends Fragment implements AdapterView.OnItemClic
         }
         return view;
     }
+
+
+    private void addListenerOnButton() {
+
+        commentButton = (Button) view.findViewById(R.id.comment_button);
+        commentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                LayoutInflater li = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View promptsView = li.inflate(R.layout.comment_prompt, null);
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+
+                alertDialogBuilder.setView(promptsView);
+
+                final EditText userInput = (EditText) promptsView
+                        .findViewById(R.id.repo_comment_input);
+
+                alertDialogBuilder
+                        .setCancelable(false)
+                        .setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        if (userInput.getText() != null) {
+                                            // Add code here ----
+                                            // NOT this:
+                                            //git.getCurrentCommit().getCommit().setMessage(userInput.getText().toString());
+                                            git.getCurrentCommit().getCommit().setMessage("hej!");
+                                            dialog.dismiss();
+                                        } else {
+                                            dialog.cancel();
+                                        }
+
+                                    }
+                                }
+                        )
+                        .setNegativeButton("Cancel",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                }
+                        );
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+            }
+
+        });
+    }
+
+
     @Override
     public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
         //Redirection logic

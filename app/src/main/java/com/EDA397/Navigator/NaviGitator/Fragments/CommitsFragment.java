@@ -1,5 +1,6 @@
 package com.EDA397.Navigator.NaviGitator.Fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -54,6 +55,7 @@ public class CommitsFragment extends Fragment implements AdapterView.OnItemClick
 
         return view;
     }
+
     @Override
     public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
         git = GitFunctionality.getInstance();
@@ -63,3 +65,5 @@ public class CommitsFragment extends Fragment implements AdapterView.OnItemClick
 
     }
 }
+
+
