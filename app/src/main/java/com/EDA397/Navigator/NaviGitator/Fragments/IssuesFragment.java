@@ -39,7 +39,7 @@ public class IssuesFragment extends Fragment implements AdapterView.OnItemClickL
 
         issueMsg.add("Title: " + repoIssues.get(0).getTitle() + " Body: " + repoIssues.get(0).getBody());
 
-        listView = (ListView) view.findViewById(R.id.repoCommit_list);
+        listView = (ListView) view.findViewById(R.id.issues_list);
         listView.setClickable(true);
         listView.setOnItemClickListener(this);
         //Consider making a custom adapter for commits (if we want to extend the ListItems to hold multiple things).

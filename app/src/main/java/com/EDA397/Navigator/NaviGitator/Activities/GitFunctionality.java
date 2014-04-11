@@ -5,6 +5,7 @@ import android.util.Log;
 
 import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.CommitFile;
+import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.github.core.RepositoryCommitCompare;
@@ -14,6 +15,7 @@ import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.service.CommitService;
 import org.eclipse.egit.github.core.service.EventService;
+import org.eclipse.egit.github.core.service.IssueService;
 import org.eclipse.egit.github.core.service.OAuthService;
 import org.eclipse.egit.github.core.service.OrganizationService;
 import org.eclipse.egit.github.core.service.RepositoryService;
@@ -156,6 +158,17 @@ public class GitFunctionality {
             Log.d("GitFunctionality", "RepoEvents");
             getRepoEvents task = new getRepoEvents();
             task.execute();
+            return task.get();
+        } catch ( Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public List<Issue> getRepoIssues() {
+        try{
+            Log.d("GitFunctionality", "RepoIssues");
+            GetRepoIssues task = new GetRepoIssues();
+            task.execute(currentRepo);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -327,6 +340,27 @@ public class GitFunctionality {
                     news.add(s);
                 }
                 return news;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+    private class GetRepoIssues extends AsyncTask<Repository, Void, List<Issue>> {
+        protected List<Issue> doInBackground(Repository... repo) {
+            try {
+                Log.d("GitFunctionality", "Issues thread");
+                GitFunctionality git = GitFunctionality.getInstance();
+                IssueService issueService = new IssueService(git.getClient());
+                List<Issue> issues = issueService.getIssues(repo[0], null); //get all issues for the repository
+
+                for (Issue i : issues) {
+                    Log.d("GitFunctionality",  " : " + i.getTitle());  //get the titles of the issues for the current repository
+                }
+
+                return issues;
+
 
             } catch (Exception e) {
                 e.printStackTrace();
