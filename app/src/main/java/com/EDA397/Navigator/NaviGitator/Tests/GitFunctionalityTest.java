@@ -23,12 +23,10 @@ public class GitFunctionalityTest extends InstrumentationTestCase {
         git = GitFunctionality.getInstance();
     }
 
-    //Logging in with fake account should fail
     public void testGitLogin() throws Exception{
-        assertFalse(git.gitLogin("LinlinWang","linlinwang!123"));
+        assertTrue(git.gitLogin("navigitator","navi123"));
     }
 
-    //Getting repos after failed login should not return repos
     public void testGetRepos() throws Exception{
         String s = "";
         List<Repository> repos = git.getRepos();
@@ -39,7 +37,7 @@ public class GitFunctionalityTest extends InstrumentationTestCase {
         }
         System.out.println(s);
         Log.d("Navigitator", s);
-        assertEquals("", s);
+        assertNotSame("", s);
     }
 
     protected void tearDown() throws Exception {
