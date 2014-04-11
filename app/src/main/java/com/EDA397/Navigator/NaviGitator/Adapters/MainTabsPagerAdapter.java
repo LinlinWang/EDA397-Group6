@@ -35,9 +35,6 @@ public class MainTabsPagerAdapter  extends FragmentPagerAdapter {
             case 2:
                 // Movies fragment activity
                 return new SettingsFragment();
-            case 3:
-                // Branches fragment activity
-                return new BranchFragment(git);
         }
 
         return null;
@@ -46,7 +43,7 @@ public class MainTabsPagerAdapter  extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         // get item count - equal to number of tabs
-        return 4;
+        return 3;
     }
 
 }
