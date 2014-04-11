@@ -90,8 +90,7 @@ public class CommentsFragment extends Fragment implements AdapterView.OnItemClic
                                         if (userInput.getText() != null) {
                                             // Add code here ----
                                             // NOT this:
-                                            //git.getCurrentCommit().getCommit().setMessage(userInput.getText().toString());
-                                            git.getCurrentCommit().getCommit().setMessage("hej!");
+                                            git.addCommitComment(userInput.getText().toString());
                                             dialog.dismiss();
                                         } else {
                                             dialog.cancel();

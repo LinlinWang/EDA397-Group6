@@ -158,6 +158,17 @@ public class GitFunctionality {
             return null;
         }
     }
+    public Void addCommitComment(String s) {
+        try{
+            Log.d("GitFunctionality", "CommitComments");
+            addCommitComment task = new addCommitComment();
+            task.execute(s);
+            return task.get();
+        } catch ( Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     public ArrayList<String> getUserEvents() {
         try{
             Log.d("GitFunctionality", "UserEvents");
@@ -345,6 +356,25 @@ public class GitFunctionality {
                 }
             }
         }
+    private class addCommitComment extends AsyncTask<String, Void, Void> {
+        @Override
+        protected Void doInBackground(String... s) {
+            try {
+                Log.d("GitFunctionality", "add CommitComments thread");
+                GitFunctionality git = GitFunctionality.getInstance();
+                CommitService commitService = new CommitService(git.getClient());
+                User u = new User();
+                u.setLogin(username);
+                CommitComment comment = new CommitComment();
+                comment.setBody(s[0]);
+                comment.setUser(u);
+                commitService.addComment(currentRepo, currentCommit.getSha(), comment);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
 
         private class getUserEvents extends AsyncTask<Void, Void, ArrayList<String>> {
             @Override
