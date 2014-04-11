@@ -19,17 +19,18 @@ public class GitFunctionalityTest extends InstrumentationTestCase {
 
     protected void setUp() throws Exception{
         super.setUp();
-        GitFunctionality.initInstance();
+        GitFunctionality.getInstance();
         git = GitFunctionality.getInstance();
     }
 
+    //Logging in with fake account should fail
     public void testGitLogin() throws Exception{
-        assertTrue(git.gitLogin("LinlinWang","linlinwang!123"));
+        assertFalse(git.gitLogin("LinlinWang","linlinwang!123"));
     }
 
+    //Getting repos after failed login should not return repos
     public void testGetRepos() throws Exception{
         String s = "";
-        git = GitFunctionality.getInstance();
         List<Repository> repos = git.getRepos();
         if (repos != null) {
             for (Repository repo : repos) {
