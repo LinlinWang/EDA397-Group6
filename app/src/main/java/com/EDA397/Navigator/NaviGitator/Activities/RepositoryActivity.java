@@ -2,6 +2,7 @@ package com.EDA397.Navigator.NaviGitator.Activities;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -25,43 +26,49 @@ public class RepositoryActivity extends FragmentActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_repository);
+        GitFunctionality git = GitFunctionality.getInstance();
 
-        viewPager = (ViewPager) findViewById(R.id.viewpagerRepo);
-        actionBar = getActionBar();
-        rAdapter = new RepoTabsPagerAdapter(getSupportFragmentManager());
-
-        viewPager.setAdapter(rAdapter);
-//            actionBar.setHomeButtonEnabled(false);
-        actionBar.setDisplayShowHomeEnabled(false);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-        // Adding Tabs
-        for (String tab_name : tabs) {
-            actionBar.addTab(actionBar.newTab().setText(tab_name)
-                    .setTabListener(this));
+        if (git.getUserName().equals("")){
+            startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.LoginActivity"));
         }
+        else {
+            viewPager = (ViewPager) findViewById(R.id.viewpagerRepo);
+            actionBar = getActionBar();
+            rAdapter = new RepoTabsPagerAdapter(getSupportFragmentManager());
 
-        /**
-         * on swiping the viewpager make respective tab selected
-         * */
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            viewPager.setAdapter(rAdapter);
+//            actionBar.setHomeButtonEnabled(false);
+            actionBar.setDisplayShowHomeEnabled(false);
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-            @Override
-            public void onPageSelected(int position) {
-                // on changing the page
-                // make respected tab selected
-                actionBar.setSelectedNavigationItem(position);
+            // Adding Tabs
+            for (String tab_name : tabs) {
+                actionBar.addTab(actionBar.newTab().setText(tab_name)
+                        .setTabListener(this));
             }
 
-            @Override
-            public void onPageScrolled(int arg0, float arg1, int arg2) {
-            }
+            /**
+             * on swiping the viewpager make respective tab selected
+             * */
+            viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
-            @Override
-            public void onPageScrollStateChanged(int arg0) {
-            }
-        });
+                @Override
+                public void onPageSelected(int position) {
+                    // on changing the page
+                    // make respected tab selected
+                    actionBar.setSelectedNavigationItem(position);
+                }
+
+                @Override
+                public void onPageScrolled(int arg0, float arg1, int arg2) {
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int arg0) {
+                }
+            });
+        }
     }
 
     @Override
