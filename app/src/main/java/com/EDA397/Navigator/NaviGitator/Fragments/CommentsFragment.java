@@ -26,6 +26,7 @@ import java.util.List;
 
 /**
  * Created by QuattroX on 2014-04-10.
+ * Fragment for displaying (and adding) comments for the currently selected commit.
  */
 public class CommentsFragment extends Fragment implements AdapterView.OnItemClickListener{
 
@@ -64,7 +65,10 @@ public class CommentsFragment extends Fragment implements AdapterView.OnItemClic
         return view;
     }
 
-
+    /**
+     * Used to create the "add comment" button, as well as assigning it the necessary logic
+     * to perform said function.
+     */
     private void addListenerOnButton() {
 
         commentButton = (Button) view.findViewById(R.id.comment_button);

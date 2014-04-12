@@ -18,6 +18,8 @@ import java.util.ArrayList;
 
 /**
  * Created by QuattroX on 2014-04-09.
+ * Fragment for displaying events received by the logged-in user,
+ * covering all repos the user has access to.
  */
 public class NewsFragment extends Fragment implements AdapterView.OnItemClickListener{
 

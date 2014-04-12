@@ -21,6 +21,7 @@ import java.util.List;
 
 /**
  * Created by QuattroX on 2014-04-10.
+ * Fragment for displaying commits to the chosen repo/branch.
  */
 public class CommitsFragment extends Fragment implements AdapterView.OnItemClickListener{
 
@@ -57,6 +58,9 @@ public class CommitsFragment extends Fragment implements AdapterView.OnItemClick
     }
 
     @Override
+    /**
+     * Navigates to comments tab after a commit has been selected.
+     */
     public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
         git = GitFunctionality.getInstance();
         git.setCurrentCommit(repoCommits.get(position));

@@ -23,6 +23,8 @@ import org.eclipse.egit.github.core.RepositoryCommit;
 
 /**
  * Created by QuattroX on 2014-04-09.
+ * Fragment for displaying the repos the logged-in user has access to,
+ * along with the date they were last updated.
  */
 public class MyProjectsFragment extends Fragment implements AdapterView.OnItemClickListener {
 
@@ -51,6 +53,10 @@ public class MyProjectsFragment extends Fragment implements AdapterView.OnItemCl
         return view;
     }
 
+    /**
+     * Overrides method in parent class, used to set the repo that was clicked as the currently
+     * selected one, followed by navigating to the tabs which show repo-specific info.
+     */
     @Override
     public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 Log.d("onItemClick", "RepoListItem: " + position);
