@@ -51,7 +51,7 @@ public class GitFunctionality {
      * Function to return the username
      * @return The current username
      */
-    protected String getUserName(){ return username; }
+    public String getUserName(){ return username; }
 
     /**
      * Return the current instance of GitFunctionality
@@ -173,17 +173,6 @@ public class GitFunctionality {
         try{
             Log.d("GitFunctionality", "UserEvents");
             getUserEvents task = new getUserEvents();
-            task.execute();
-            return task.get();
-        } catch ( Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    public ArrayList<String> getRepoEvents() {
-        try{
-            Log.d("GitFunctionality", "RepoEvents");
-            getRepoEvents task = new getRepoEvents();
             task.execute();
             return task.get();
         } catch ( Exception e) {
@@ -398,30 +387,6 @@ public class GitFunctionality {
                 }
             }
         }
-
-        private class getRepoEvents extends AsyncTask<Void, Void, ArrayList<String>> {
-            @Override
-            protected ArrayList<String> doInBackground(Void... v) {
-                try {
-                    Log.d("GitFunctionality", "Events thread");
-                    GitFunctionality git = GitFunctionality.getInstance();
-                    EventService evService = new EventService(git.getClient());
-                    PageIterator<Event> events = evService.pageEvents(currentRepo);
-                    ArrayList<String> news = new ArrayList<String>();
-                    for (Event e : events.next()) {
-                        String s = e.getActor().getLogin() + " " + e.getType();
-                        Log.d("GitFunctionality", s);
-                        news.add(s);
-                    }
-                    return news;
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            }
-        }
-
         private class GetRepoIssues extends AsyncTask<Repository, Void, List<Issue>> {
             protected List<Issue> doInBackground(Repository... repo) {
                 try {

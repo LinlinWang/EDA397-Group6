@@ -53,11 +53,8 @@ public class LoginActivity extends Activity {
                     startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.MainActivity"));
                 }
                 else {
-                    //Only stored while app is "alive".
-                    Intent i = new Intent("com.EDA397.Navigator.NaviGitator.Activities.MainActivity");
-                    i.putExtra("name", name);
-                    i.putExtra("pw", Encrypter.encrypt(pw));
-                    startActivity(i);
+                    //Only logged in while app is "alive".
+                    startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.MainActivity"));
                 }
             }
             else{
