@@ -13,6 +13,9 @@ import android.widget.Toast;
 
 import com.EDA397.Navigator.NaviGitator.R;
 
+/**
+ * Activity representing the application's login screen.
+ */
 public class LoginActivity extends Activity {
 
     private SharedPreferences accounts;
@@ -30,6 +33,12 @@ public class LoginActivity extends Activity {
         checked = false;
     }
 
+    /**
+     * Function reacting to the screen's login button, leading to evaluation of whatever the user
+     * has input into the username/password fields (or lack f said input). Either results in a
+     * transition to the main part of the application, or a toast notifying the user of what went
+     * wrong.
+     */
     public void login(View view) {
         final String name = ((EditText)findViewById(R.id.account)).getText().toString().trim().toLowerCase();
         final String pw = ((EditText)findViewById(R.id.password)).getText().toString().trim();
@@ -86,12 +95,26 @@ public class LoginActivity extends Activity {
             toast.show();
         }
     }
+
+    /**
+     * Used to track the state of the "remember me!" checkbox, so that the app will know if it needs
+     * to store the current account info.
+     */
     public void remCheckbox(View view) {
         checked = ((CheckBox) view).isChecked();
     }
+
+    /**
+     * User is redirected if the account picking button is pressed.
+     */
     public void pickAcc(View view) {
         startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.AccountPickerActivity"));
     }
+
+    /**
+     * We disable the back button while the user is on the login screen, in order to prevent
+     * certain possible issues.
+     */
     @Override
     public void onBackPressed() {
     }

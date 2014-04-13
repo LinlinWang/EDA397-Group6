@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Eric on 2014-04-05.
+ * Adapter used to apply formatting to the items in the repo list.
  */
 public class RepoAdapter extends ArrayAdapter<Repository> {
 

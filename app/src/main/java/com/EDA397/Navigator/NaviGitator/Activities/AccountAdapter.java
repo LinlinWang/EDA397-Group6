@@ -12,6 +12,10 @@ import java.util.ArrayList;
 
 import com.EDA397.Navigator.NaviGitator.R;
 
+/**
+ * Adapter used to apply formatting to items in the AccountPicker list, as well as to add
+ * a "delete button" component to every list item.
+ */
 public class AccountAdapter extends ArrayAdapter<String> {
 
     private Context context;

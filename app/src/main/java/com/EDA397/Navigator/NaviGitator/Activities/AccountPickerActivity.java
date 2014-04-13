@@ -17,9 +17,9 @@ import java.util.Set;
 
 import com.EDA397.Navigator.NaviGitator.R;
 
-
-
-
+/**
+ * Activity for choosing which saved account to log in with (if any exist)
+ */
 public class AccountPickerActivity extends Activity implements AdapterView.OnItemClickListener {
 
     private SharedPreferences accounts;
@@ -43,6 +43,9 @@ public class AccountPickerActivity extends Activity implements AdapterView.OnIte
                 R.id.account_text, columns));
     }
 
+    /**
+     * Overriden method used to try and log in with the selected account.
+     */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         final String s = ((TextView)view.findViewById(R.id.account_text)).getText().toString();

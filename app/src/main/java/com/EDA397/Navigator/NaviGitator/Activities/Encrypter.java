@@ -7,13 +7,17 @@ import javax.crypto.*;
 import javax.crypto.spec.*;
 
 /**
- * Created by Eric on 2014-04-06.
- * Uses AES encryption/decryption implementation from
- * http://www.developer.com/ws/android/encrypting-with-android-cryptography-api.html
+ * Class for encrypting/decrypting user passwords. Uses AES encryption/decryption implementation
+ * from http://www.developer.com/ws/android/encrypting-with-android-cryptography-api.html
  */
 public class Encrypter {
     private static final String TAG = "SymmetricAlgorithmAES";
 
+    /**
+     * Encrypts the passed in String
+     * @param s The password to encrypt
+     * @return The encrypted password
+     */
     public static String encrypt (String s){
         SecretKeySpec sks = null;
         try {
@@ -37,6 +41,11 @@ public class Encrypter {
         return Base64.encodeToString(encodedBytes, Base64.DEFAULT);
     }
 
+    /**
+     * Decrypts the passed in String
+     * @param s The password to decrypt
+     * @return The decrypted password
+     */
     public static String decrypt (String s){
         SecretKeySpec sks = null;
         try {
