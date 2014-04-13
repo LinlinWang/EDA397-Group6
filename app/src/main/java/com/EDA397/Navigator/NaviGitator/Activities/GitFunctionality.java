@@ -136,6 +136,11 @@ public class GitFunctionality {
             return null;
         }
     }
+
+    /**
+     *
+     * @return
+     */
     public ArrayList<String> getFileNames() {
         try{
             Log.d("GitFunctionality", "FileNames");
@@ -147,6 +152,11 @@ public class GitFunctionality {
             return null;
         }
     }
+
+    /**
+     *
+     * @return
+     */
     public ArrayList<String> getCommitComments() {
         try{
             Log.d("GitFunctionality", "CommitComments");
@@ -169,6 +179,11 @@ public class GitFunctionality {
             return null;
         }
     }
+
+    /**
+     *
+     * @return
+     */
     public ArrayList<String> getUserEvents() {
         try{
             Log.d("GitFunctionality", "UserEvents");
@@ -302,49 +317,55 @@ public class GitFunctionality {
             }
         }
     }
-        private class getFileNames extends AsyncTask<RepositoryCommit, Void, ArrayList<String>> {
-            @Override
-            protected ArrayList<String> doInBackground(RepositoryCommit... r) {
-                try {
-                    Log.d("GitFunctionality", "FileName thread");
-                    GitFunctionality git = GitFunctionality.getInstance();
-                    CommitService commitService = new CommitService(git.getClient());
+    /**
+     * Async task to get the names of all files changed in a selected commit
+     */
+    private class getFileNames extends AsyncTask<RepositoryCommit, Void, ArrayList<String>> {
+        @Override
+        protected ArrayList<String> doInBackground(RepositoryCommit... r) {
+            try {
+                Log.d("GitFunctionality", "FileName thread");
+                GitFunctionality git = GitFunctionality.getInstance();
+                CommitService commitService = new CommitService(git.getClient());
 
-                    ArrayList<String> names = new ArrayList<String>();
-                    for (CommitFile cf : commitService.getCommit(currentRepo, r[0].getSha()).getFiles()) {
-                        names.add(cf.getFilename());
-                        Log.d("GitFunctionality", cf.getFilename());
-                    }
-                    return names;
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
+                ArrayList<String> names = new ArrayList<String>();
+                for (CommitFile cf : commitService.getCommit(currentRepo, r[0].getSha()).getFiles()) {
+                    names.add(cf.getFilename());
+                    Log.d("GitFunctionality", cf.getFilename());
                 }
+                return names;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
             }
         }
+    }
+    /**
+     * Async task to get all the comments on a selected commit
+     */
+    private class getCommitComments extends AsyncTask<RepositoryCommit, Void, ArrayList<String>> {
+        @Override
+        protected ArrayList<String> doInBackground(RepositoryCommit... r) {
+            try {
+                Log.d("GitFunctionality", "CommitComments thread");
+                GitFunctionality git = GitFunctionality.getInstance();
+                CommitService commitService = new CommitService(git.getClient());
 
-        private class getCommitComments extends AsyncTask<RepositoryCommit, Void, ArrayList<String>> {
-            @Override
-            protected ArrayList<String> doInBackground(RepositoryCommit... r) {
-                try {
-                    Log.d("GitFunctionality", "CommitComments thread");
-                    GitFunctionality git = GitFunctionality.getInstance();
-                    CommitService commitService = new CommitService(git.getClient());
-
-                    ArrayList<String> comments = new ArrayList<String>();
-                    for (CommitComment cc : commitService.getComments(currentRepo, r[0].getSha())) {
-                        comments.add(cc.getUser().getLogin() + ":\n" + cc.getBody());
-                        Log.d("GitFunctionality", cc.getUser().getLogin());
-                    }
-                    return comments;
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
+                ArrayList<String> comments = new ArrayList<String>();
+                for (CommitComment cc : commitService.getComments(currentRepo, r[0].getSha())) {
+                    comments.add(cc.getUser().getLogin() + ":\n" + cc.getBody());
+                    Log.d("GitFunctionality", cc.getUser().getLogin());
                 }
+                return comments;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
             }
         }
+    }
+
     private class addCommitComment extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... s) {
@@ -365,47 +386,51 @@ public class GitFunctionality {
         }
     }
 
-        private class getUserEvents extends AsyncTask<Void, Void, ArrayList<String>> {
-            @Override
-            protected ArrayList<String> doInBackground(Void... v) {
-                try {
-                    Log.d("GitFunctionality", "Events thread");
-                    GitFunctionality git = GitFunctionality.getInstance();
-                    EventService evService = new EventService(git.getClient());
-                    PageIterator<Event> events = evService.pageUserReceivedEvents(username);
-                    ArrayList<String> news = new ArrayList<String>();
-                    for (Event e : events.next()) {
-                        String s = e.getActor().getLogin() + " " + e.getType() + " " + e.getRepo().getName();
-                        Log.d("GitFunctionality", s);
-                        news.add(s);
-                    }
-                    return news;
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
+    /**
+     * Async task to retrieve events received by the logged-in user (currently only retrieving
+     * the latest events, using the default maximum of 30).
+     */
+    private class getUserEvents extends AsyncTask<Void, Void, ArrayList<String>> {
+        @Override
+        protected ArrayList<String> doInBackground(Void... v) {
+            try {
+                Log.d("GitFunctionality", "Events thread");
+                GitFunctionality git = GitFunctionality.getInstance();
+                EventService evService = new EventService(git.getClient());
+                PageIterator<Event> events = evService.pageUserReceivedEvents(username);
+                ArrayList<String> news = new ArrayList<String>();
+                for (Event e : events.next()) {
+                    String s = e.getActor().getLogin() + " " + e.getType() + " " + e.getRepo().getName();
+                    Log.d("GitFunctionality", s);
+                    news.add(s);
                 }
-            }
-        }
-        private class GetRepoIssues extends AsyncTask<Repository, Void, List<Issue>> {
-            protected List<Issue> doInBackground(Repository... repo) {
-                try {
-                    Log.d("GitFunctionality", "Issues thread");
-                    GitFunctionality git = GitFunctionality.getInstance();
-                    IssueService issueService = new IssueService(git.getClient());
-                    List<Issue> issues = issueService.getIssues(repo[0], null); //get all issues for the repository
+                return news;
 
-                    for (Issue i : issues) {
-                        Log.d("GitFunctionality", " : " + i.getTitle());  //get the titles of the issues for the current repository
-                    }
-
-                    return issues;
-
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return null;
-                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
             }
         }
     }
+    private class GetRepoIssues extends AsyncTask<Repository, Void, List<Issue>> {
+        protected List<Issue> doInBackground(Repository... repo) {
+            try {
+                Log.d("GitFunctionality", "Issues thread");
+                GitFunctionality git = GitFunctionality.getInstance();
+                IssueService issueService = new IssueService(git.getClient());
+                List<Issue> issues = issueService.getIssues(repo[0], null); //get all issues for the repository
+
+                for (Issue i : issues) {
+                    Log.d("GitFunctionality", " : " + i.getTitle());  //get the titles of the issues for the current repository
+                }
+
+                return issues;
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+}
