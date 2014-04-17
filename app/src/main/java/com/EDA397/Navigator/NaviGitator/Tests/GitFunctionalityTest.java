@@ -102,7 +102,7 @@ public class GitFunctionalityTest extends InstrumentationTestCase {
      */
     public void testGetFileNames() throws Exception{
         String s = "";
-        List<String> fn = git.getFileNames();
+        List<String> fn = git.getCommitFileNames();
         if (fn != null) {
             for (String f : fn) {
                 s += f + ", ";

@@ -20,7 +20,7 @@ public class RepositoryActivity extends FragmentActivity implements
     private ActionBar actionBar;
 
     // Tab titles
-    private String[] tabs = { "Commits", "Branches", "Issues", "Comments" };
+    private String[] tabs = { "Commits", "Branches", "Issues", "Comments", "Watched Files" };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

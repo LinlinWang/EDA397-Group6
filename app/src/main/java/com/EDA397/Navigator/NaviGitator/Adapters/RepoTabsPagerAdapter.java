@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.EDA397.Navigator.NaviGitator.Fragments.BranchesFragment;
 import com.EDA397.Navigator.NaviGitator.Fragments.CommentsFragment;
 import com.EDA397.Navigator.NaviGitator.Fragments.CommitsFragment;
+import com.EDA397.Navigator.NaviGitator.Fragments.FileWatchFragment;
 import com.EDA397.Navigator.NaviGitator.Fragments.IssuesFragment;
 
 /**
@@ -34,6 +35,9 @@ public class RepoTabsPagerAdapter extends FragmentPagerAdapter {
             case 3:
                 // Comments fragment activity
                 return new CommentsFragment();
+            case 4:
+                // File watch fragment activity
+                return new FileWatchFragment();
         }
 
         return null;
@@ -42,6 +46,6 @@ public class RepoTabsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         // get item count - equal to number of tabs
-        return 4;
+        return 5;
     }
 }

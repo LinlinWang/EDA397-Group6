@@ -10,17 +10,20 @@ import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryBranch;
 import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.github.core.RepositoryCommitCompare;
+import org.eclipse.egit.github.core.RepositoryContents;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.service.CommitService;
+import org.eclipse.egit.github.core.service.ContentsService;
 import org.eclipse.egit.github.core.service.EventService;
 import org.eclipse.egit.github.core.service.IssueService;
 import org.eclipse.egit.github.core.service.OAuthService;
 import org.eclipse.egit.github.core.service.OrganizationService;
 import org.eclipse.egit.github.core.service.RepositoryService;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -137,15 +140,11 @@ public class GitFunctionality {
         }
     }
 
-    /**
-     *
-     * @return
-     */
-    public ArrayList<String> getFileNames() {
+    public ArrayList<RepositoryContents> getAllFileNames(String s) {
         try{
-            Log.d("GitFunctionality", "FileNames");
-            getFileNames task = new getFileNames();
-            task.execute(currentCommit);
+            Log.d("GitFunctionality", "All FileNames");
+            getAllFileNames task = new getAllFileNames();
+            task.execute(s);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -154,8 +153,25 @@ public class GitFunctionality {
     }
 
     /**
-     *
-     * @return
+     * Get all filenames for the currently chosen commit
+     * @return A list of filenames
+     */
+    public ArrayList<String> getCommitFileNames() {
+        try{
+            Log.d("GitFunctionality", "Commit FileNames");
+            getCommitFileNames task = new getCommitFileNames();
+            task.execute(currentCommit);
+            return task.get();
+        } catch ( Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    /**
+     * Get all comments for the currently chosen commit
+     * @return A list of comments
      */
     public ArrayList<String> getCommitComments() {
         try{
@@ -181,8 +197,8 @@ public class GitFunctionality {
     }
 
     /**
-     *
-     * @return
+     * Returns up to the 30 latest events targeting the logged-in user
+     * @return A list of events
      */
     public ArrayList<String> getUserEvents() {
         try{
@@ -317,10 +333,39 @@ public class GitFunctionality {
             }
         }
     }
+    private class getAllFileNames extends AsyncTask<String, Void, ArrayList<RepositoryContents>> {
+        @Override
+        protected ArrayList<RepositoryContents> doInBackground(String... dir) {
+            try {
+                Log.d("GitFunctionality", "FileName thread");
+                GitFunctionality git = GitFunctionality.getInstance();
+                ContentsService conService = new ContentsService(git.getClient());
+                ArrayList<RepositoryContents> rc = new ArrayList<RepositoryContents>();
+                ArrayList<RepositoryContents> sorted = new ArrayList<RepositoryContents>();
+                rc.addAll(conService.getContents(currentRepo, dir[0]));
+                for(int i = 0; i < rc.size(); i++){
+                    if(rc.get(i).getType().equals("dir")){
+                        Log.d("GitFunctionality", rc.get(i).getType() + "      " +
+                              rc.get(i).getName());
+                        sorted.add(rc.get(i));
+                        rc.remove(i);
+                        i--;
+                    }
+                }
+                sorted.addAll(rc);
+                return sorted;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
     /**
      * Async task to get the names of all files changed in a selected commit
      */
-    private class getFileNames extends AsyncTask<RepositoryCommit, Void, ArrayList<String>> {
+    private class getCommitFileNames extends AsyncTask<RepositoryCommit, Void, ArrayList<String>> {
         @Override
         protected ArrayList<String> doInBackground(RepositoryCommit... r) {
             try {
