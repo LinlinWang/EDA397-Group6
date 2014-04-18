@@ -70,7 +70,7 @@ public class GitFunctionality {
     }
     //Used in current solution, cannot be protected since fragments are not
     //in same folder anymore.
-    protected Repository getCurrentRepo(){ return currentRepo; }
+    public Repository getCurrentRepo(){ return currentRepo; }
     public void setCurrentRepo(Repository r){ currentRepo = r; }
     public RepositoryCommit getCurrentCommit(){ return currentCommit; }
     public void setCurrentCommit(RepositoryCommit r){ currentCommit = r; }

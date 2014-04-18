@@ -3,6 +3,7 @@ package com.EDA397.Navigator.NaviGitator.Fragments;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -23,9 +25,10 @@ import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryContents;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * A simple {@link android.support.v4.app.Fragment} subclass.
  *
  */
 public class FileWatchFragment extends Fragment implements AdapterView.OnItemClickListener {
@@ -33,6 +36,8 @@ public class FileWatchFragment extends Fragment implements AdapterView.OnItemCli
     private ListView listView;
     private ArrayList<RepositoryContents> repoContents;
     private GitFunctionality git;
+    private SharedPreferences watched_files;
+    private SharedPreferences.Editor watchEdit;
     private View view;
 
     @Override
@@ -40,16 +45,58 @@ public class FileWatchFragment extends Fragment implements AdapterView.OnItemCli
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_file_watch, container, false);
-
         git = GitFunctionality.getInstance();
-
+        watched_files = getActivity().getApplicationContext().getSharedPreferences("WatchedFiles",
+                getActivity().getApplicationContext().MODE_PRIVATE);
+        watchEdit = watched_files.edit();
         repoContents = git.getAllFileNames("");
         listView = (ListView) view.findViewById(R.id.file_list);
         listView.setClickable(true);
         listView.setOnItemClickListener(this);
         listView.setAdapter(new FileAdapter(getActivity().getApplicationContext(), R.layout.file_item,
                 R.id.pathitem_text, repoContents));
-
+        Button watch = (Button) view.findViewById(R.id.watch_button);
+        watch.setOnClickListener(
+                new Button.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Set<String> temp = new HashSet<String>();
+                        temp.addAll(watched_files.getStringSet(git.getUserName() +
+                                git.getCurrentRepo().getName(), new HashSet<String>()));
+                        for(RepositoryContents r : repoContents){
+                            if(!r.getType().equals("dir") && !temp.contains(r.getName())){
+                                temp.add(r.getName());
+                            }
+                        }
+                        watchEdit.putStringSet(git.getUserName() + git.getCurrentRepo().getName(),
+                                temp);
+                        watchEdit.commit();
+                        listView.setAdapter(new FileAdapter(getActivity().getApplicationContext(),
+                                R.layout.file_item, R.id.pathitem_text, repoContents));
+                    }
+                }
+        );
+        Button unwatch = (Button) view.findViewById(R.id.unwatch_button);
+        unwatch.setOnClickListener(
+                new Button.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Set<String> temp = new HashSet<String>();
+                        temp.addAll(watched_files.getStringSet(git.getUserName() +
+                                git.getCurrentRepo().getName(), new HashSet<String>()));
+                        for(RepositoryContents r : repoContents){
+                            if(!r.getType().equals("dir") && temp.contains(r.getName())){
+                                temp.remove(r.getName());
+                            }
+                        }
+                        watchEdit.putStringSet(git.getUserName() + git.getCurrentRepo().getName(),
+                                temp);
+                        watchEdit.commit();
+                        listView.setAdapter(new FileAdapter(getActivity().getApplicationContext(),
+                                R.layout.file_item, R.id.pathitem_text, repoContents));
+                    }
+                }
+        );
         return view;
     }
 
@@ -70,6 +117,7 @@ public class FileWatchFragment extends Fragment implements AdapterView.OnItemCli
             if(!path.equals("")){
                 RepositoryContents rc = new RepositoryContents();
                 rc.setType("dir");
+                rc.setContent("return");
                 rc.setName("Root");
                 rc.setPath("");
                 repoContents.add(rc);
@@ -77,6 +125,7 @@ public class FileWatchFragment extends Fragment implements AdapterView.OnItemCli
             for(int i = 0; i < levels.length-1; i++){
                 RepositoryContents rc = new RepositoryContents();
                 rc.setType("dir");
+                rc.setContent("return");
                 rc.setName(levels[i]);
                 backPath += levels[i] + "/";
                 rc.setPath(backPath);

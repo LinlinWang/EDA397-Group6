@@ -49,8 +49,9 @@ public class CommentsFragment extends Fragment implements AdapterView.OnItemClic
         if(git.getCurrentCommit() != null) {
             info.add("Message: " + "\n" + git.getCurrentCommit().getCommit().getMessage());
 
-            for (String s : git.getCommitFileNames()) {
-                String[] temp = s.split("/");
+            ArrayList<String> fileNames = git.getCommitFileNames();
+            for (String f : fileNames) {
+                String[] temp = f.split("/");
                 info.add("Modified File:\n" + temp[temp.length - 1]);
             }
             for (String s : git.getCommitComments()) {

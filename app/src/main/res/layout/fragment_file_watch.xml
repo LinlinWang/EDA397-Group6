@@ -12,6 +12,25 @@
         android:id="@+id/repo_path"
         android:textSize="20dp"/>
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="watch all files in dir"
+        android:id="@+id/watch_button" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Unwatch all files in dir"
+        android:id="@+id/unwatch_button" />
+</LinearLayout>
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

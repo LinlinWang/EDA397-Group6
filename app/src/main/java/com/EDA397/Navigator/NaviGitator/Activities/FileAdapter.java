@@ -51,9 +51,15 @@ public class FileAdapter extends ArrayAdapter<RepositoryContents> {
         watch.setFocusableInTouchMode(false);
         watch.setFocusable(false);
         if(items.get(position).getType().equals("dir")){
-            tv.setText("Open " + s + "...");
             watch.setEnabled(false);
             watch.setVisibility(convertView.GONE);
+            if(items.get(position).getContent() != null &&
+               items.get(position).getContent().equals("return")) {
+                tv.setText("Back to " + s + "...");
+            }
+            else{
+                tv.setText("Open dir " + s + "...");
+            }
         }
         else {
             Set<String> watched = new HashSet<String>();
