@@ -9,7 +9,6 @@ import org.eclipse.egit.github.core.Issue;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryBranch;
 import org.eclipse.egit.github.core.RepositoryCommit;
-import org.eclipse.egit.github.core.RepositoryCommitCompare;
 import org.eclipse.egit.github.core.RepositoryContents;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
@@ -22,8 +21,6 @@ import org.eclipse.egit.github.core.service.IssueService;
 import org.eclipse.egit.github.core.service.OAuthService;
 import org.eclipse.egit.github.core.service.OrganizationService;
 import org.eclipse.egit.github.core.service.RepositoryService;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -139,12 +136,16 @@ public class GitFunctionality {
             return null;
         }
     }
-
-    public ArrayList<RepositoryContents> getAllFileNames(String s) {
+    /**
+     * Get the contents of the specified directory (from the current repository).
+     * @param dir The directory to retrieve.
+     * @return A list of RepositoryContents representing the folders and files in the directory.
+     */
+    public ArrayList<RepositoryContents> getDirContents(String dir) {
         try{
             Log.d("GitFunctionality", "All FileNames");
-            getAllFileNames task = new getAllFileNames();
-            task.execute(s);
+            getDirContents task = new getDirContents();
+            task.execute(dir);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -333,26 +334,29 @@ public class GitFunctionality {
             }
         }
     }
-    private class getAllFileNames extends AsyncTask<String, Void, ArrayList<RepositoryContents>> {
+    /**
+     * Async task to get the contents of a specific repo directory (sorted by listing directories
+     * first).
+     */
+    private class getDirContents extends AsyncTask<String, Void, ArrayList<RepositoryContents>> {
         @Override
         protected ArrayList<RepositoryContents> doInBackground(String... dir) {
             try {
                 Log.d("GitFunctionality", "FileName thread");
                 GitFunctionality git = GitFunctionality.getInstance();
                 ContentsService conService = new ContentsService(git.getClient());
-                ArrayList<RepositoryContents> rc = new ArrayList<RepositoryContents>();
+                ArrayList<RepositoryContents> unsorted = new ArrayList<RepositoryContents>();
                 ArrayList<RepositoryContents> sorted = new ArrayList<RepositoryContents>();
-                rc.addAll(conService.getContents(currentRepo, dir[0]));
-                for(int i = 0; i < rc.size(); i++){
-                    if(rc.get(i).getType().equals("dir")){
-                        Log.d("GitFunctionality", rc.get(i).getType() + "      " +
-                              rc.get(i).getName());
-                        sorted.add(rc.get(i));
-                        rc.remove(i);
+                unsorted.addAll(conService.getContents(currentRepo, dir[0]));
+                for(int i = 0; i < unsorted.size(); i++){
+                    Log.d("GitFunctionality", unsorted.get(i).getPath());
+                    if(unsorted.get(i).getType().equals("dir")){
+                        sorted.add(unsorted.get(i));
+                        unsorted.remove(i);
                         i--;
                     }
                 }
-                sorted.addAll(rc);
+                sorted.addAll(unsorted);
                 return sorted;
 
             } catch (Exception e) {

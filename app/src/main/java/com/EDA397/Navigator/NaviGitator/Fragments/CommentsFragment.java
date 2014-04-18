@@ -3,7 +3,7 @@ package com.EDA397.Navigator.NaviGitator.Fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -15,14 +15,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-
 import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
 import com.EDA397.Navigator.NaviGitator.R;
-
-import org.eclipse.egit.github.core.RepositoryCommit;
-
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by QuattroX on 2014-04-10.
@@ -35,6 +32,7 @@ public class CommentsFragment extends Fragment implements AdapterView.OnItemClic
     private Context context;
     private ArrayList<String> info;
     private View view;
+    private SharedPreferences watched_files;
     Button commentButton;
 
     @Override
@@ -43,14 +41,21 @@ public class CommentsFragment extends Fragment implements AdapterView.OnItemClic
 
         view = inflater.inflate(R.layout.fragment_comments, container, false);
         git = GitFunctionality.getInstance();
+        watched_files = getActivity().getApplicationContext().getSharedPreferences("WatchedFiles",
+                getActivity().getApplicationContext().MODE_PRIVATE);
+        Set<String> watched = new HashSet<String>();
+        watched.addAll(watched_files.getStringSet(git.getUserName() +
+                git.getCurrentRepo().getName(), new HashSet<String>()));
         addListenerOnButton();
         info = new ArrayList<String>();
         context = container.getContext();
         if(git.getCurrentCommit() != null) {
             info.add("Message: " + "\n" + git.getCurrentCommit().getCommit().getMessage());
 
-            ArrayList<String> fileNames = git.getCommitFileNames();
-            for (String f : fileNames) {
+            for (String f : git.getCommitFileNames()) {
+                if(watched.contains(f)){
+                    Log.d("Possible Conflict", f);
+                }
                 String[] temp = f.split("/");
                 info.add("Modified File:\n" + temp[temp.length - 1]);
             }

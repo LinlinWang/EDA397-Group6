@@ -1,8 +1,5 @@
 package com.EDA397.Navigator.NaviGitator.Fragments;
 
-
-
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,24 +9,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.EDA397.Navigator.NaviGitator.Activities.FileAdapter;
 import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
-import com.EDA397.Navigator.NaviGitator.Activities.RepoAdapter;
 import com.EDA397.Navigator.NaviGitator.R;
-
-import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryContents;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- *
+ *Fragment for navigating the current repo's directories, in order to choose which files to
+ * watch.
  */
 public class FileWatchFragment extends Fragment implements AdapterView.OnItemClickListener {
 
@@ -49,7 +41,7 @@ public class FileWatchFragment extends Fragment implements AdapterView.OnItemCli
         watched_files = getActivity().getApplicationContext().getSharedPreferences("WatchedFiles",
                 getActivity().getApplicationContext().MODE_PRIVATE);
         watchEdit = watched_files.edit();
-        repoContents = git.getAllFileNames("");
+        repoContents = git.getDirContents("");
         listView = (ListView) view.findViewById(R.id.file_list);
         listView.setClickable(true);
         listView.setOnItemClickListener(this);
@@ -64,8 +56,8 @@ public class FileWatchFragment extends Fragment implements AdapterView.OnItemCli
                         temp.addAll(watched_files.getStringSet(git.getUserName() +
                                 git.getCurrentRepo().getName(), new HashSet<String>()));
                         for(RepositoryContents r : repoContents){
-                            if(!r.getType().equals("dir") && !temp.contains(r.getName())){
-                                temp.add(r.getName());
+                            if(!r.getType().equals("dir") && !temp.contains(r.getPath())){
+                                temp.add(r.getPath());
                             }
                         }
                         watchEdit.putStringSet(git.getUserName() + git.getCurrentRepo().getName(),
@@ -85,8 +77,8 @@ public class FileWatchFragment extends Fragment implements AdapterView.OnItemCli
                         temp.addAll(watched_files.getStringSet(git.getUserName() +
                                 git.getCurrentRepo().getName(), new HashSet<String>()));
                         for(RepositoryContents r : repoContents){
-                            if(!r.getType().equals("dir") && temp.contains(r.getName())){
-                                temp.remove(r.getName());
+                            if(!r.getType().equals("dir") && temp.contains(r.getPath())){
+                                temp.remove(r.getPath());
                             }
                         }
                         watchEdit.putStringSet(git.getUserName() + git.getCurrentRepo().getName(),
@@ -101,8 +93,9 @@ public class FileWatchFragment extends Fragment implements AdapterView.OnItemCli
     }
 
     /**
-     * Overrides method in parent class, used to set the repo that was clicked as the currently
-     * selected one, followed by navigating to the tabs which show repo-specific info.
+     * Overriden method used to navigate when a folder item is selected, while also making sure that
+     * the directories that make up the current path are also added as folder items (so that the
+     * user can navigate "backwards").
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
@@ -114,6 +107,7 @@ public class FileWatchFragment extends Fragment implements AdapterView.OnItemCli
             TextView tv = (TextView) view.findViewById(R.id.repo_path);
             tv.setText(path);
             repoContents = new ArrayList<RepositoryContents>();
+            //Adding folder item for returning to Root.
             if(!path.equals("")){
                 RepositoryContents rc = new RepositoryContents();
                 rc.setType("dir");
@@ -122,6 +116,8 @@ public class FileWatchFragment extends Fragment implements AdapterView.OnItemCli
                 rc.setPath("");
                 repoContents.add(rc);
             }
+            //Adding folder items for returning to all directory levels beyond Root found in the
+            //current path.
             for(int i = 0; i < levels.length-1; i++){
                 RepositoryContents rc = new RepositoryContents();
                 rc.setType("dir");
@@ -131,7 +127,7 @@ public class FileWatchFragment extends Fragment implements AdapterView.OnItemCli
                 rc.setPath(backPath);
                 repoContents.add(rc);
             }
-            repoContents.addAll(git.getAllFileNames(path));
+            repoContents.addAll(git.getDirContents(path));
             FileAdapter f = (FileAdapter) listView.getAdapter();
             f.clear();
             f.addAll(repoContents);
