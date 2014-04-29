@@ -25,12 +25,14 @@ public class MainActivity extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         GitFunctionality git = GitFunctionality.getInstance();
-        startService(new Intent(this, NotificationService.class)); //TODO move line to else
 
         if (git.getUserName().equals("")){
             startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.LoginActivity"));
         }
         else{
+            // Start Notification Service
+            startService(new Intent(this, NotificationService.class));
+
             // Initilization
             viewPager = (ViewPager) findViewById(R.id.viewpager);
             actionBar = getActionBar();

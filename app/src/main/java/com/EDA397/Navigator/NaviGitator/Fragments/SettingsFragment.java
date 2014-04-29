@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
 import com.EDA397.Navigator.NaviGitator.R;
+import com.EDA397.Navigator.NaviGitator.Services.NotificationService;
 
 /**
  * Created by QuattroX on 2014-04-09.
@@ -36,6 +37,7 @@ public class SettingsFragment extends Fragment {
                 new Button.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        getActivity().stopService(new Intent(getActivity().getApplicationContext(), NotificationService.class));
                         startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.LoginActivity"));
                     }
                 }
