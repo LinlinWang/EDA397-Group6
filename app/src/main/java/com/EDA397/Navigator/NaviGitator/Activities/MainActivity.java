@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import com.EDA397.Navigator.NaviGitator.Adapters.MainTabsPagerAdapter;
 import com.EDA397.Navigator.NaviGitator.R;
+import com.EDA397.Navigator.NaviGitator.Services.NotificationService;
 
 public class MainActivity extends FragmentActivity implements
         ActionBar.TabListener {
@@ -24,6 +25,7 @@ public class MainActivity extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         GitFunctionality git = GitFunctionality.getInstance();
+        startService(new Intent(this, NotificationService.class)); //TODO move line to else
 
         if (git.getUserName().equals("")){
             startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.LoginActivity"));
