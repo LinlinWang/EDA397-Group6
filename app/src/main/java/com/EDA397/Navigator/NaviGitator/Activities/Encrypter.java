@@ -1,10 +1,11 @@
 package com.EDA397.Navigator.NaviGitator.Activities;
-
+/**
 import android.util.Base64;
 import android.util.Log;
 import java.security.SecureRandom;
 import javax.crypto.*;
 import javax.crypto.spec.*;
+ **/
 
 /**
  * Class for encrypting/decrypting user passwords. Uses AES encryption/decryption implementation
@@ -19,6 +20,7 @@ public class Encrypter {
      * @return The encrypted password
      */
     public static String encrypt (String s){
+        /**
         SecretKeySpec sks = null;
         try {
             SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
@@ -39,6 +41,8 @@ public class Encrypter {
             Log.e(TAG, "AES encryption error");
         }
         return Base64.encodeToString(encodedBytes, Base64.DEFAULT);
+         **/
+        return s;
     }
 
     /**
@@ -47,6 +51,7 @@ public class Encrypter {
      * @return The decrypted password
      */
     public static String decrypt (String s){
+        /**
         SecretKeySpec sks = null;
         try {
             SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
@@ -67,5 +72,7 @@ public class Encrypter {
             Log.e(TAG, "AES decryption error");
         }
         return new String(decodedBytes);
+        **/
+        return s;
     }
 }
