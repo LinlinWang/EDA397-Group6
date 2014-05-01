@@ -119,14 +119,16 @@ public class FileWatchFragment extends Fragment implements AdapterView.OnItemCli
             //Adding folder items for returning to all directory levels beyond Root found in the
             //current path.
             for(int i = 0; i < levels.length-1; i++){
-                RepositoryContents rc = new RepositoryContents();
-                rc.setType("dir");
-                rc.setContent("return");
-                rc.setName(levels[i]);
                 backPath += levels[i] + "/";
-                rc.setPath(backPath);
-                repoContents.add(rc);
             }
+           if(!backPath.equals("")){
+               RepositoryContents rc = new RepositoryContents();
+               rc.setType("dir");
+               rc.setContent("return");
+               rc.setName(levels[levels.length-2]);
+               rc.setPath(backPath);
+               repoContents.add(rc);
+           }
             repoContents.addAll(git.getDirContents(path));
             FileAdapter f = (FileAdapter) listView.getAdapter();
             f.clear();
