@@ -61,6 +61,7 @@ public class MyProjectsFragment extends Fragment implements AdapterView.OnItemCl
     public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 Log.d("onItemClick", "RepoListItem: " + position);
                 git.setCurrentRepo(repos.get(position));
+                git.setCurrentBranch(null);
                 startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.RepositoryActivity"));
     }
 }

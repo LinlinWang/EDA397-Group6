@@ -35,6 +35,7 @@ public class GitFunctionality {
     private static String username;
     private static Repository currentRepo;
     private static RepositoryCommit currentCommit;
+    private static RepositoryBranch currentBranch;
 
     private GitFunctionality() {
             client = new GitHubClient();
@@ -71,6 +72,8 @@ public class GitFunctionality {
     public void setCurrentRepo(Repository r){ currentRepo = r; }
     public RepositoryCommit getCurrentCommit(){ return currentCommit; }
     public void setCurrentCommit(RepositoryCommit r){ currentCommit = r; }
+    public RepositoryBranch getCurrentBranch(){ return currentBranch; }
+    public void setCurrentBranch(RepositoryBranch r){ currentBranch = r; }
 
     /**
      * Function to login to GitHub
@@ -295,8 +298,13 @@ public class GitFunctionality {
                 Log.d("GitFunctionality", "Commit thread");
                 GitFunctionality git = GitFunctionality.getInstance();
                 CommitService commitService = new CommitService(git.getClient());
-
-                List<RepositoryCommit> commits = commitService.getCommits(repo[0]);
+                List<RepositoryCommit> commits;
+                if(currentBranch == null) {
+                    commits = commitService.getCommits(repo[0]);
+                }
+                else{
+                    commits = commitService.getCommits(repo[0], currentBranch.getCommit().getSha(), null);
+                }
                 for (RepositoryCommit comm : commits) {
                     Log.d("GitFunctionality", comm.getCommit().getAuthor().getName() + " : " + comm.getCommit().getMessage());
                 }
@@ -347,7 +355,12 @@ public class GitFunctionality {
                 ContentsService conService = new ContentsService(git.getClient());
                 ArrayList<RepositoryContents> unsorted = new ArrayList<RepositoryContents>();
                 ArrayList<RepositoryContents> sorted = new ArrayList<RepositoryContents>();
-                unsorted.addAll(conService.getContents(currentRepo, dir[0]));
+                if(currentBranch == null) {
+                    unsorted.addAll(conService.getContents(currentRepo, dir[0]));
+                }
+                else{
+                    unsorted.addAll(conService.getContents(currentRepo, dir[0], currentBranch.getName()));
+                }
                 for(int i = 0; i < unsorted.size(); i++){
                     Log.d("GitFunctionality", unsorted.get(i).getPath());
                     if(unsorted.get(i).getType().equals("dir")){
