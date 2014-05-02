@@ -47,4 +47,12 @@ public class PivotalFunctionality {
             return false;
         }
     }
+
+    public String getProjects() {
+        return "";
+    }
+
+    public String getStories() {
+        return "";
+    }
 }
