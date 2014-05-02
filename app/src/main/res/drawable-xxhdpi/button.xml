@@ -24,14 +24,14 @@
         android:state_pressed="true">
         <shape
             xmlns:android="http://schemas.android.com/apk/res/android">
-            <corners
-                android:radius="50dp" />
             <padding android:left="1dp"
                 android:top="1dp"
                 android:right="1dp"
                 android:bottom="1dp"/>
-            <solid
-                android:color="#707070" />
+            <gradient
+                android:startColor="#707070"
+                android:endColor="#bdbdbd"
+                android:angle="270" />
             <stroke android:color="#FF000000"
                 android:width="0.006dp"/>
         </shape>
