@@ -42,6 +42,17 @@ public class SettingsFragment extends Fragment {
                     }
                 }
         );
+        Button stopNTF = (Button) view.findViewById(R.id.stopNTF_button);
+        stopNTF.setFocusableInTouchMode(false);
+        stopNTF.setFocusable(false);
+        stopNTF.setOnClickListener(
+                new Button.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //getActivity().stopService(new Intent(getActivity().getApplicationContext(), NotificationService.class));
+                    }
+                }
+        );
         return view;
     }
 }
