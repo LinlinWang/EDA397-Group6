@@ -21,14 +21,22 @@ public class PivotalFunctionalityTest extends InstrumentationTestCase {
     }
 
     public void testLogin() throws Exception {
-
+        String username = "";
+        String password = "";
+        boolean result;
+        result = pivotal.pivotalLogin(username, password);
+        assertTrue(result);
     }
 
-    public void testGetProject() throws Exception {
-
+    public void testGetProjects() throws Exception {
+        String projects = "";
+        projects = pivotal.getProjects();
+        assertFalse(projects.equals(""));
     }
 
-    public void testGetBacklog() throws Exception {
-
+    public void testGetStories() throws Exception {
+        String stories = "";
+        stories = pivotal.getStories();
+        assertFalse(stories.equals(""));
     }
 }
