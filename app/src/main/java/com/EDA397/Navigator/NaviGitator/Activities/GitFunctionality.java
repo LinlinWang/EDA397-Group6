@@ -509,14 +509,11 @@ public class GitFunctionality {
                 PageIterator<Event> events = evService.pageEvents(currentRepo);
                 ArrayList <PushPayload> pushes = new ArrayList<PushPayload>();
                 for(Event e : events.next()){
-                    if(pushes.size() < 1 && e.getType().equals("PushEvent")) {
+                    if(e.getType().equals("PushEvent")) {
                         PushPayload p = (PushPayload) e.getPayload();
                         String[] branch = p.getRef().split("/");
                         Log.d("GitFunctionality", e.getActor().getLogin() + " pushed to " + branch[branch.length-1]);
                         pushes.add(p);
-                    }
-                    else if (pushes.size() == 1){
-                        break;
                     }
                 }
                 return pushes;
