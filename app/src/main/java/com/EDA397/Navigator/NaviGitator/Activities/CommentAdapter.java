@@ -52,7 +52,7 @@ public class CommentAdapter extends ArrayAdapter<String> {
                     new ImageButton.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                           // git.removeCommitComment(info.get(position), position);
+                            git.removeCommitComment(position);
                             info.remove(position);
                             remove(s);
                         }

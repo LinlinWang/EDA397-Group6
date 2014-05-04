@@ -170,6 +170,18 @@ public class GitFunctionality {
     }
 
 
+    public Void removeCommitComment(int i) {
+        try{
+            Log.d("GitFunctionality", "RemoveCommitComments");
+            RemoveCommitComment task = new RemoveCommitComment();
+            task.execute(i);
+            return task.get();
+        } catch ( Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     /**
      * Get all comments for the currently chosen commit
      * @return A list of comments
@@ -476,6 +488,20 @@ public class GitFunctionality {
                 return issues;
 
 
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    private class RemoveCommitComment extends AsyncTask<Integer, Void, Void> {
+        protected Void doInBackground(Integer... i) {
+            try {
+                CommitService commitService = new CommitService();
+                commitService.deleteComment(currentRepo, commitService.getComments(currentRepo, currentCommit.getSha()).get(i[0]).getId());
+
+                return null;
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
