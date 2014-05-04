@@ -230,11 +230,11 @@ public class GitFunctionality {
             return null;
         }
     }
-    public void checkConflicts(Set<String> w, PushPayload p) {
+    public void checkConflicts(Set<String> w, Commit c) {
         try{
             Log.d("GitFunctionality", "Conflict Check");
             CheckConflicts task = new CheckConflicts(w);
-            task.execute(p);
+            task.execute(c);
         } catch ( Exception e) {
             e.printStackTrace();
         }
@@ -524,19 +524,18 @@ public class GitFunctionality {
             }
         }
     }
-    private class CheckConflicts extends AsyncTask<PushPayload, Void, Void> {
+    private class CheckConflicts extends AsyncTask<Commit, Void, Void> {
         private Set<String> watched;
 
         public CheckConflicts(Set<String> w) {
             this.watched = w;
         }
         @Override
-        protected Void doInBackground(PushPayload... push) {
+        protected Void doInBackground(Commit... comm) {
             try {
                 Log.d("GitFunctionality", "Conflicts thread");
-                for (Commit c : push[0].getCommits()){
                     RepositoryCommit temp = new RepositoryCommit();
-                    temp.setSha(c.getSha());
+                    temp.setSha(comm[0].getSha());
                     getCommitFileNames task = new getCommitFileNames();
                     task.execute(temp);
                     for (String f : task.get()) {
@@ -544,7 +543,6 @@ public class GitFunctionality {
                             Log.d("Possible Conflict", f);
                         }
                     }
-                }
                 return null;
 
             } catch (Exception e) {

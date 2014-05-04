@@ -21,6 +21,8 @@ import java.util.Set;
 import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
 import com.EDA397.Navigator.NaviGitator.Activities.RepoAdapter;
 import com.EDA397.Navigator.NaviGitator.R;
+
+import org.eclipse.egit.github.core.Commit;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.github.core.event.PushPayload;
@@ -72,10 +74,12 @@ public class MyProjectsFragment extends Fragment implements AdapterView.OnItemCl
         watched.addAll(watched_files.getStringSet(git.getUserName() +
                 git.getCurrentRepo().getName(), new HashSet<String>()));
         ArrayList <PushPayload> pushes = git.getRepoEvents();
-    /**    for(PushPayload p : pushes){
-            git.checkConflicts(watched, p);
-        }
-     **/
+ /**       for(PushPayload p : pushes){
+            for (Commit c : p.getCommits()) {
+                git.checkConflicts(watched, c);
+            }
+        }**/
+
         startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.RepositoryActivity"));
     }
 }
