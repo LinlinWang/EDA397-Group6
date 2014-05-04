@@ -3,6 +3,7 @@ package com.EDA397.Navigator.NaviGitator.Activities;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.eclipse.egit.github.core.Commit;
 import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.CommitFile;
 import org.eclipse.egit.github.core.Issue;
@@ -10,10 +11,12 @@ import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryBranch;
 import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.github.core.RepositoryContents;
+import org.eclipse.egit.github.core.TreeEntry;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.event.Event;
+import org.eclipse.egit.github.core.event.PushPayload;
 import org.eclipse.egit.github.core.service.CommitService;
 import org.eclipse.egit.github.core.service.ContentsService;
 import org.eclipse.egit.github.core.service.EventService;
@@ -23,6 +26,7 @@ import org.eclipse.egit.github.core.service.OrganizationService;
 import org.eclipse.egit.github.core.service.RepositoryService;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  *  Class containing functionality to communicate with GitHub
@@ -215,6 +219,27 @@ public class GitFunctionality {
             return null;
         }
     }
+    public ArrayList<PushPayload> getRepoEvents() {
+        try{
+            Log.d("GitFunctionality", "RepoEvents");
+            getRepoEvents task = new getRepoEvents();
+            task.execute();
+            return task.get();
+        } catch ( Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    public void checkConflicts(Set<String> w, PushPayload p) {
+        try{
+            Log.d("GitFunctionality", "Conflict Check");
+            CheckConflicts task = new CheckConflicts(w);
+            task.execute(p);
+        } catch ( Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public List<Issue> getRepoIssues() {
         try{
             Log.d("GitFunctionality", "RepoIssues");
@@ -474,6 +499,64 @@ public class GitFunctionality {
             }
         }
     }
+    private class getRepoEvents extends AsyncTask<Void, Void, ArrayList<PushPayload>> {
+        @Override
+        protected ArrayList<PushPayload> doInBackground(Void... v) {
+            try {
+                Log.d("GitFunctionality", "Events thread");
+                GitFunctionality git = GitFunctionality.getInstance();
+                EventService evService = new EventService(git.getClient());
+                PageIterator<Event> events = evService.pageEvents(currentRepo);
+                ArrayList <PushPayload> pushes = new ArrayList<PushPayload>();
+                for(Event e : events.next()){
+                    if(pushes.size() < 1 && e.getType().equals("PushEvent")) {
+                        PushPayload p = (PushPayload) e.getPayload();
+                        String[] branch = p.getRef().split("/");
+                        Log.d("GitFunctionality", e.getActor().getLogin() + " pushed to " + branch[branch.length-1]);
+                        pushes.add(p);
+                    }
+                    else if (pushes.size() == 1){
+                        break;
+                    }
+                }
+                return pushes;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+    private class CheckConflicts extends AsyncTask<PushPayload, Void, Void> {
+        private Set<String> watched;
+
+        public CheckConflicts(Set<String> w) {
+            this.watched = w;
+        }
+        @Override
+        protected Void doInBackground(PushPayload... push) {
+            try {
+                Log.d("GitFunctionality", "Conflicts thread");
+                for (Commit c : push[0].getCommits()){
+                    RepositoryCommit temp = new RepositoryCommit();
+                    temp.setSha(c.getSha());
+                    getCommitFileNames task = new getCommitFileNames();
+                    task.execute(temp);
+                    for (String f : task.get()) {
+                        if (watched.contains(f)) {
+                            Log.d("Possible Conflict", f);
+                        }
+                    }
+                }
+                return null;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
     private class GetRepoIssues extends AsyncTask<Repository, Void, List<Issue>> {
         protected List<Issue> doInBackground(Repository... repo) {
             try {

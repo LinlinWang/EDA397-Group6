@@ -32,7 +32,6 @@ public class CommentsFragment extends Fragment implements AdapterView.OnItemClic
     private Context context;
     private ArrayList<String> info;
     private View view;
-    private SharedPreferences watched_files;
     Button commentButton;
 
     @Override
@@ -41,11 +40,6 @@ public class CommentsFragment extends Fragment implements AdapterView.OnItemClic
 
         view = inflater.inflate(R.layout.fragment_comments, container, false);
         git = GitFunctionality.getInstance();
-        watched_files = getActivity().getApplicationContext().getSharedPreferences("WatchedFiles",
-                getActivity().getApplicationContext().MODE_PRIVATE);
-        Set<String> watched = new HashSet<String>();
-        watched.addAll(watched_files.getStringSet(git.getUserName() +
-                git.getCurrentRepo().getName(), new HashSet<String>()));
         addListenerOnButton();
         info = new ArrayList<String>();
         context = container.getContext();
@@ -53,9 +47,6 @@ public class CommentsFragment extends Fragment implements AdapterView.OnItemClic
             info.add("Message: " + "\n" + git.getCurrentCommit().getCommit().getMessage());
 
             for (String f : git.getCommitFileNames()) {
-                if(watched.contains(f)){
-                    Log.d("Possible Conflict", f);
-                }
                 String[] temp = f.split("/");
                 info.add("Modified File:\n" + temp[temp.length - 1]);
             }
