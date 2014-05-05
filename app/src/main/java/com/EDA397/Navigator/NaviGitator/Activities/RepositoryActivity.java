@@ -1,6 +1,7 @@
 package com.EDA397.Navigator.NaviGitator.Activities;
 
 import android.app.ActionBar;
+import android.app.ActivityManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v4.view.ViewPager;
 
 import com.EDA397.Navigator.NaviGitator.Adapters.RepoTabsPagerAdapter;
 import com.EDA397.Navigator.NaviGitator.R;
+import com.EDA397.Navigator.NaviGitator.Services.NotificationService;
 
 /**
  * Created by QuattroX on 2014-04-10.
@@ -32,6 +34,11 @@ public class RepositoryActivity extends FragmentActivity implements
             startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.LoginActivity"));
         }
         else {
+            // Start Notification Service
+//            if(!isServiceRunning()){
+//                startService(new Intent(this, NotificationService.class));
+//            }
+
             viewPager = (ViewPager) findViewById(R.id.viewpagerRepo);
             actionBar = getActionBar();
             rAdapter = new RepoTabsPagerAdapter(getSupportFragmentManager());
@@ -69,6 +76,16 @@ public class RepositoryActivity extends FragmentActivity implements
                 }
             });
         }
+    }
+
+    private boolean isServiceRunning() {
+        ActivityManager manager = (ActivityManager)getSystemService(ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (NotificationService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
