@@ -1,13 +1,10 @@
 package com.EDA397.Navigator.NaviGitator.Tests;
 
-import android.content.Context;
 import android.test.InstrumentationTestCase;
 import android.util.Log;
 
-import com.EDA397.Navigator.NaviGitator.Activities.Encrypter;
-import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
+import com.EDA397.Navigator.NaviGitator.SupportFunctions.GitFunctionality;
 
-import org.eclipse.egit.github.core.CommitFile;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryCommit;
 
@@ -41,7 +38,7 @@ public class GitFunctionalityTest extends InstrumentationTestCase {
      * @throws Exception
      */
     public void testGitLogin() throws Exception{
-        assertTrue(git.gitLogin("navigitator","navi123"));
+        assertTrue(git.gitLogin("navigitator", "navi123"));
     }
     public void testGetRepos() throws Exception{
         String s = "";

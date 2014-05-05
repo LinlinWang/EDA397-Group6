@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.EDA397.Navigator.NaviGitator.R;
+import com.EDA397.Navigator.NaviGitator.SupportFunctions.GitFunctionality;
 
 /**
  * Activity representing the application's login screen.

@@ -9,7 +9,8 @@ import android.os.Bundle;
 
 import com.EDA397.Navigator.NaviGitator.Adapters.MainTabsPagerAdapter;
 import com.EDA397.Navigator.NaviGitator.R;
-import com.EDA397.Navigator.NaviGitator.Services.NotificationService;
+import com.EDA397.Navigator.NaviGitator.SupportFunctions.GitFunctionality;
+import com.EDA397.Navigator.NaviGitator.SupportFunctions.PivotalFunctionality;
 
 public class MainActivity extends FragmentActivity implements
         ActionBar.TabListener {
@@ -26,7 +27,7 @@ public class MainActivity extends FragmentActivity implements
         setContentView(R.layout.activity_main);
         GitFunctionality git = GitFunctionality.getInstance();
         PivotalFunctionality pv = PivotalFunctionality.getInstance();
-        pv.pivotalLogin("username","password");
+        pv.pivotalLogin("sajfer@gmail.com","suqe7Mfs");
         pv.getPivotalProjects();
 
         if (git.getUserName().equals("")){

@@ -2,8 +2,7 @@ package com.EDA397.Navigator.NaviGitator.Tests;
 
 import android.test.InstrumentationTestCase;
 
-import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
-import com.EDA397.Navigator.NaviGitator.Activities.PivotalFunctionality;
+import com.EDA397.Navigator.NaviGitator.SupportFunctions.PivotalFunctionality;
 import com.EDA397.Navigator.NaviGitator.Datatypes.PivotalProject;
 
 import java.util.List;

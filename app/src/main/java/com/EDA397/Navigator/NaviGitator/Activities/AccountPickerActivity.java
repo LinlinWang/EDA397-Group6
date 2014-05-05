@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -16,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import com.EDA397.Navigator.NaviGitator.R;
+import com.EDA397.Navigator.NaviGitator.SupportFunctions.GitFunctionality;
 
 /**
  * Activity for choosing which saved account to log in with (if any exist)

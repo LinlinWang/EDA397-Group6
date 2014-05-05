@@ -7,12 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
+import com.EDA397.Navigator.NaviGitator.SupportFunctions.GitFunctionality;
 import com.EDA397.Navigator.NaviGitator.R;
-import com.EDA397.Navigator.NaviGitator.Services.NotificationService;
 
 /**
  * Created by QuattroX on 2014-04-09.

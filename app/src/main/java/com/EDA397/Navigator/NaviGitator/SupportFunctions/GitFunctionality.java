@@ -1,4 +1,4 @@
-package com.EDA397.Navigator.NaviGitator.Activities;
+package com.EDA397.Navigator.NaviGitator.SupportFunctions;
 
 import android.os.AsyncTask;
 import android.util.Log;
