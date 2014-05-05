@@ -1,5 +1,6 @@
 package com.EDA397.Navigator.NaviGitator.Fragments;
 
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -37,12 +38,11 @@ public class SettingsFragment extends Fragment {
                 new Button.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        /**
+
                          if(isServiceRunning()){
                          getActivity().stopService(new Intent(getActivity().getApplicationContext(),
                          NotificationService.class));
                          }
-                         **/
                         startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.LoginActivity"));
                     }
                 }
@@ -54,15 +54,24 @@ public class SettingsFragment extends Fragment {
                 new Button.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        /**
                          if(isServiceRunning()){
                          getActivity().stopService(new Intent(getActivity().getApplicationContext(),
                          NotificationService.class));
                          }
-                         **/
                     }
                 }
         );
         return view;
+    }
+    private boolean isServiceRunning() {
+        ActivityManager manager =
+                (ActivityManager) getActivity().getSystemService(getActivity().ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service :
+                manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (NotificationService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

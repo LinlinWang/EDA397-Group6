@@ -86,12 +86,12 @@ public class MainActivity extends FragmentActivity implements
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
     }
     public void onBackPressed() {
-        /**
+
         if(isServiceRunning()){
-            getActivity().stopService(new Intent(getActivity().getApplicationContext(),
+            stopService(new Intent(getApplicationContext(),
             NotificationService.class));
          }
-         **/
+
         super.onBackPressed();
     }
     private boolean isServiceRunning() {

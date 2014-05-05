@@ -35,9 +35,9 @@ public class RepositoryActivity extends FragmentActivity implements
         }
         else {
             // Start Notification Service
-//            if(!isServiceRunning()){
-//                startService(new Intent(this, NotificationService.class));
-//            }
+            if(!isServiceRunning()){
+                startService(new Intent(this, NotificationService.class));
+            }
 
             viewPager = (ViewPager) findViewById(R.id.viewpagerRepo);
             actionBar = getActionBar();
