@@ -26,9 +26,10 @@ public class MainActivity extends FragmentActivity implements
         setContentView(R.layout.activity_main);
         GitFunctionality git = GitFunctionality.getInstance();
         PivotalFunctionality pv = PivotalFunctionality.getInstance();
-        pv.pivotalLogin("username","password");
+        pv.pivotalLogin("user","pw<!");
         pv.getPivotalProjects();
         pv.getPivotalStories();
+        
         if (git.getUserName().equals("")){
             startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.LoginActivity"));
         }
