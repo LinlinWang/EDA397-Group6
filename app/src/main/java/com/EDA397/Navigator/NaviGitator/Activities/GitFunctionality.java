@@ -3,6 +3,7 @@ package com.EDA397.Navigator.NaviGitator.Activities;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.eclipse.egit.github.core.Commit;
 import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.CommitFile;
 import org.eclipse.egit.github.core.Issue;
@@ -24,6 +25,7 @@ import org.eclipse.egit.github.core.service.OrganizationService;
 import org.eclipse.egit.github.core.service.RepositoryService;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  *  Class containing functionality to communicate with GitHub
@@ -219,7 +221,7 @@ public class GitFunctionality {
     public ArrayList<PushPayload> getRepoEvents() {
         try{
             Log.d("GitFunctionality", "RepoEvents");
-            getRepoEvents task = new getRepoEvents();
+            GetRepoEvents task = new GetRepoEvents();
             task.execute();
             return task.get();
         } catch ( Exception e) {
@@ -498,9 +500,10 @@ public class GitFunctionality {
     }
 
     /**
-     * Class which gets all issues for the current repository.
+     * Class which gets the 30 latest events covering all the current repo's branches
+     * (filtering out any non-push events).
      */
-    private class getRepoEvents extends AsyncTask<Void, Void, ArrayList<PushPayload>> {
+    private class GetRepoEvents extends AsyncTask<Void, Void, ArrayList<PushPayload>> {
         @Override
         protected ArrayList<PushPayload> doInBackground(Void... v) {
             try {
@@ -525,6 +528,11 @@ public class GitFunctionality {
             }
         }
     }
+
+    /**
+     * Class which checks if the files changed in the commit are amongst the ones
+     * the user is watching for changes
+     */
     private class CheckConflicts extends AsyncTask<Commit, Void, Void> {
         private Set<String> watched;
 
@@ -537,7 +545,7 @@ public class GitFunctionality {
                 Log.d("GitFunctionality", "Conflicts thread");
                     RepositoryCommit temp = new RepositoryCommit();
                     temp.setSha(comm[0].getSha());
-                    getCommitFileNames task = new getCommitFileNames();
+                    GetCommitFileNames task = new GetCommitFileNames();
                     task.execute(temp);
                     for (String f : task.get()) {
                         if (watched.contains(f)) {
@@ -553,6 +561,9 @@ public class GitFunctionality {
         }
     }
 
+    /**
+     * Class which gets all issues for the current repository.
+     */
     private class GetRepoIssues extends AsyncTask<Repository, Void, List<Issue>> {
         protected List<Issue> doInBackground(Repository... repo) {
             try {

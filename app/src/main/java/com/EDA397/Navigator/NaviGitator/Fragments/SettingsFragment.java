@@ -37,7 +37,12 @@ public class SettingsFragment extends Fragment {
                 new Button.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //getActivity().stopService(new Intent(getActivity().getApplicationContext(), NotificationService.class));
+                        /**
+                         if(isServiceRunning()){
+                         getActivity().stopService(new Intent(getActivity().getApplicationContext(),
+                         NotificationService.class));
+                         }
+                         **/
                         startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.LoginActivity"));
                     }
                 }
@@ -49,7 +54,12 @@ public class SettingsFragment extends Fragment {
                 new Button.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //getActivity().stopService(new Intent(getActivity().getApplicationContext(), NotificationService.class));
+                        /**
+                         if(isServiceRunning()){
+                         getActivity().stopService(new Intent(getActivity().getApplicationContext(),
+                         NotificationService.class));
+                         }
+                         **/
                     }
                 }
         );
