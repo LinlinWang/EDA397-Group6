@@ -13,10 +13,12 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.DefaultClientConnection;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
+import org.apache.http.util.ByteArrayBuffer;
 import org.eclipse.egit.github.core.service.OAuthService;
 
 import java.io.IOException;
@@ -33,6 +35,7 @@ public class PivotalFunctionality {
 
     private static PivotalFunctionality instance;
     private String url = "https://www.pivotaltracker.com/services/v3/tokens/active";
+    private String token = "";
 
     private PivotalFunctionality() {
 
@@ -82,10 +85,16 @@ public class PivotalFunctionality {
                 //Response
                 HttpResponse resp = httpclient.execute(post);
                 Log.d("PivotalFunctionality", "RESPONSE CODE" + resp.getStatusLine().getStatusCode());
-                if(resp.getStatusLine().getStatusCode() == 200)
+                String responseString = new BasicResponseHandler().handleResponse(resp);
+                int start = responseString.indexOf("<guid>")+6;
+                int end = responseString.indexOf("</guid>");
+                token = responseString.substring(start, end);
+                if(resp.getStatusLine().getStatusCode() == 200) {
+                    Log.d("PivotalFunctionality", "Token: " + token);
                     return true;
-                else
+                } else {
                     return false;
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.d("PivotalFunctionality", "Login failed");
