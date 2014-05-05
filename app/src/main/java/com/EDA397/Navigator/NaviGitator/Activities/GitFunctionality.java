@@ -3,7 +3,6 @@ package com.EDA397.Navigator.NaviGitator.Activities;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.eclipse.egit.github.core.Commit;
 import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.CommitFile;
 import org.eclipse.egit.github.core.Issue;
@@ -11,7 +10,6 @@ import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryBranch;
 import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.github.core.RepositoryContents;
-import org.eclipse.egit.github.core.TreeEntry;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.PageIterator;
@@ -26,7 +24,6 @@ import org.eclipse.egit.github.core.service.OrganizationService;
 import org.eclipse.egit.github.core.service.RepositoryService;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  *  Class containing functionality to communicate with GitHub
@@ -105,7 +102,7 @@ public class GitFunctionality {
     public List<Repository> getRepos() {
         try{
             Log.d("GitFunctionality", "Repos");
-            getRepos task = new getRepos();
+            GetRepos task = new GetRepos();
             task.execute();
             return task.get();
         } catch ( Exception e) {
@@ -135,7 +132,7 @@ public class GitFunctionality {
     public List<RepositoryCommit> getRepoCommits() {
         try{
             Log.d("GitFunctionality", "RepoCommits");
-            getRepoCommits task = new getRepoCommits();
+            GetRepoCommits task = new GetRepoCommits();
             task.execute(currentRepo);
             return task.get();
         } catch ( Exception e) {
@@ -151,7 +148,7 @@ public class GitFunctionality {
     public ArrayList<RepositoryContents> getDirContents(String dir) {
         try{
             Log.d("GitFunctionality", "All FileNames");
-            getDirContents task = new getDirContents();
+            GetDirContents task = new GetDirContents();
             task.execute(dir);
             return task.get();
         } catch ( Exception e) {
@@ -167,7 +164,7 @@ public class GitFunctionality {
     public ArrayList<String> getCommitFileNames() {
         try{
             Log.d("GitFunctionality", "Commit FileNames");
-            getCommitFileNames task = new getCommitFileNames();
+            GetCommitFileNames task = new GetCommitFileNames();
             task.execute(currentCommit);
             return task.get();
         } catch ( Exception e) {
@@ -184,7 +181,7 @@ public class GitFunctionality {
     public ArrayList<String> getCommitComments() {
         try{
             Log.d("GitFunctionality", "CommitComments");
-            getCommitComments task = new getCommitComments();
+            GetCommitComments task = new GetCommitComments();
             task.execute(currentCommit);
             return task.get();
         } catch ( Exception e) {
@@ -195,7 +192,7 @@ public class GitFunctionality {
     public Void addCommitComment(String s) {
         try{
             Log.d("GitFunctionality", "CommitComments");
-            addCommitComment task = new addCommitComment();
+            AddCommitComment task = new AddCommitComment();
             task.execute(s);
             return task.get();
         } catch ( Exception e) {
@@ -211,7 +208,7 @@ public class GitFunctionality {
     public ArrayList<String> getUserEvents() {
         try{
             Log.d("GitFunctionality", "UserEvents");
-            getUserEvents task = new getUserEvents();
+            GetUserEvents task = new GetUserEvents();
             task.execute();
             return task.get();
         } catch ( Exception e) {
@@ -274,7 +271,7 @@ public class GitFunctionality {
     /**
      * Async task to get all the repositories for the current user
      */
-    private class getRepos extends AsyncTask<Void, Void, List<Repository>> {
+    private class GetRepos extends AsyncTask<Void, Void, List<Repository>> {
         @Override
         protected List<Repository> doInBackground(Void... arg0) {
             try {
@@ -316,7 +313,7 @@ public class GitFunctionality {
     /**
      * Async task to get all the commits for a selected repository
      */
-    private class getRepoCommits extends AsyncTask<Repository, Void, List<RepositoryCommit>> {
+    private class GetRepoCommits extends AsyncTask<Repository, Void, List<RepositoryCommit>> {
         @Override
         protected List<RepositoryCommit> doInBackground(Repository... repo) {
             try {
@@ -371,7 +368,7 @@ public class GitFunctionality {
      * Async task to get the contents of a specific repo directory (sorted by listing directories
      * first).
      */
-    private class getDirContents extends AsyncTask<String, Void, ArrayList<RepositoryContents>> {
+    private class GetDirContents extends AsyncTask<String, Void, ArrayList<RepositoryContents>> {
         @Override
         protected ArrayList<RepositoryContents> doInBackground(String... dir) {
             try {
@@ -407,7 +404,7 @@ public class GitFunctionality {
     /**
      * Async task to get the names of all files changed in a selected commit
      */
-    private class getCommitFileNames extends AsyncTask<RepositoryCommit, Void, ArrayList<String>> {
+    private class GetCommitFileNames extends AsyncTask<RepositoryCommit, Void, ArrayList<String>> {
         @Override
         protected ArrayList<String> doInBackground(RepositoryCommit... r) {
             try {
@@ -431,7 +428,7 @@ public class GitFunctionality {
     /**
      * Async task to get all the comments on a selected commit
      */
-    private class getCommitComments extends AsyncTask<RepositoryCommit, Void, ArrayList<String>> {
+    private class GetCommitComments extends AsyncTask<RepositoryCommit, Void, ArrayList<String>> {
         @Override
         protected ArrayList<String> doInBackground(RepositoryCommit... r) {
             try {
@@ -453,7 +450,7 @@ public class GitFunctionality {
         }
     }
 
-    private class addCommitComment extends AsyncTask<String, Void, Void> {
+    private class AddCommitComment extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... s) {
             try {
@@ -477,7 +474,7 @@ public class GitFunctionality {
      * Async task to retrieve events received by the logged-in user (currently only retrieving
      * the latest events, using the default maximum of 30).
      */
-    private class getUserEvents extends AsyncTask<Void, Void, ArrayList<String>> {
+    private class GetUserEvents extends AsyncTask<Void, Void, ArrayList<String>> {
         @Override
         protected ArrayList<String> doInBackground(Void... v) {
             try {
@@ -499,6 +496,10 @@ public class GitFunctionality {
             }
         }
     }
+
+    /**
+     * Class which gets all issues for the current repository.
+     */
     private class getRepoEvents extends AsyncTask<Void, Void, ArrayList<PushPayload>> {
         @Override
         protected ArrayList<PushPayload> doInBackground(Void... v) {
