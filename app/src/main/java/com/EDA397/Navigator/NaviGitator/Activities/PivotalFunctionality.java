@@ -38,8 +38,7 @@ import javax.xml.xpath.XPathFactory;
 public class PivotalFunctionality {
 
     private static PivotalFunctionality instance;
-    private String urlLogin = "https://www.pivotaltracker.com/services/v3/tokens/active";
-    private String urlProject = "http://www.pivotaltracker.com/services/v3/projects";
+    private String url = "https://www.pivotaltracker.com/services/v3";
     private String token = "";
 
     private PivotalFunctionality() {
@@ -141,6 +140,22 @@ public class PivotalFunctionality {
     }
 
     /**
+     * Executing the asynctask for get pivotaltracker stories
+     * @return boolean if getting the pivotaltracker stories are successful
+     */
+    public Boolean getPivotalStories() {
+        try{
+            Log.d("PivotalFunctionality", "getprojects");
+            getStories task = new getStories();
+            task.execute();
+            return task.get();
+        } catch ( Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
      * Async task to Authenticate a user against Pivotal tracker
      */
     private class LoginPivotal extends AsyncTask<String, Void, Boolean> {
@@ -149,7 +164,7 @@ public class PivotalFunctionality {
         protected Boolean doInBackground(String... str) {
             try {
                 HttpClient httpclient = new DefaultHttpClient();
-                HttpPost post = new HttpPost(urlLogin);
+                HttpPost post = new HttpPost(url + "/tokens/active");
                 List<NameValuePair> np = new ArrayList<NameValuePair>();
                 np.add(new BasicNameValuePair("username", str[0]));
                 np.add(new BasicNameValuePair("password", str[1]));
@@ -187,7 +202,7 @@ public class PivotalFunctionality {
         protected List<PivotalProject> doInBackground(Void... arg0) {
             try {
                 HttpClient httpclient = new DefaultHttpClient();
-                HttpGet get = new HttpGet(urlProject);
+                HttpGet get = new HttpGet(url + "/projects");
                 get.setHeader("X-TrackerToken", token);
 
                 //Response
@@ -195,11 +210,40 @@ public class PivotalFunctionality {
 
                 String responseString = new BasicResponseHandler().handleResponse(resp);
 
+                Log.d("PivotalFunctionality", "RESPONSE FROM GET PROJECTS" + responseString);
+                return true;
                 //Log.d("PivotalFunctionality", "RESPONSE FROM GETPROJECTS \n " + responseString);
                 return parseXML(responseString);
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.d("PivotalFunctionality", "Login failed");
+                return false;
+            }
+        }
+    }
+
+    /**
+     * Async task to get the stories from pivotaltracker
+     */
+    private class getStories extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... arg0) {
+            try {
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpGet get = new HttpGet(url + "/projects/1043912/stories");
+                get.setHeader("X-TrackerToken", token);
+
+                //Response
+                HttpResponse resp = httpclient.execute(get);
+                String responseString = new BasicResponseHandler().handleResponse(resp);
+
+                Log.d("PivotalFunctionality", "RESPONSE GETSTORIES " + responseString);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.d("PivotalFunctionality", "failed get stories");
+                return false;
                 return null;
             }
         }
