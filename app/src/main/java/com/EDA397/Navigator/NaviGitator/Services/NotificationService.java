@@ -6,11 +6,19 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
+import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
 import com.EDA397.Navigator.NaviGitator.R;
+
+import org.eclipse.egit.github.core.event.PushPayload;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by QuattroX on 2014-04-29.
@@ -18,6 +26,7 @@ import com.EDA397.Navigator.NaviGitator.R;
 public class NotificationService extends Service{
 
     private Thread thread;
+    private SharedPreferences watched_files;
 
     @Override
     public IBinder onBind(Intent arg0) {
@@ -28,6 +37,7 @@ public class NotificationService extends Service{
     public void onCreate() {
         super.onCreate();
         Toast.makeText(this,"Service created", Toast.LENGTH_LONG).show();
+
         thread = new Thread(){
             @Override
             public void run() {
@@ -41,6 +51,17 @@ public class NotificationService extends Service{
                         .setAutoCancel(true)
                         .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, new Intent(), 0))
                         .build();
+                GitFunctionality git = GitFunctionality.getInstance();
+                watched_files = getSharedPreferences("WatchedFiles", MODE_PRIVATE);
+                Set<String> watched = new HashSet<String>();
+                watched.addAll(watched_files.getStringSet(git.getUserName() +
+                        git.getCurrentRepo().getName(), new HashSet<String>()));
+                ArrayList<PushPayload> pushes = git.getRepoEvents();
+                /**       for(PushPayload p : pushes){
+                 for (Commit c : p.getCommits()) {
+                 git.checkConflicts(watched, c);
+                 }
+                 }**/
                 NotifyManager.notify(1111, notification);
             }
         };

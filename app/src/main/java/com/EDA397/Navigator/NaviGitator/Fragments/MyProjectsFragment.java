@@ -38,7 +38,6 @@ public class MyProjectsFragment extends Fragment implements AdapterView.OnItemCl
     private ArrayList<Repository> repos;
     private GitFunctionality git;
     private View view;
-    private SharedPreferences watched_files;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,17 +67,6 @@ public class MyProjectsFragment extends Fragment implements AdapterView.OnItemCl
         Log.d("onItemClick", "RepoListItem: " + position);
         git.setCurrentRepo(repos.get(position));
         git.setCurrentBranch(null);
-        watched_files = getActivity().getApplicationContext().getSharedPreferences("WatchedFiles",
-                getActivity().getApplicationContext().MODE_PRIVATE);
-        Set<String> watched = new HashSet<String>();
-        watched.addAll(watched_files.getStringSet(git.getUserName() +
-                git.getCurrentRepo().getName(), new HashSet<String>()));
-        ArrayList <PushPayload> pushes = git.getRepoEvents();
- /**       for(PushPayload p : pushes){
-            for (Commit c : p.getCommits()) {
-                git.checkConflicts(watched, c);
-            }
-        }**/
 
         startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.RepositoryActivity"));
     }
