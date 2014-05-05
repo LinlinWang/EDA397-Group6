@@ -78,11 +78,11 @@ public class XMLParser {
 
             // normalize text representation
             doc.getDocumentElement().normalize();
-            System.out.println("Root element of the doc is " + doc.getDocumentElement().getNodeName());
+            //System.out.println("Root element of the doc is " + doc.getDocumentElement().getNodeName());
 
-            NodeList listOfProjects = doc.getElementsByTagName("project");
-            int totalProjects = listOfProjects.getLength();
-            Log.d("PivotalFunctionality","Total no of projects : " + totalProjects);
+            NodeList listOfProjects = doc.getElementsByTagName("story");
+            int totalStories = listOfProjects.getLength();
+            Log.d("PivotalFunctionality","Total no of story : " + totalStories);
 
             for (int i = 0; i < listOfProjects.getLength(); i++) {
 
@@ -93,18 +93,29 @@ public class XMLParser {
 
                     NodeList nameList = firstElement.getElementsByTagName("name");
                     NodeList idList = firstElement.getElementsByTagName("id");
+                    NodeList descriptionList = firstElement.getElementsByTagName("description");
+                    NodeList ownerList = firstElement.getElementsByTagName("owned_by");
 
                     Element nameElement = (Element) nameList.item(0);
                     Element idElement = (Element) idList.item(0);
+                    Element desciptionElement = (Element) descriptionList.item(0);
+                    Element ownerElement = (Element) ownerList.item(0);
 
                     NodeList textNameList = nameElement.getChildNodes();
                     NodeList textIdList = idElement.getChildNodes();
+                    NodeList textdescriptionList = desciptionElement.getChildNodes();
+                    NodeList textownerList = ownerElement.getChildNodes();
+
 
                     String name = ((Node) textNameList.item(0)).getNodeValue().trim();
                     Integer id = Integer.parseInt(((Node) textIdList.item(0)).getNodeValue().trim());
-                    Log.d("PivotalFunctionality","title : " + name);
-                    Log.d("PivotalFunctionality","id : " + id);
-                    //projects.add(new PivotalStory(name, id));
+                    String owner = ((Node) textownerList.item(0)).getNodeValue().trim();
+                    String description = ((Node) textdescriptionList.item(0)).getNodeValue().trim();
+
+                    Log.d("PivotalFunctionality","name of story" + name );
+                    Log.d("PivotalFunctionality","id of story : " + id);
+                    Log.d("PivotalFunctionality","owner of story : " + owner);
+                    Log.d("PivotalFunctionality","description of story: " + description);
                 }
             }//end of for loop with s var
             return projects;
