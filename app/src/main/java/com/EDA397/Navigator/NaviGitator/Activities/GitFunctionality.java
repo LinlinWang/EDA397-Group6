@@ -212,6 +212,11 @@ public class GitFunctionality {
             return null;
         }
     }
+
+    /**
+     * Method for getting the issues of a repository
+     * @return
+     */
     public List<Issue> getRepoIssues() {
         try{
             Log.d("GitFunctionality", "RepoIssues");
@@ -222,6 +227,14 @@ public class GitFunctionality {
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * Method which makes it possible for a user using the app to add an issue
+     * @return
+     */
+    public Void addIssues(){
+        return null;
     }
     /**
      * Async task to Authenticate a user against GitHub
