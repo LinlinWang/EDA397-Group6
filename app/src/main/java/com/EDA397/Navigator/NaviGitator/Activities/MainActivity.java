@@ -30,9 +30,6 @@ public class MainActivity extends FragmentActivity implements
             startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.LoginActivity"));
         }
         else{
-            // Start Notification Service
-            //startService(new Intent(this, NotificationService.class));
-
             // Initilization
             viewPager = (ViewPager) findViewById(R.id.viewpager);
             actionBar = getActionBar();
