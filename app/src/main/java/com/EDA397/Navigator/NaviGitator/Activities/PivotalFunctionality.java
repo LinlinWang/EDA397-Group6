@@ -32,11 +32,10 @@ import java.util.List;
 public class PivotalFunctionality {
 
     private static PivotalFunctionality instance;
-
+    private String url = "https://www.pivotaltracker.com/services/v3/tokens/active";
 
     private PivotalFunctionality() {
-        String url = "https://www.pivotaltracker.com/services/v3/tokens/active";
-        new LoginPivotal().execute(url);
+
     }
 
     /**
@@ -52,22 +51,17 @@ public class PivotalFunctionality {
         return instance;
     }
 
-    /**
-     * Function to login to pivotalTracker
-     * @param userName The username to be logged in
-     * @param password The users password
-     * @return the result of the login
-
-    public String pivotalLogin() {
-        String url = "https://www.pivotaltracker.com/services/v3/tokens/active";
-
-            Log.d("PivotalFunctionality", "Login pivotal");
-
-            return url;
-
-
+    public Boolean pivotalLogin(String userName, String password) {
+        try{
+            Log.d("GitFunctionality", "Login");
+            LoginPivotal task = new LoginPivotal();
+            task.execute(userName, password);
+            return task.get();
+        } catch ( Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
-*/
     /**
      * Async task to Authenticate a user against Pivotal tracker
      */
@@ -78,10 +72,37 @@ public class PivotalFunctionality {
         protected Boolean doInBackground(String... str) {
             try {
                 HttpClient httpclient = new DefaultHttpClient();
-                HttpPost post = new HttpPost(str[0]);
+                HttpPost post = new HttpPost(url);
                 List<NameValuePair> np = new ArrayList<NameValuePair>();
-                np.add(new BasicNameValuePair("username", "YOURUSERNAME"));
-                np.add(new BasicNameValuePair("password", "PASSWORD"));
+                np.add(new BasicNameValuePair("username", str[0]));
+                np.add(new BasicNameValuePair("password", str[1]));
+
+                post.setEntity(new UrlEncodedFormEntity(np));
+
+                //Response
+                HttpResponse resp = httpclient.execute(post);
+                Log.d("PivotalFunctionality", "RESPONSE CODE" + resp.getStatusLine().getStatusCode());
+                if(resp.getStatusLine().getStatusCode() == 200)
+                    return true;
+                else
+                    return false;
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.d("PivotalFunctionality", "Login failed");
+                return false;
+            }
+        }
+    }
+
+    private class getProjects extends AsyncTask<Void, Void, Boolean> {
+
+
+        @Override
+        protected Boolean doInBackground(Void... arg0) {
+            try {
+                HttpClient httpclient = new DefaultHttpClient();
+                HttpPost post = new HttpPost(url);
+                List<NameValuePair> np = new ArrayList<NameValuePair>();
 
                 post.setEntity(new UrlEncodedFormEntity(np));
 
@@ -96,6 +117,5 @@ public class PivotalFunctionality {
             }
         }
     }
-
 
 }

@@ -30,13 +30,13 @@ public class PivotalFunctionalityTest extends InstrumentationTestCase {
 
     public void testGetProjects() throws Exception {
         String projects = "";
-        projects = pivotal.getProjects();
+        //projects = pivotal.getProjects();
         assertFalse(projects.equals(""));
     }
 
     public void testGetStories() throws Exception {
         String stories = "";
-        stories = pivotal.getStories();
+        //stories = pivotal.getStories();
         assertFalse(stories.equals(""));
     }
 }
