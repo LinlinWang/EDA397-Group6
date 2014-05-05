@@ -2,31 +2,35 @@ package com.EDA397.Navigator.NaviGitator.Activities;
 
 import android.os.AsyncTask;
 import android.util.Log;
-
-import org.apache.http.HttpEntity;
+import com.EDA397.Navigator.NaviGitator.Datatypes.PivotalProject;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.DefaultClientConnection;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.ByteArrayBuffer;
-import org.eclipse.egit.github.core.service.OAuthService;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 
 /**
  * Created by sajfer on 2014-05-01.
@@ -34,7 +38,7 @@ import java.util.List;
 public class PivotalFunctionality {
 
     private static PivotalFunctionality instance;
-    private String url = "https://www.pivotaltracker.com/services/v3/tokens/active";
+    private String urlLogin = "https://www.pivotaltracker.com/services/v3/tokens/active";
     private String urlProject = "http://www.pivotaltracker.com/services/v3/projects";
     private String token = "";
 
@@ -57,6 +61,8 @@ public class PivotalFunctionality {
 
     /**
      * Executing the asynctask for pivotal login
+     * @param userName
+     * @param password
      * @return boolean if user is logged into pivotaltracker
      */
     public Boolean pivotalLogin(String userName, String password) {
@@ -75,7 +81,7 @@ public class PivotalFunctionality {
      * Executing the asynctask for get pivotaltracker projects
      * @return boolean if getting the pivotaltracker projects are successful
      */
-    public Boolean getPivotalProjects() {
+    public List<PivotalProject> getPivotalProjects() {
         try{
             Log.d("PivotalFunctionality", "getprojects");
             getProjects task = new getProjects();
@@ -83,7 +89,54 @@ public class PivotalFunctionality {
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
-            return false;
+            return null;
+        }
+    }
+
+    private List<PivotalProject> parseXML(String xml) {
+        List<PivotalProject> projects = new ArrayList<PivotalProject>();
+        try {
+            DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+            Document doc = docBuilder.parse(new InputSource(new StringReader(xml)));
+
+            // normalize text representation
+            doc.getDocumentElement().normalize();
+            System.out.println("Root element of the doc is " + doc.getDocumentElement().getNodeName());
+
+            NodeList listOfProjects = doc.getElementsByTagName("project");
+            int totalProjects = listOfProjects.getLength();
+            Log.d("PivotalFunctionality","Total no of projects : " + totalProjects);
+
+            for (int i = 0; i < listOfProjects.getLength(); i++) {
+
+                Node firstProjectNode = listOfProjects.item(i);
+                if (firstProjectNode.getNodeType() == Node.ELEMENT_NODE) {
+
+                    Element firstElement = (Element) firstProjectNode;
+
+                    NodeList nameList = firstElement.getElementsByTagName("name");
+                    NodeList idList = firstElement.getElementsByTagName("id");
+
+                    Element nameElement = (Element) nameList.item(0);
+                    Element idElement = (Element) idList.item(0);
+
+                    NodeList textNameList = nameElement.getChildNodes();
+                    NodeList textIdList = idElement.getChildNodes();
+
+                    String name = ((Node) textNameList.item(0)).getNodeValue().trim();
+                    Integer id = Integer.parseInt(((Node) textIdList.item(0)).getNodeValue().trim());
+                    Log.d("PivotalFunctionality","title : " + name);
+                    Log.d("PivotalFunctionality","id : " + id);
+                    projects.add(new PivotalProject(name, id));
+                }
+            }//end of for loop with s var
+            return projects;
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -92,12 +145,11 @@ public class PivotalFunctionality {
      */
     private class LoginPivotal extends AsyncTask<String, Void, Boolean> {
 
-
         @Override
         protected Boolean doInBackground(String... str) {
             try {
                 HttpClient httpclient = new DefaultHttpClient();
-                HttpPost post = new HttpPost(url);
+                HttpPost post = new HttpPost(urlLogin);
                 List<NameValuePair> np = new ArrayList<NameValuePair>();
                 np.add(new BasicNameValuePair("username", str[0]));
                 np.add(new BasicNameValuePair("password", str[1]));
@@ -128,11 +180,11 @@ public class PivotalFunctionality {
     /**
      * Async task to get the projects from pivotaltracker
      */
-    private class getProjects extends AsyncTask<Void, Void, Boolean> {
+    private class getProjects extends AsyncTask<Void, Void, List<PivotalProject>> {
 
 
         @Override
-        protected Boolean doInBackground(Void... arg0) {
+        protected List<PivotalProject> doInBackground(Void... arg0) {
             try {
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpGet get = new HttpGet(urlProject);
@@ -143,12 +195,12 @@ public class PivotalFunctionality {
 
                 String responseString = new BasicResponseHandler().handleResponse(resp);
 
-                Log.d("PivotalFunctionality", "RESPONSE FROM GETPROJECTS" + responseString);
-                return true;
+                //Log.d("PivotalFunctionality", "RESPONSE FROM GETPROJECTS \n " + responseString);
+                return parseXML(responseString);
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.d("PivotalFunctionality", "Login failed");
-                return false;
+                return null;
             }
         }
     }

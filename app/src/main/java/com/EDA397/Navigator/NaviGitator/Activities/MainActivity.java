@@ -6,10 +6,14 @@ import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.EDA397.Navigator.NaviGitator.Adapters.MainTabsPagerAdapter;
+import com.EDA397.Navigator.NaviGitator.Datatypes.PivotalProject;
 import com.EDA397.Navigator.NaviGitator.R;
 import com.EDA397.Navigator.NaviGitator.Services.NotificationService;
+
+import java.util.List;
 
 public class MainActivity extends FragmentActivity implements
         ActionBar.TabListener {
@@ -26,9 +30,14 @@ public class MainActivity extends FragmentActivity implements
         setContentView(R.layout.activity_main);
         GitFunctionality git = GitFunctionality.getInstance();
         PivotalFunctionality pv = PivotalFunctionality.getInstance();
-        pv.pivotalLogin("username","password");
-        pv.getPivotalProjects();
+        pv.pivotalLogin("","");
+        List<PivotalProject> projects = pv.getPivotalProjects();
 
+        for (PivotalProject proj: projects)
+        {
+            Log.d("MainActivity", proj.getName());
+            Log.d("MainActivity", proj.getId().toString());
+        }
         if (git.getUserName().equals("")){
             startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.LoginActivity"));
         }

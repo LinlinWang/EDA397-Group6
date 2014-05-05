@@ -4,6 +4,9 @@ import android.test.InstrumentationTestCase;
 
 import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
 import com.EDA397.Navigator.NaviGitator.Activities.PivotalFunctionality;
+import com.EDA397.Navigator.NaviGitator.Datatypes.PivotalProject;
+
+import java.util.List;
 
 /**
  * Created by sajfer on 2014-05-01.
@@ -29,7 +32,7 @@ public class PivotalFunctionalityTest extends InstrumentationTestCase {
     }
 
     public void testGetProjects() throws Exception {
-        String projects = "";
+        List<PivotalProject> projects = null;
         //projects = pivotal.getProjects();
         assertFalse(projects.equals(""));
     }
