@@ -210,14 +210,12 @@ public class PivotalFunctionality {
 
                 String responseString = new BasicResponseHandler().handleResponse(resp);
 
-                Log.d("PivotalFunctionality", "RESPONSE FROM GET PROJECTS" + responseString);
-                return true;
-                //Log.d("PivotalFunctionality", "RESPONSE FROM GETPROJECTS \n " + responseString);
+                Log.d("PivotalFunctionality", "RESPONSE FROM GETPROJECTS \n " + responseString);
                 return parseXML(responseString);
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.d("PivotalFunctionality", "Login failed");
-                return false;
+                Log.d("PivotalFunctionality", "failed get projects");
+                return null;
             }
         }
     }
@@ -243,7 +241,6 @@ public class PivotalFunctionality {
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.d("PivotalFunctionality", "failed get stories");
-                return false;
                 return null;
             }
         }
