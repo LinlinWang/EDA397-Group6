@@ -50,8 +50,13 @@ public class IssuesFragment extends Fragment implements AdapterView.OnItemClickL
     }
 
     @Override
+    /**
+     * Navigates to comments tab after a issue has been selected.
+     */
     public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-    // do nothing for now
-
+        git = GitFunctionality.getInstance();
+        git.setCurrentIssue(repoIssues.get(position));
+        RepositoryActivity r = (RepositoryActivity) getActivity();
+        r.viewPager.setCurrentItem(3);
     }
 }

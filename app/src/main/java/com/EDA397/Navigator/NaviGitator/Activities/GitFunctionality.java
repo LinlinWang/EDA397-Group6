@@ -3,13 +3,16 @@ package com.EDA397.Navigator.NaviGitator.Activities;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.CommitFile;
 import org.eclipse.egit.github.core.Issue;
+import org.eclipse.egit.github.core.IssueEvent;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryBranch;
 import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.github.core.RepositoryContents;
+import org.eclipse.egit.github.core.RepositoryIssue;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.PageIterator;
@@ -35,6 +38,7 @@ public class GitFunctionality {
     private static String username;
     private static Repository currentRepo;
     private static RepositoryCommit currentCommit;
+    private static Issue currentIssue;
 
     private GitFunctionality() {
             client = new GitHubClient();
@@ -71,6 +75,8 @@ public class GitFunctionality {
     public void setCurrentRepo(Repository r){ currentRepo = r; }
     public RepositoryCommit getCurrentCommit(){ return currentCommit; }
     public void setCurrentCommit(RepositoryCommit r){ currentCommit = r; }
+    public Issue getCurrentIssues(){ return currentIssue; }
+    public void setCurrentIssue(Issue r){ currentIssue = r; }
 
     /**
      * Function to login to GitHub
@@ -168,8 +174,6 @@ public class GitFunctionality {
             return null;
         }
     }
-
-
     /**
      * Get all comments for the currently chosen commit
      * @return A list of comments
@@ -212,6 +216,10 @@ public class GitFunctionality {
             return null;
         }
     }
+    /**
+     * Returns the issues for the currently chosen repository
+     * @return A list of events
+     */
     public List<Issue> getRepoIssues() {
         try{
             Log.d("GitFunctionality", "RepoIssues");
@@ -219,6 +227,19 @@ public class GitFunctionality {
             task.execute(currentRepo);
             return task.get();
         } catch ( Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public ArrayList<String> getIssueComments(){
+        try{
+            Log.d("GitFunctionality", "IssueComments");
+            GetIssueComments task = new GetIssueComments();
+            task.execute(currentIssue);
+            //return task.get();
+            return null;
+        }catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -484,6 +505,29 @@ public class GitFunctionality {
                 e.printStackTrace();
                 return null;
             }
+        }
+    }
+    /**
+     * Class which returns the comments on the selected issue
+     */
+    private class GetIssueComments extends AsyncTask<Issue,Void,ArrayList<Comment>> {
+        @Override
+        protected ArrayList<Comment> doInBackground(Issue... issue) {
+            try {
+                Log.d("GitFunctionality", "IssueComments thread");
+                GitFunctionality git = GitFunctionality.getInstance();
+                IssueService issueService = new IssueService(git.getClient());
+                String issueId = String.valueOf(issue[0].getId());
+                issueService.getComments(currentRepo, issueId);
+                List<Comment> issueComments= issueService.getComments(currentRepo, issueId);
+                issueComments = new ArrayList<Comment>();
+
+                return null;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+
         }
     }
 }
