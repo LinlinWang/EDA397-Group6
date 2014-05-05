@@ -17,6 +17,7 @@ import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.event.Event;
+import org.eclipse.egit.github.core.event.IssueCommentPayload;
 import org.eclipse.egit.github.core.service.CommitService;
 import org.eclipse.egit.github.core.service.ContentsService;
 import org.eclipse.egit.github.core.service.EventService;
@@ -201,6 +202,18 @@ public class GitFunctionality {
         }
     }
 
+    public Void addIssueComment(String s){
+        try{
+            Log.d("GitFunctionality", "IssueComments");
+            AddIssueComment task = new AddIssueComment();
+            task.execute(s);
+            return task.get();
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     /**
      * Returns up to the 30 latest events targeting the logged-in user
      * @return A list of events
@@ -232,13 +245,12 @@ public class GitFunctionality {
         }
     }
 
-    public ArrayList<String> getIssueComments(){
+    public List<Comment> getIssueComments(){
         try{
             Log.d("GitFunctionality", "IssueComments");
             GetIssueComments task = new GetIssueComments();
             task.execute(currentIssue);
-            //return task.get();
-            return null;
+            return task.get();
         }catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -456,6 +468,30 @@ public class GitFunctionality {
         }
     }
 
+    private class AddIssueComment extends AsyncTask<String,Void,Void>{
+
+        @Override
+        protected Void doInBackground(String... s) {
+            try{
+                Log.d("GitFunctionality", "add IssueComments thread");
+                GitFunctionality git = GitFunctionality.getInstance();
+                IssueService issueService = new IssueService(git.getClient());
+                String issueId = String.valueOf(currentIssue.getId());
+                User user = new User();
+                user.setLogin(username);
+                Comment comment = new Comment();
+                comment.setBody(s[0]);
+                String c = comment.getBody();
+                //comment.setUser(user);
+                issueService.createComment(username,currentRepo.getName(),issueId,c);
+
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            return  null;
+        }
+    }
+
     /**
      * Async task to retrieve events received by the logged-in user (currently only retrieving
      * the latest events, using the default maximum of 30).
@@ -510,9 +546,9 @@ public class GitFunctionality {
     /**
      * Class which returns the comments on the selected issue
      */
-    private class GetIssueComments extends AsyncTask<Issue,Void,ArrayList<Comment>> {
+    private class GetIssueComments extends AsyncTask<Issue,Void,List<Comment>> {
         @Override
-        protected ArrayList<Comment> doInBackground(Issue... issue) {
+        protected List<Comment> doInBackground(Issue... issue) {
             try {
                 Log.d("GitFunctionality", "IssueComments thread");
                 GitFunctionality git = GitFunctionality.getInstance();
@@ -520,9 +556,11 @@ public class GitFunctionality {
                 String issueId = String.valueOf(issue[0].getId());
                 issueService.getComments(currentRepo, issueId);
                 List<Comment> issueComments= issueService.getComments(currentRepo, issueId);
-                issueComments = new ArrayList<Comment>();
 
-                return null;
+                for (Comment i: issueComments){
+                    Log.d("GitFunctionality", " : " + i.getBody());
+                }
+                return  issueComments;
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;

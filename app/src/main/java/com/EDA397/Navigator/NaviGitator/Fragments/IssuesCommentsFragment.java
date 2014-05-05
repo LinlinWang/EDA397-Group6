@@ -20,6 +20,8 @@ import android.widget.ListView;
 import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
 import com.EDA397.Navigator.NaviGitator.R;
 
+import org.eclipse.egit.github.core.Comment;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -54,14 +56,14 @@ public class IssuesCommentsFragment extends Fragment implements AdapterView.OnIt
         if(git.getCurrentIssues() != null) {
             info.add("Message: " + "\n" + git.getCurrentIssues().getBody());
 
-            for (String f : git.getIssueComments()) {
+            for (Comment f : git.getIssueComments()) {
                 if(watched.contains(f)){
-                    Log.d("Possible Conflict", f);
+                    Log.d("Possible Conflict", f.getBody());
                 }
-                String[] temp = f.split("/");
+                String[] temp = f.getBody().split("/");
                 info.add("Modified File:\n" + temp[temp.length - 1]);
             }
-            for (String s : git.getIssueComments()) {
+            for (Comment s : git.getIssueComments()) {
                 info.add("Comment by " + s);
             }
 
@@ -100,7 +102,7 @@ public class IssuesCommentsFragment extends Fragment implements AdapterView.OnIt
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         if (userInput.getText() != null) {
-                                            //git.addIssueComment (userInput.getText().toString());
+                                            git.addIssueComment (userInput.getText().toString());
                                             //git.addCommitComment(userInput.getText().toString());
                                             dialog.dismiss();
                                         } else {
