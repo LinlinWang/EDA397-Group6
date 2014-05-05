@@ -13,7 +13,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import com.EDA397.Navigator.NaviGitator.SupportFunctions.GitFunctionality;
-import com.EDA397.Navigator.NaviGitator.Activities.RepoAdapter;
+import com.EDA397.Navigator.NaviGitator.Adapters.RepoAdapter;
 import com.EDA397.Navigator.NaviGitator.R;
 import org.eclipse.egit.github.core.Repository;
 

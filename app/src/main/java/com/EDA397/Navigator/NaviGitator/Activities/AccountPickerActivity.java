@@ -14,7 +14,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Set;
 
+import com.EDA397.Navigator.NaviGitator.Adapters.AccountAdapter;
 import com.EDA397.Navigator.NaviGitator.R;
+import com.EDA397.Navigator.NaviGitator.SupportFunctions.Encrypter;
 import com.EDA397.Navigator.NaviGitator.SupportFunctions.GitFunctionality;
 
 /**
