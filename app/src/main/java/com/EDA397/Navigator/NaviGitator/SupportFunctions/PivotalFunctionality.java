@@ -3,6 +3,7 @@ package com.EDA397.Navigator.NaviGitator.SupportFunctions;
 import android.os.AsyncTask;
 import android.util.Log;
 import com.EDA397.Navigator.NaviGitator.Datatypes.PivotalProject;
+import com.EDA397.Navigator.NaviGitator.Datatypes.PivotalStory;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -81,15 +82,15 @@ public class PivotalFunctionality {
      * Executing the asynctask for get pivotaltracker stories
      * @return boolean if getting the pivotaltracker stories are successful
      */
-    public Boolean getPivotalStories() {
+    public List<PivotalStory> getPivotalStories() {
         try{
-            Log.d("PivotalFunctionality", "getprojects");
+            Log.d("PivotalFunctionality", "get stories");
             getStories task = new getStories();
             task.execute();
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
     }
 
@@ -135,7 +136,6 @@ public class PivotalFunctionality {
      */
     private class getProjects extends AsyncTask<Void, Void, List<PivotalProject>> {
 
-
         @Override
         protected List<PivotalProject> doInBackground(Void... arg0) {
             try {
@@ -148,7 +148,7 @@ public class PivotalFunctionality {
 
                 String responseString = new BasicResponseHandler().handleResponse(resp);
 
-                Log.d("PivotalFunctionality", "RESPONSE FROM GETPROJECTS \n " + responseString);
+                Log.d("PivotalFunctionality", "RESPONSE FROM GET PROJECTS \n " + responseString);
                 return XMLParser.parseProjects(responseString);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -161,21 +161,21 @@ public class PivotalFunctionality {
     /**
      * Async task to get the stories from pivotaltracker
      */
-    private class getStories extends AsyncTask<Void, Void, Boolean> {
+    private class getStories extends AsyncTask<Void, Void, List<PivotalStory>> {
 
         @Override
-        protected Boolean doInBackground(Void... arg0) {
+        protected List<PivotalStory> doInBackground(Void... arg0) {
             try {
                 HttpClient httpclient = new DefaultHttpClient();
-                HttpGet get = new HttpGet(url + "/projects/1043912/stories");
+                HttpGet get = new HttpGet(url + "/projects/1043912/stories?state:accepted");
                 get.setHeader("X-TrackerToken", token);
 
                 //Response
                 HttpResponse resp = httpclient.execute(get);
-                String responseString = new BasicResponseHandler().handleResponse(resp);
+                //String responseString = new BasicResponseHandler().handleResponse(resp);
 
-                Log.d("PivotalFunctionality", "RESPONSE GETSTORIES " + responseString);
-                return true;
+                //Log.d("PivotalFunctionality", "RESPONSE GET STORIES " + responseString);
+                return XMLParser.parseStories(new BasicResponseHandler().handleResponse(resp));
             } catch (Exception e) {
                 e.printStackTrace();
                 Log.d("PivotalFunctionality", "failed get stories");
