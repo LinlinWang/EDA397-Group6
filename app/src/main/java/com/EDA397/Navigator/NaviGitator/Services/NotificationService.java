@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
 import com.EDA397.Navigator.NaviGitator.R;
 
+import org.eclipse.egit.github.core.Commit;
 import org.eclipse.egit.github.core.event.PushPayload;
 
 import java.util.ArrayList;
@@ -57,11 +58,11 @@ public class NotificationService extends Service{
                 watched.addAll(watched_files.getStringSet(git.getUserName() +
                         git.getCurrentRepo().getName(), new HashSet<String>()));
                 ArrayList<PushPayload> pushes = git.getRepoEvents();
-                /**       for(PushPayload p : pushes){
-                 for (Commit c : p.getCommits()) {
-                 git.checkConflicts(watched, c);
-                 }
-                 }**/
+                /**for(PushPayload p : pushes){
+                    for (Commit c : p.getCommits()) {
+                        git.checkConflicts(watched, c);
+                    }
+                }**/
                 NotifyManager.notify(1111, notification);
             }
         };

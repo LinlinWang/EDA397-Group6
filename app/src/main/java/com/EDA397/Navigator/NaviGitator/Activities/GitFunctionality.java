@@ -218,10 +218,9 @@ public class GitFunctionality {
             return null;
         }
     }
-
     /**
-     * Method for getting the issues of a repository
-     * @return
+     * Returns up to the 30 latest pushevents on the current repo
+     * @return A list of events
      */
     public ArrayList<PushPayload> getRepoEvents() {
         try{
@@ -234,6 +233,10 @@ public class GitFunctionality {
             return null;
         }
     }
+    /**
+     * Method for checking for filename conflicts between a commit and the user's watched files.
+     * @return
+     */
     public void checkConflicts(Set<String> w, Commit c) {
         try{
             Log.d("GitFunctionality", "Conflict Check");
@@ -243,7 +246,10 @@ public class GitFunctionality {
             e.printStackTrace();
         }
     }
-
+    /**
+     * Method for getting the issues of a repository
+     * @return
+     */
     public List<Issue> getRepoIssues() {
         try{
             Log.d("GitFunctionality", "RepoIssues");
