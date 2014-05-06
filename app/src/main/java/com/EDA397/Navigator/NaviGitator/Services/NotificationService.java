@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.IBinder;
+import android.os.Process;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
@@ -57,17 +58,7 @@ public class NotificationService extends Service{
                         .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, new Intent(), 0))
                         .build();
                 GitFunctionality git = GitFunctionality.getInstance();
-//                watched_files = getSharedPreferences("WatchedFiles", MODE_PRIVATE);
-//                Set<String> watched = new HashSet<String>();
-//                watched.addAll(watched_files.getStringSet(git.getUserName() +
-//                        git.getCurrentRepo().getName(), new HashSet<String>()));
-//                ArrayList<PushPayload> pushes = git.getRepoEvents();
-                /**for(PushPayload p : pushes){
-                    for (Commit c : p.getCommits()) {
-                        git.checkConflicts(watched, c);
-                    }
-                }**/
-
+                ArrayList<PushPayload> pushes = new ArrayList<PushPayload>();
                 ArrayList<Event> events = git.getRepoEvents2();
                 int nrPushes = 0;
                 int nrCommitComments = 0;
@@ -80,6 +71,7 @@ public class NotificationService extends Service{
                 for(Event e : events){
                     if(e.getType().equals("PushEvent")){
                         PushPayload p = (PushPayload) e.getPayload();
+                        pushes.add(p);
                         String[] branch = p.getRef().split("/");
                         Notification pushNoti = builder
                                 .setSmallIcon(R.drawable.ic_launcher)
@@ -125,9 +117,18 @@ public class NotificationService extends Service{
                     }
                 }
                 NotifyManager.notify(1111, notification);
+                watched_files = getSharedPreferences("WatchedFiles", MODE_PRIVATE);
+                Set<String> watched = new HashSet<String>();
+                watched.addAll(watched_files.getStringSet(git.getUserName() +
+                        git.getCurrentRepo().getName(), new HashSet<String>()));
+                for(PushPayload p : pushes){
+                    for (Commit c : p.getCommits()) {
+                        git.checkConflicts(watched, c);
+                    }
+                }
             }
         };
-
+        thread.setPriority(Thread.MIN_PRIORITY);
     }
 
     @Override

@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-
+import android.os.Process;
 import com.EDA397.Navigator.NaviGitator.Adapters.MainTabsPagerAdapter;
 import com.EDA397.Navigator.NaviGitator.R;
 import com.EDA397.Navigator.NaviGitator.Services.NotificationService;

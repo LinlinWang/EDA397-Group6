@@ -91,7 +91,7 @@ public class GitFunctionality {
             Log.d("GitFunctionality", "Login");
             username = userName;
             Authenticate task = new Authenticate();
-            task.execute(userName, password);
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR,userName, password);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -107,7 +107,7 @@ public class GitFunctionality {
         try{
             Log.d("GitFunctionality", "Repos");
             GetRepos task = new GetRepos();
-            task.execute();
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -122,7 +122,7 @@ public class GitFunctionality {
         try{
             Log.d("GitFunctionality", "Branches");
             GetRepoBranches task = new GetRepoBranches();
-            task.execute(currentRepo);
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR,currentRepo);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -137,7 +137,7 @@ public class GitFunctionality {
         try{
             Log.d("GitFunctionality", "RepoCommits");
             GetRepoCommits task = new GetRepoCommits();
-            task.execute(currentRepo);
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR,currentRepo);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -153,7 +153,7 @@ public class GitFunctionality {
         try{
             Log.d("GitFunctionality", "All FileNames");
             GetDirContents task = new GetDirContents();
-            task.execute(dir);
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR,dir);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -169,7 +169,7 @@ public class GitFunctionality {
         try{
             Log.d("GitFunctionality", "Commit FileNames");
             GetCommitFileNames task = new GetCommitFileNames();
-            task.execute(currentCommit);
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR,currentCommit);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -186,7 +186,7 @@ public class GitFunctionality {
         try{
             Log.d("GitFunctionality", "CommitComments");
             GetCommitComments task = new GetCommitComments();
-            task.execute(currentCommit);
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR,currentCommit);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -197,7 +197,7 @@ public class GitFunctionality {
         try{
             Log.d("GitFunctionality", "CommitComments");
             AddCommitComment task = new AddCommitComment();
-            task.execute(s);
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR,s);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -213,7 +213,7 @@ public class GitFunctionality {
         try{
             Log.d("GitFunctionality", "UserEvents");
             GetUserEvents task = new GetUserEvents();
-            task.execute();
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -228,7 +228,7 @@ public class GitFunctionality {
         try{
             Log.d("GitFunctionality", "RepoEvents");
             GetRepoEvents task = new GetRepoEvents();
-            task.execute();
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -243,7 +243,7 @@ public class GitFunctionality {
         try{
             Log.d("GitFunctionality", "RepoEvents");
             GetRepoEvents2 task = new GetRepoEvents2();
-            task.execute();
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -258,7 +258,7 @@ public class GitFunctionality {
         try{
             Log.d("GitFunctionality", "Conflict Check");
             CheckConflicts task = new CheckConflicts(w);
-            task.execute(c);
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR,c);
         } catch ( Exception e) {
             e.printStackTrace();
         }
@@ -271,7 +271,7 @@ public class GitFunctionality {
         try{
             Log.d("GitFunctionality", "RepoIssues");
             GetRepoIssues task = new GetRepoIssues();
-            task.execute(currentRepo);
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR,currentRepo);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -603,7 +603,8 @@ public class GitFunctionality {
                     RepositoryCommit temp = new RepositoryCommit();
                     temp.setSha(comm[0].getSha());
                     GetCommitFileNames task = new GetCommitFileNames();
-                    task.execute(temp);
+                    //task.execute(temp);
+                    task.executeOnExecutor(THREAD_POOL_EXECUTOR, temp);
                     for (String f : task.get()) {
                         if (watched.contains(f)) {
                             Log.d("Possible Conflict", f);

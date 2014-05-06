@@ -4,7 +4,7 @@ import android.app.ActionBar;
 import android.app.ActivityManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.os.Bundle;
+import android.os.*;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 
@@ -34,11 +34,6 @@ public class RepositoryActivity extends FragmentActivity implements
             startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.LoginActivity"));
         }
         else {
-            // Start Notification Service
-            if(!isServiceRunning()){
-                startService(new Intent(this, NotificationService.class));
-            }
-
             viewPager = (ViewPager) findViewById(R.id.viewpagerRepo);
             actionBar = getActionBar();
             rAdapter = new RepoTabsPagerAdapter(getSupportFragmentManager());
@@ -75,6 +70,10 @@ public class RepositoryActivity extends FragmentActivity implements
                 public void onPageScrollStateChanged(int arg0) {
                 }
             });
+            // Start Notification Service
+            if(!isServiceRunning()){
+                startService(new Intent(this, NotificationService.class));
+            }
         }
     }
 
