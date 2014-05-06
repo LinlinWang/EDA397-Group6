@@ -94,13 +94,13 @@ public class NotificationService extends Service{
                         Notification commitCommentNoti = builder
                                 .setSmallIcon(R.drawable.ic_launcher)
                                 .setContentTitle(++nrCommitComments + " new commit comment(s)")
-                                .setContentText("on " + ccp.getComment().getPath())
+                                .setContentText("on " + ccp.getComment().getCommitId())
                                 .setAutoCancel(true)
                                 .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, new Intent(), 0))
                                 .build();
                         NotifyManager.notify(commitCommentsId, commitCommentNoti);
                     }
-                    else if(e.getType().equals("IssueEvent")){
+                    else if(e.getType().equals("IssuesEvent")){
 //                        IssuesPayload ip = (IssuesPayload) e.getPayload();
                         Notification issueNoti = builder
                                 .setSmallIcon(R.drawable.ic_launcher)
