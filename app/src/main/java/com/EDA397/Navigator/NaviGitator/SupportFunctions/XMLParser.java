@@ -70,7 +70,7 @@ public class XMLParser {
     }
 
     public static List<PivotalStory> parseStories(String xml) {
-        List<PivotalStory> projects = new ArrayList<PivotalStory>();
+        List<PivotalStory> stories = new ArrayList<PivotalStory>();
         try {
             DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
@@ -116,9 +116,11 @@ public class XMLParser {
                     Log.d("PivotalFunctionality","id of story : " + id);
                     Log.d("PivotalFunctionality","owner of story : " + owner);
                     Log.d("PivotalFunctionality","description of story: " + description);
+
+                    stories.add(new PivotalStory(name, id, description, owner));
                 }
             }//end of for loop with s var
-            return projects;
+            return stories;
         }
         catch (Exception e)
         {
