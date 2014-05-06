@@ -73,9 +73,9 @@ public class NotificationService extends Service{
                 int nrIssues = 0;
                 int nrIssuesComments = 0;
                 int pushId = 1;
-                int commitCommentsId = 1;
-                int issuesId = 1;
-                int issueCommentId = 1;
+                int commitCommentsId = 2;
+                int issuesId = 3;
+                int issueCommentId = 4;
                 for(Event e : events){
                     if(e.getType().equals("PushEvent")){
                         PushPayload p = (PushPayload) e.getPayload();
