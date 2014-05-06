@@ -15,7 +15,10 @@ import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
 import com.EDA397.Navigator.NaviGitator.R;
 
 import org.eclipse.egit.github.core.Commit;
+import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.Event;
+import org.eclipse.egit.github.core.event.IssueCommentPayload;
+import org.eclipse.egit.github.core.event.IssuesPayload;
 import org.eclipse.egit.github.core.event.PushPayload;
 
 import java.util.ArrayList;
@@ -66,14 +69,20 @@ public class NotificationService extends Service{
                 }**/
                 ArrayList<Event> events = git.getRepoEvents2();
                 int nrPushes = 0;
+                int nrCommitComments = 0;
+                int nrIssues = 0;
+                int nrIssuesComments = 0;
                 int pushId = 1;
+                int commitCommentsId = 1;
+                int issuesId = 1;
+                int issueCommentId = 1;
                 for(Event e : events){
                     if(e.getType().equals("PushEvent")){
                         PushPayload p = (PushPayload) e.getPayload();
                         String[] branch = p.getRef().split("/");
                         Notification pushNoti = builder
                                 .setSmallIcon(R.drawable.ic_launcher)
-                                .setContentTitle(++nrPushes + " new push")
+                                .setContentTitle(++nrPushes + " new push(es)")
                                 .setContentText("on branch " + branch[branch.length-1])
                                 .setAutoCancel(true)
                                 .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, new Intent(), 0))
@@ -81,13 +90,37 @@ public class NotificationService extends Service{
                         NotifyManager.notify(pushId, pushNoti);
                     }
                     else if(e.getType().equals("CommitCommentEvent")){
-
+                        CommitCommentPayload ccp = (CommitCommentPayload) e.getPayload();
+                        Notification commitCommentNoti = builder
+                                .setSmallIcon(R.drawable.ic_launcher)
+                                .setContentTitle(++nrCommitComments + " new commit comment(s)")
+                                .setContentText("on " + ccp.getComment().getPath())
+                                .setAutoCancel(true)
+                                .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, new Intent(), 0))
+                                .build();
+                        NotifyManager.notify(commitCommentsId, commitCommentNoti);
                     }
                     else if(e.getType().equals("IssueEvent")){
-
+//                        IssuesPayload ip = (IssuesPayload) e.getPayload();
+                        Notification issueNoti = builder
+                                .setSmallIcon(R.drawable.ic_launcher)
+                                .setContentTitle(++nrIssues + " new issue(s)")
+                                .setContentText("")
+                                .setAutoCancel(true)
+                                .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, new Intent(), 0))
+                                .build();
+                        NotifyManager.notify(issuesId, issueNoti);
                     }
                     else if(e.getType().equals("IssueCommentEvent")){
-
+                        IssueCommentPayload icp = (IssueCommentPayload) e.getPayload();
+                        Notification issueCommentNoti = builder
+                                .setSmallIcon(R.drawable.ic_launcher)
+                                .setContentTitle(++nrIssuesComments + " new issue comment(s)")
+                                .setContentText("on " + icp.getIssue().getTitle())
+                                .setAutoCancel(true)
+                                .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, new Intent(), 0))
+                                .build();
+                        NotifyManager.notify(issueCommentId, issueCommentNoti);
                     }
                 }
                 NotifyManager.notify(1111, notification);
