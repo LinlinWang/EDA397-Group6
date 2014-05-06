@@ -49,7 +49,7 @@ public class PivotalFunctionalityTest extends InstrumentationTestCase {
      */
     public void testGetStories() throws Exception {
         List<PivotalStory> stories = null;
-        stories = pivotal.getPivotalStories();
+        stories = pivotal.getPivotalStories(1043912);
         assertFalse(stories.isEmpty());
     }
 }

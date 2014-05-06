@@ -89,11 +89,11 @@ public class PivotalFunctionality {
      * Executing the asynctask for get pivotaltracker stories
      * @return boolean if getting the pivotaltracker stories are successful
      */
-    public List<PivotalStory> getPivotalStories() {
+    public List<PivotalStory> getPivotalStories(Integer projectId) {
         try{
             Log.d("PivotalFunctionality", "getprojects");
             getStories task = new getStories();
-            task.execute();
+            task.execute(projectId);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -169,13 +169,13 @@ public class PivotalFunctionality {
     /**
      * Async task to get the stories from pivotaltracker
      */
-    private class getStories extends AsyncTask<Void, Void, List<PivotalStory>> {
+    private class getStories extends AsyncTask<Integer, Void, List<PivotalStory>> {
 
         @Override
-        protected List<PivotalStory> doInBackground(Void... arg0) {
+        protected List<PivotalStory> doInBackground(Integer... arg) {
             try {
                 HttpClient httpclient = new DefaultHttpClient();
-                HttpGet get = new HttpGet(url + "/projects/1043912/stories");
+                HttpGet get = new HttpGet(url + "/projects/"+ arg[0]+"/stories");
                 get.setHeader("X-TrackerToken", token);
 
                 //Response

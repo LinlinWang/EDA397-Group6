@@ -29,7 +29,7 @@ public class MainActivity extends FragmentActivity implements
         PivotalFunctionality pv = PivotalFunctionality.getInstance();
         pv.pivotalLogin("user","pw");
         pv.getPivotalProjects();
-        pv.getPivotalStories();
+        pv.getPivotalStories(1043912);
 
         if (git.getUserName().equals("")){
             startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.LoginActivity"));
