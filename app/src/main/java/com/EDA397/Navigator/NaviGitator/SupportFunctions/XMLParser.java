@@ -22,6 +22,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
  * Created by sajfer on 2014-05-05.
  */
 public class XMLParser {
+
+    /**
+     * Parse the XML from Pivotal Tracker and store as a list of projects
+     * @param xml The XML string from Pivotal Tracker
+     * @return A list of pivotal projects
+     */
     public static List<PivotalProject> parseProjects(String xml) {
         List<PivotalProject> projects = new ArrayList<PivotalProject>();
         try {
@@ -69,6 +75,11 @@ public class XMLParser {
         }
     }
 
+    /**
+     * Parse the XML from Pivotal Tracker and store as a list of stories
+     * @param xml The XML string from Pivotal Tracker
+     * @return A list of pivotal stories
+     */
     public static List<PivotalStory> parseStories(String xml) {
         List<PivotalStory> stories = new ArrayList<PivotalStory>();
         try {

@@ -45,6 +45,13 @@ public class PivotalFunctionality {
     }
 
     /**
+     * Return the current token for the logged in user
+     * @return return the current token
+     */
+    public String returnToken(){
+        return token;
+    }
+    /**
      * Executing the asynctask for pivotal login
      * @param userName
      * @param password
