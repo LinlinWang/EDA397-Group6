@@ -67,6 +67,7 @@ public class NotificationService extends Service{
                         git.checkConflicts(watched, c);
                     }
                 }**/
+
                 ArrayList<Event> events = git.getRepoEvents2();
                 int nrPushes = 0;
                 int nrCommitComments = 0;
