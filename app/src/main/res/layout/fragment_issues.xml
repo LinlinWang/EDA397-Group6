@@ -11,10 +11,10 @@
         android:text="Issues List"
         android:textSize="20dp"/>
 
-    <ListView
+    <ExpandableListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/issues_list"
+        android:id="@+id/lvExp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
