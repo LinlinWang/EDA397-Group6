@@ -15,6 +15,7 @@ import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.event.Event;
+import org.eclipse.egit.github.core.event.EventPayload;
 import org.eclipse.egit.github.core.event.PushPayload;
 import org.eclipse.egit.github.core.service.CommitService;
 import org.eclipse.egit.github.core.service.ContentsService;
@@ -24,6 +25,7 @@ import org.eclipse.egit.github.core.service.OAuthService;
 import org.eclipse.egit.github.core.service.OrganizationService;
 import org.eclipse.egit.github.core.service.RepositoryService;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -226,6 +228,21 @@ public class GitFunctionality {
         try{
             Log.d("GitFunctionality", "RepoEvents");
             GetRepoEvents task = new GetRepoEvents();
+            task.execute();
+            return task.get();
+        } catch ( Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * -------
+     */
+    public ArrayList<Event> getRepoEvents2() {
+        try{
+            Log.d("GitFunctionality", "RepoEvents");
+            GetRepoEvents2 task = new GetRepoEvents2();
             task.execute();
             return task.get();
         } catch ( Exception e) {
@@ -541,6 +558,26 @@ public class GitFunctionality {
                     }
                 }
                 return pushes;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    private class GetRepoEvents2 extends AsyncTask<Void, Void, ArrayList<Event>> {
+        @Override
+        protected ArrayList<Event> doInBackground(Void... v) {
+            try {
+                Log.d("GitFunctionality", "Events thread");
+                GitFunctionality git = GitFunctionality.getInstance();
+                EventService evService = new EventService(git.getClient());
+                PageIterator<Event> evIter = evService.pageEvents(currentRepo);
+                ArrayList <Event> events = new ArrayList<Event>();
+                events.addAll(evIter.next());
+
+                return events;
 
             } catch (Exception e) {
                 e.printStackTrace();

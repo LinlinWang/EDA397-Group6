@@ -15,6 +15,7 @@ import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
 import com.EDA397.Navigator.NaviGitator.R;
 
 import org.eclipse.egit.github.core.Commit;
+import org.eclipse.egit.github.core.event.Event;
 import org.eclipse.egit.github.core.event.PushPayload;
 
 import java.util.ArrayList;
@@ -53,16 +54,42 @@ public class NotificationService extends Service{
                         .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, new Intent(), 0))
                         .build();
                 GitFunctionality git = GitFunctionality.getInstance();
-                watched_files = getSharedPreferences("WatchedFiles", MODE_PRIVATE);
-                Set<String> watched = new HashSet<String>();
-                watched.addAll(watched_files.getStringSet(git.getUserName() +
-                        git.getCurrentRepo().getName(), new HashSet<String>()));
-                ArrayList<PushPayload> pushes = git.getRepoEvents();
+//                watched_files = getSharedPreferences("WatchedFiles", MODE_PRIVATE);
+//                Set<String> watched = new HashSet<String>();
+//                watched.addAll(watched_files.getStringSet(git.getUserName() +
+//                        git.getCurrentRepo().getName(), new HashSet<String>()));
+//                ArrayList<PushPayload> pushes = git.getRepoEvents();
                 /**for(PushPayload p : pushes){
                     for (Commit c : p.getCommits()) {
                         git.checkConflicts(watched, c);
                     }
                 }**/
+                ArrayList<Event> events = git.getRepoEvents2();
+                int nrPushes = 0;
+                int pushId = 1;
+                for(Event e : events){
+                    if(e.getType().equals("PushEvent")){
+                        PushPayload p = (PushPayload) e.getPayload();
+                        String[] branch = p.getRef().split("/");
+                        Notification pushNoti = builder
+                                .setSmallIcon(R.drawable.ic_launcher)
+                                .setContentTitle(++nrPushes + " new push")
+                                .setContentText("on branch " + branch[branch.length-1])
+                                .setAutoCancel(true)
+                                .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, new Intent(), 0))
+                                .build();
+                        NotifyManager.notify(pushId, pushNoti);
+                    }
+                    else if(e.getType().equals("CommitCommentEvent")){
+
+                    }
+                    else if(e.getType().equals("IssueEvent")){
+
+                    }
+                    else if(e.getType().equals("IssueCommentEvent")){
+
+                    }
+                }
                 NotifyManager.notify(1111, notification);
             }
         };
