@@ -218,6 +218,11 @@ public class GitFunctionality {
             return null;
         }
     }
+
+    /**
+     * Method for getting the issues of a repository
+     * @return
+     */
     public ArrayList<PushPayload> getRepoEvents() {
         try{
             Log.d("GitFunctionality", "RepoEvents");
@@ -250,6 +255,15 @@ public class GitFunctionality {
             return null;
         }
     }
+
+    /**
+     * Method which makes it possible for a user using the app to add an issue
+     * @return
+     */
+    public Void addIssues(){
+        return null;
+    }
+    
     /**
      * Async task to Authenticate a user against GitHub
      */

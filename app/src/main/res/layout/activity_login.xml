@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:weightSum="1"
-    android:background="@drawable/backgroundtwo">
+    android:background="@drawable/backgroundone">
 
     <ImageView
         android:layout_marginTop="40dp"
@@ -36,7 +36,7 @@
             android:src="@android:drawable/arrow_down_float"
             android:layout_above="@+id/password"
             android:onClick="pickAcc"
-            android:background="@drawable/button"
+            android:background="@drawable/button2"
             android:alpha="0.75"/>
     </LinearLayout>
 
@@ -76,6 +76,7 @@
         android:checked="false"
         android:onClick="remCheckbox"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        />
 
 </LinearLayout>
