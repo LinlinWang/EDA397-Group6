@@ -68,6 +68,7 @@ public class NotificationService extends Service{
                 int commitCommentsId = 2;
                 int issuesId = 3;
                 int issueCommentId = 4;
+                int conflictId = 5;
                 for(Event e : events){
                     if(e.getType().equals("PushEvent")){
                         PushPayload p = (PushPayload) e.getPayload();
@@ -116,16 +117,31 @@ public class NotificationService extends Service{
                         NotifyManager.notify(issueCommentId, issueCommentNoti);
                     }
                 }
-                NotifyManager.notify(1111, notification);
                 watched_files = getSharedPreferences("WatchedFiles", MODE_PRIVATE);
                 Set<String> watched = new HashSet<String>();
                 watched.addAll(watched_files.getStringSet(git.getUserName() +
                         git.getCurrentRepo().getName(), new HashSet<String>()));
+                ArrayList<String> conflictFiles = new ArrayList<String>();
                 for(PushPayload p : pushes){
                     for (Commit c : p.getCommits()) {
-                        git.checkConflicts(watched, c);
+                        for (String f : (git.checkConflicts(watched, c))){
+                            if(!conflictFiles.contains(f)){
+                                conflictFiles.add(f);
+                            }
+                        }
                     }
                 }
+                if(conflictFiles.size() > 0){
+                    Notification conflictNoti = builder
+                            .setSmallIcon(R.drawable.ic_launcher)
+                            .setContentTitle(conflictFiles.size() + " possible file conflict(s)")
+                            .setContentText("")
+                            .setAutoCancel(true)
+                            .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, new Intent(), 0))
+                            .build();
+                    NotifyManager.notify(conflictId, conflictNoti);
+                }
+                NotifyManager.notify(1111, notification);
             }
         };
         thread.setPriority(Thread.MIN_PRIORITY);

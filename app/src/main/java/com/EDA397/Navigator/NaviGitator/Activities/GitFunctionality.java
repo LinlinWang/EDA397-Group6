@@ -122,7 +122,7 @@ public class GitFunctionality {
         try{
             Log.d("GitFunctionality", "Branches");
             GetRepoBranches task = new GetRepoBranches();
-            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR,currentRepo);
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR, currentRepo);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -137,7 +137,7 @@ public class GitFunctionality {
         try{
             Log.d("GitFunctionality", "RepoCommits");
             GetRepoCommits task = new GetRepoCommits();
-            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR,currentRepo);
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR, currentRepo);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -153,7 +153,7 @@ public class GitFunctionality {
         try{
             Log.d("GitFunctionality", "All FileNames");
             GetDirContents task = new GetDirContents();
-            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR,dir);
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR, dir);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -169,7 +169,7 @@ public class GitFunctionality {
         try{
             Log.d("GitFunctionality", "Commit FileNames");
             GetCommitFileNames task = new GetCommitFileNames();
-            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR,currentCommit);
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR, currentCommit);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -186,7 +186,7 @@ public class GitFunctionality {
         try{
             Log.d("GitFunctionality", "CommitComments");
             GetCommitComments task = new GetCommitComments();
-            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR,currentCommit);
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR, currentCommit);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -197,7 +197,7 @@ public class GitFunctionality {
         try{
             Log.d("GitFunctionality", "CommitComments");
             AddCommitComment task = new AddCommitComment();
-            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR,s);
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR, s);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -254,13 +254,15 @@ public class GitFunctionality {
      * Method for checking for filename conflicts between a commit and the user's watched files.
      * @return
      */
-    public void checkConflicts(Set<String> w, Commit c) {
+    public ArrayList<String> checkConflicts(Set<String> w, Commit c) {
         try{
             Log.d("GitFunctionality", "Conflict Check");
             CheckConflicts task = new CheckConflicts(w);
-            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR,c);
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR, c);
+            return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
+            return null;
         }
     }
     /**
@@ -271,7 +273,7 @@ public class GitFunctionality {
         try{
             Log.d("GitFunctionality", "RepoIssues");
             GetRepoIssues task = new GetRepoIssues();
-            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR,currentRepo);
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR, currentRepo);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -590,27 +592,28 @@ public class GitFunctionality {
      * Class which checks if the files changed in the commit are amongst the ones
      * the user is watching for changes
      */
-    private class CheckConflicts extends AsyncTask<Commit, Void, Void> {
+    private class CheckConflicts extends AsyncTask<Commit, Void, ArrayList<String>> {
         private Set<String> watched;
 
         public CheckConflicts(Set<String> w) {
             this.watched = w;
         }
         @Override
-        protected Void doInBackground(Commit... comm) {
+        protected ArrayList<String> doInBackground(Commit... comm) {
             try {
                 Log.d("GitFunctionality", "Conflicts thread");
                     RepositoryCommit temp = new RepositoryCommit();
                     temp.setSha(comm[0].getSha());
                     GetCommitFileNames task = new GetCommitFileNames();
-                    //task.execute(temp);
+                    ArrayList<String> fileNames = new ArrayList<String>();
                     task.executeOnExecutor(THREAD_POOL_EXECUTOR, temp);
                     for (String f : task.get()) {
                         if (watched.contains(f)) {
                             Log.d("Possible Conflict", f);
+                            fileNames.add(f);
                         }
                     }
-                return null;
+                return fileNames;
 
             } catch (Exception e) {
                 e.printStackTrace();
