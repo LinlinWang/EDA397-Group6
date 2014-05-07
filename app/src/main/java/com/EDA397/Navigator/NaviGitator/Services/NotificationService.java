@@ -88,7 +88,7 @@ public class NotificationService extends Service{
                         }
                     }
 
-                    currentLoopDate.getTime();
+                    currentLoopDate.setTime(System.currentTimeMillis());
 
                     if(nrPushes > 0){
                         Notification pushNoti = builder
