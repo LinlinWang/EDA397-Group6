@@ -185,15 +185,19 @@ public class GitFunctionality {
             return null;
         }
     }
-    public Void addCommitComment(String s) {
+
+    /**
+     * Add a comment for a commit
+     * @param s The comment to add
+     */
+    public void addCommitComment(String s) {
         try{
             Log.d("GitFunctionality", "CommitComments");
             addCommitComment task = new addCommitComment();
             task.execute(s);
-            return task.get();
+            task.get();
         } catch ( Exception e) {
             e.printStackTrace();
-            return null;
         }
     }
 
@@ -415,6 +419,9 @@ public class GitFunctionality {
         }
     }
 
+    /**
+     * Async task to add a comment to a commit
+     */
     private class addCommitComment extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... s) {
@@ -461,6 +468,10 @@ public class GitFunctionality {
             }
         }
     }
+
+    /**
+     * Async task to get all the issues for a repository
+     */
     private class GetRepoIssues extends AsyncTask<Repository, Void, List<Issue>> {
         protected List<Issue> doInBackground(Repository... repo) {
             try {
