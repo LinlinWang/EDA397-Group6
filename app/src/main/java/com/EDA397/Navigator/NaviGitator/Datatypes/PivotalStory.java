@@ -7,9 +7,9 @@ public class PivotalStory {
     private String name;
     private Integer id;
     private String description;
-    private String owner;
+    private Integer owner;
 
-    public PivotalStory(String name, Integer id, String description, String owner){
+    public PivotalStory(String name, Integer id, String description, Integer owner){
         this.name = name;
         this.id = id;
         this.description = description;
@@ -40,11 +40,11 @@ public class PivotalStory {
         return description;
     }
 
-    public void setOwner(String owner) {
+    public void setOwner(Integer owner) {
         this.owner = owner;
     }
 
-    public String getOwner() {
+    public Integer getOwner() {
         return owner;
     }
 }
