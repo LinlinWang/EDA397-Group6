@@ -101,7 +101,7 @@ public class NotificationService extends Service{
 
                     if(NotificationVariables.nrPushes > 0){
                         Notification pushNoti = builder
-                                .setSmallIcon(R.drawable.ic_launcher)
+                                .setSmallIcon(R.drawable.minitator)
                                 .setContentTitle(NotificationVariables.nrPushes + " new push(es)")
                                 .setAutoCancel(true)
                                 .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, pushIntent, 0))
@@ -112,7 +112,7 @@ public class NotificationService extends Service{
                     }
                     if(NotificationVariables.nrCommitComments > 0){
                         Notification commitCommentNoti = builder
-                                .setSmallIcon(R.drawable.ic_launcher)
+                                .setSmallIcon(R.drawable.minitator)
                                 .setContentTitle(NotificationVariables.nrCommitComments + " commit comment(s)")
                                 .setAutoCancel(true)
                                 .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, ccIntent, 0))
@@ -123,7 +123,7 @@ public class NotificationService extends Service{
                     }
                     if(NotificationVariables.nrIssues > 0){
                         Notification issueNoti = builder
-                                .setSmallIcon(R.drawable.ic_launcher)
+                                .setSmallIcon(R.drawable.minitator)
                                 .setContentTitle(NotificationVariables.nrIssues + " new issue(s)")
                                 .setAutoCancel(true)
                                 .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, issueIntent, 0))
@@ -134,7 +134,7 @@ public class NotificationService extends Service{
                     }
                     if(NotificationVariables.nrIssuesComments > 0){
                         Notification issueCommentNoti = builder
-                                .setSmallIcon(R.drawable.ic_launcher)
+                                .setSmallIcon(R.drawable.minitator)
                                 .setContentTitle(NotificationVariables.nrIssuesComments + " issue comment(s)")
                                 .setAutoCancel(true)
                                 .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, icIntent, 0))
@@ -151,11 +151,12 @@ public class NotificationService extends Service{
                            String [] temp = f.split("/");
                            body = NotificationVariables.conflictFiles.get(f);
                             builderConflict
-                                    .setSmallIcon(R.drawable.ic_launcher)
+                                    .setSmallIcon(R.drawable.minitator)
                                     .setContentTitle("Possible conflict")
                                     .setContentText(temp[temp.length - 1])
                                     .setAutoCancel(true)
-                                    .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, conflictIntent, 0));
+                                    .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, conflictIntent, 0))
+                                    .setDeleteIntent(PendingIntent.getActivity(NotificationService.this, 0, conflictIntent, 0));
                             big.bigText("In branches " + body);
                             big.setSummaryText(temp[temp.length - 1]);
                             big.setBigContentTitle("Possible conflict");
