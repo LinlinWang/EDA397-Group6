@@ -12,24 +12,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-<<<<<<< HEAD
-=======
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
->>>>>>> master
 
 import com.EDA397.Navigator.NaviGitator.SupportFunctions.GitFunctionality;
 import com.EDA397.Navigator.NaviGitator.Adapters.RepoAdapter;
 import com.EDA397.Navigator.NaviGitator.R;
 
-import org.eclipse.egit.github.core.Commit;
 import org.eclipse.egit.github.core.Repository;
-<<<<<<< HEAD
-=======
-import org.eclipse.egit.github.core.RepositoryCommit;
-import org.eclipse.egit.github.core.event.PushPayload;
->>>>>>> master
 
 /**
  * Created by QuattroX on 2014-04-09.

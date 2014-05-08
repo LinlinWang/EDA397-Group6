@@ -201,15 +201,9 @@ public class GitFunctionality {
     public void addCommitComment(String s) {
         try{
             Log.d("GitFunctionality", "CommitComments");
-<<<<<<< HEAD:app/src/main/java/com/EDA397/Navigator/NaviGitator/SupportFunctions/GitFunctionality.java
-            addCommitComment task = new addCommitComment();
-            task.execute(s);
-            task.get();
-=======
             AddCommitComment task = new AddCommitComment();
             task.executeOnExecutor(task.THREAD_POOL_EXECUTOR, s);
-            return task.get();
->>>>>>> master:app/src/main/java/com/EDA397/Navigator/NaviGitator/Activities/GitFunctionality.java
+            task.get();
         } catch ( Exception e) {
             e.printStackTrace();
         }
@@ -501,14 +495,11 @@ public class GitFunctionality {
         }
     }
 
-<<<<<<< HEAD:app/src/main/java/com/EDA397/Navigator/NaviGitator/SupportFunctions/GitFunctionality.java
     /**
      * Async task to add a comment to a commit
      */
-    private class addCommitComment extends AsyncTask<String, Void, Void> {
-=======
     private class AddCommitComment extends AsyncTask<String, Void, Void> {
->>>>>>> master:app/src/main/java/com/EDA397/Navigator/NaviGitator/Activities/GitFunctionality.java
+
         @Override
         protected Void doInBackground(String... s) {
             try {
@@ -556,9 +547,7 @@ public class GitFunctionality {
     }
 
     /**
-<<<<<<< HEAD:app/src/main/java/com/EDA397/Navigator/NaviGitator/SupportFunctions/GitFunctionality.java
      * Async task to get all the issues for a repository
-=======
      * Class which gets the 30 latest events covering all the current repo's branches
      * (filtering out any non-push events).
      */
@@ -644,7 +633,6 @@ public class GitFunctionality {
 
     /**
      * Class which gets all issues for the current repository.
->>>>>>> master:app/src/main/java/com/EDA397/Navigator/NaviGitator/Activities/GitFunctionality.java
      */
     private class GetRepoIssues extends AsyncTask<Repository, Void, List<Issue>> {
         protected List<Issue> doInBackground(Repository... repo) {

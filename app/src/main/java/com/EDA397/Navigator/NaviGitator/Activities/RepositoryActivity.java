@@ -10,11 +10,9 @@ import android.support.v4.view.ViewPager;
 
 import com.EDA397.Navigator.NaviGitator.Adapters.RepoTabsPagerAdapter;
 import com.EDA397.Navigator.NaviGitator.R;
-<<<<<<< HEAD
 import com.EDA397.Navigator.NaviGitator.SupportFunctions.GitFunctionality;
-=======
 import com.EDA397.Navigator.NaviGitator.Services.NotificationService;
->>>>>>> master
+
 
 /**
  * Created by QuattroX on 2014-04-10.

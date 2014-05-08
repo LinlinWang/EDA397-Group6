@@ -31,3 +31,5 @@ proguard/
 
 *.bin
 *.lock
+
+*.bin

@@ -7,16 +7,13 @@ import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-<<<<<<< HEAD
 import android.util.Log;
 
-=======
-import android.os.Process;
->>>>>>> master
 import com.EDA397.Navigator.NaviGitator.Adapters.MainTabsPagerAdapter;
 import com.EDA397.Navigator.NaviGitator.Datatypes.PivotalProject;
 import com.EDA397.Navigator.NaviGitator.Datatypes.PivotalStory;
 import com.EDA397.Navigator.NaviGitator.R;
+import com.EDA397.Navigator.NaviGitator.Services.NotificationService;
 import com.EDA397.Navigator.NaviGitator.SupportFunctions.GitFunctionality;
 import com.EDA397.Navigator.NaviGitator.SupportFunctions.PivotalFunctionality;
 
