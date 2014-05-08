@@ -14,6 +14,7 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
+import com.EDA397.Navigator.NaviGitator.Activities.NotificationForwarder;
 import com.EDA397.Navigator.NaviGitator.R;
 
 import org.eclipse.egit.github.core.Commit;
@@ -36,12 +37,6 @@ public class NotificationService extends Service{
     private Thread thread;
     private SharedPreferences watched_files;
     private boolean running = false;
-
-    public static int nrPushes;
-    public static int nrCommitComments;
-    public static int nrIssues;
-    public static int nrIssuesComments;
-    public static int nrConflicts;
 
     private final int pushId = 1;
     private final int commitCommentsId = 2;
@@ -80,42 +75,44 @@ public class NotificationService extends Service{
                 while(running){
                     ArrayList<Event> events = git.getRepoEvents2();
                     for(Event e : events){
-                    //    if(e.getCreatedAt().after(currentLoopDate)){
+                        if(e.getCreatedAt().before(currentLoopDate)){
                             if(e.getType().equals("PushEvent")){
-                                nrPushes++;
+                                NotificationVariables.nrPushes++;
                                 pushes.add((PushPayload)e.getPayload());
                             }
                             else if(e.getType().equals("CommitCommentEvent")){
-                                nrCommitComments++;
+                                NotificationVariables.nrCommitComments++;
                             }
                             else if(e.getType().equals("IssuesEvent")){
-                                nrIssues++;
+                                NotificationVariables.nrIssues++;
                             }
                             else if(e.getType().equals("IssueCommentEvent")){
-                                nrIssuesComments++;
+                                NotificationVariables.nrIssuesComments++;
                             }
-                    //    }
+                        }
                     }
                     //We will need sharedpreference, last notification time/date is unique per account,
                     //If another account logs in they should get notifications.
                     currentLoopDate.setTime(System.currentTimeMillis());
 
-                    if(nrPushes > 0){
+                    Intent notiIntent = new Intent(getApplicationContext(), NotificationForwarder.class);
+
+                    if(NotificationVariables.nrPushes > 0){
                         builder
                                 .setSmallIcon(R.drawable.ic_launcher)
-                                .setContentTitle(nrPushes + " new push(es)")
+                                .setContentTitle(NotificationVariables.nrPushes + " new push(es)")
                                 .setContentText("")
                                 .setAutoCancel(true)
-                                .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, new Intent(), 0));
+                                .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, notiIntent, 0));
                         big.bigText("");
                         Notification pushNoti = builder.build();
 
                         NotifyManager.notify(pushId, pushNoti);
                     }
-                    if(nrCommitComments > 0){
+                    if(NotificationVariables.nrCommitComments > 0){
                         builder
                                 .setSmallIcon(R.drawable.ic_launcher)
-                                .setContentTitle(nrCommitComments + " commit comment(s)")
+                                .setContentTitle(NotificationVariables.nrCommitComments + " commit comment(s)")
                                 .setContentText("")
                                 .setAutoCancel(true)
                                 .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, new Intent(), 0));
@@ -124,10 +121,10 @@ public class NotificationService extends Service{
 
                         NotifyManager.notify(commitCommentsId, commitCommentNoti);
                     }
-                    if(nrIssues > 0){
+                    if(NotificationVariables.nrIssues > 0){
                         builder
                                 .setSmallIcon(R.drawable.ic_launcher)
-                                .setContentTitle(nrIssues + " new issue(s)")
+                                .setContentTitle(NotificationVariables.nrIssues + " new issue(s)")
                                 .setContentText("")
                                 .setAutoCancel(true)
                                 .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, new Intent(), 0));
@@ -136,10 +133,10 @@ public class NotificationService extends Service{
 
                         NotifyManager.notify(issuesId, issueNoti);
                     }
-                    if(nrIssuesComments > 0){
+                    if(NotificationVariables.nrIssuesComments > 0){
                         builder
                                 .setSmallIcon(R.drawable.ic_launcher)
-                                .setContentTitle(nrIssuesComments + " issue comment(s)")
+                                .setContentTitle(NotificationVariables.nrIssuesComments + " issue comment(s)")
                                 .setContentText("")
                                 .setAutoCancel(true)
                                 .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, new Intent(), 0));
@@ -149,7 +146,7 @@ public class NotificationService extends Service{
                         NotifyManager.notify(issueCommentId, issueCommentNoti);
                     }
                     conflictCheck();
-                    if(nrConflicts > 0){
+                    if(NotificationVariables.nrConflicts > 0){
                         String body = "";
                         for(String f : conflictFiles){
                             String [] temp = f.split("/");
@@ -168,7 +165,7 @@ public class NotificationService extends Service{
 
                     try {
                         sleep(60000);
-                        reset();
+//                        reset();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -193,11 +190,11 @@ public class NotificationService extends Service{
         return super.onStartCommand(intent, flags, startId);
     }
     private void reset(){
-        nrPushes = 0;
-        nrCommitComments = 0;
-        nrIssues = 0;
-        nrIssuesComments = 0;
-        nrConflicts = 0;
+        NotificationVariables.nrPushes = 0;
+        NotificationVariables.nrCommitComments = 0;
+        NotificationVariables.nrIssues = 0;
+        NotificationVariables.nrIssuesComments = 0;
+        NotificationVariables.nrConflicts = 0;
         pushes = new ArrayList<PushPayload>();
         conflictFiles = new ArrayList<String>();
     }
@@ -215,7 +212,7 @@ public class NotificationService extends Service{
                     if(!conflictFiles.contains(f + " in branch " +
                             branch[branch.length-1])){
                         conflictFiles.add(f + " in branch " + branch[branch.length-1]);
-                        nrConflicts++;
+                        NotificationVariables.nrConflicts++;
                     }
                 }
             }
