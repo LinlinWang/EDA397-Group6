@@ -1,15 +1,20 @@
 package com.EDA397.Navigator.NaviGitator.Activities;
 
 import android.app.ActionBar;
+import android.app.ActivityManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.os.Bundle;
+import android.os.*;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 
 import com.EDA397.Navigator.NaviGitator.Adapters.RepoTabsPagerAdapter;
 import com.EDA397.Navigator.NaviGitator.R;
+<<<<<<< HEAD
 import com.EDA397.Navigator.NaviGitator.SupportFunctions.GitFunctionality;
+=======
+import com.EDA397.Navigator.NaviGitator.Services.NotificationService;
+>>>>>>> master
 
 /**
  * Created by QuattroX on 2014-04-10.
@@ -69,7 +74,21 @@ public class RepositoryActivity extends FragmentActivity implements
                 public void onPageScrollStateChanged(int arg0) {
                 }
             });
+            // Start Notification Service
+            if(!isServiceRunning()){
+                startService(new Intent(this, NotificationService.class));
+            }
         }
+    }
+
+    private boolean isServiceRunning() {
+        ActivityManager manager = (ActivityManager)getSystemService(ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (NotificationService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.EDA397.Navigator.NaviGitator.SupportFunctions;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.eclipse.egit.github.core.Commit;
 import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.CommitFile;
 import org.eclipse.egit.github.core.Issue;
@@ -14,6 +15,8 @@ import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.event.Event;
+import org.eclipse.egit.github.core.event.EventPayload;
+import org.eclipse.egit.github.core.event.PushPayload;
 import org.eclipse.egit.github.core.service.CommitService;
 import org.eclipse.egit.github.core.service.ContentsService;
 import org.eclipse.egit.github.core.service.EventService;
@@ -22,7 +25,9 @@ import org.eclipse.egit.github.core.service.OAuthService;
 import org.eclipse.egit.github.core.service.OrganizationService;
 import org.eclipse.egit.github.core.service.RepositoryService;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  *  Class containing functionality to communicate with GitHub
@@ -35,6 +40,7 @@ public class GitFunctionality {
     private static String username;
     private static Repository currentRepo;
     private static RepositoryCommit currentCommit;
+    private static RepositoryBranch currentBranch;
 
     private GitFunctionality() {
             client = new GitHubClient();
@@ -71,6 +77,8 @@ public class GitFunctionality {
     public void setCurrentRepo(Repository r){ currentRepo = r; }
     public RepositoryCommit getCurrentCommit(){ return currentCommit; }
     public void setCurrentCommit(RepositoryCommit r){ currentCommit = r; }
+    public RepositoryBranch getCurrentBranch(){ return currentBranch; }
+    public void setCurrentBranch(RepositoryBranch r){ currentBranch = r; }
 
     /**
      * Function to login to GitHub
@@ -83,7 +91,7 @@ public class GitFunctionality {
             Log.d("GitFunctionality", "Login");
             username = userName;
             Authenticate task = new Authenticate();
-            task.execute(userName, password);
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR,userName, password);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -98,8 +106,8 @@ public class GitFunctionality {
     public List<Repository> getRepos() {
         try{
             Log.d("GitFunctionality", "Repos");
-            getRepos task = new getRepos();
-            task.execute();
+            GetRepos task = new GetRepos();
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -114,7 +122,7 @@ public class GitFunctionality {
         try{
             Log.d("GitFunctionality", "Branches");
             GetRepoBranches task = new GetRepoBranches();
-            task.execute(currentRepo);
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR, currentRepo);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -128,8 +136,8 @@ public class GitFunctionality {
     public List<RepositoryCommit> getRepoCommits() {
         try{
             Log.d("GitFunctionality", "RepoCommits");
-            getRepoCommits task = new getRepoCommits();
-            task.execute(currentRepo);
+            GetRepoCommits task = new GetRepoCommits();
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR, currentRepo);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -144,8 +152,8 @@ public class GitFunctionality {
     public ArrayList<RepositoryContents> getDirContents(String dir) {
         try{
             Log.d("GitFunctionality", "All FileNames");
-            getDirContents task = new getDirContents();
-            task.execute(dir);
+            GetDirContents task = new GetDirContents();
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR, dir);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -160,8 +168,8 @@ public class GitFunctionality {
     public ArrayList<String> getCommitFileNames() {
         try{
             Log.d("GitFunctionality", "Commit FileNames");
-            getCommitFileNames task = new getCommitFileNames();
-            task.execute(currentCommit);
+            GetCommitFileNames task = new GetCommitFileNames();
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR, currentCommit);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -177,8 +185,8 @@ public class GitFunctionality {
     public ArrayList<String> getCommitComments() {
         try{
             Log.d("GitFunctionality", "CommitComments");
-            getCommitComments task = new getCommitComments();
-            task.execute(currentCommit);
+            GetCommitComments task = new GetCommitComments();
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR, currentCommit);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -193,9 +201,15 @@ public class GitFunctionality {
     public void addCommitComment(String s) {
         try{
             Log.d("GitFunctionality", "CommitComments");
+<<<<<<< HEAD:app/src/main/java/com/EDA397/Navigator/NaviGitator/SupportFunctions/GitFunctionality.java
             addCommitComment task = new addCommitComment();
             task.execute(s);
             task.get();
+=======
+            AddCommitComment task = new AddCommitComment();
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR, s);
+            return task.get();
+>>>>>>> master:app/src/main/java/com/EDA397/Navigator/NaviGitator/Activities/GitFunctionality.java
         } catch ( Exception e) {
             e.printStackTrace();
         }
@@ -208,25 +222,83 @@ public class GitFunctionality {
     public ArrayList<String> getUserEvents() {
         try{
             Log.d("GitFunctionality", "UserEvents");
-            getUserEvents task = new getUserEvents();
-            task.execute();
+            GetUserEvents task = new GetUserEvents();
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
             return null;
         }
     }
+    /**
+     * Returns up to the 30 latest pushevents on the current repo
+     * @return A list of events
+     */
+    public ArrayList<PushPayload> getRepoEvents() {
+        try{
+            Log.d("GitFunctionality", "RepoEvents");
+            GetRepoEvents task = new GetRepoEvents();
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR);
+            return task.get();
+        } catch ( Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * -------
+     */
+    public ArrayList<Event> getRepoEvents2() {
+        try{
+            Log.d("GitFunctionality", "RepoEvents");
+            GetRepoEvents2 task = new GetRepoEvents2();
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR);
+            return task.get();
+        } catch ( Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    /**
+     * Method for checking for filename conflicts between a commit and the user's watched files.
+     * @return
+     */
+    public ArrayList<String> checkConflicts(Set<String> w, Commit c) {
+        try{
+            Log.d("GitFunctionality", "Conflict Check");
+            CheckConflicts task = new CheckConflicts(w);
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR, c);
+            return task.get();
+        } catch ( Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    /**
+     * Method for getting the issues of a repository
+     * @return
+     */
     public List<Issue> getRepoIssues() {
         try{
             Log.d("GitFunctionality", "RepoIssues");
             GetRepoIssues task = new GetRepoIssues();
-            task.execute(currentRepo);
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR, currentRepo);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
             return null;
         }
     }
+
+    /**
+     * Method which makes it possible for a user using the app to add an issue
+     * @return
+     */
+    public Void addIssues(){
+        return null;
+    }
+    
     /**
      * Async task to Authenticate a user against GitHub
      */
@@ -250,7 +322,7 @@ public class GitFunctionality {
     /**
      * Async task to get all the repositories for the current user
      */
-    private class getRepos extends AsyncTask<Void, Void, List<Repository>> {
+    private class GetRepos extends AsyncTask<Void, Void, List<Repository>> {
         @Override
         protected List<Repository> doInBackground(Void... arg0) {
             try {
@@ -292,15 +364,20 @@ public class GitFunctionality {
     /**
      * Async task to get all the commits for a selected repository
      */
-    private class getRepoCommits extends AsyncTask<Repository, Void, List<RepositoryCommit>> {
+    private class GetRepoCommits extends AsyncTask<Repository, Void, List<RepositoryCommit>> {
         @Override
         protected List<RepositoryCommit> doInBackground(Repository... repo) {
             try {
                 Log.d("GitFunctionality", "Commit thread");
                 GitFunctionality git = GitFunctionality.getInstance();
                 CommitService commitService = new CommitService(git.getClient());
-
-                List<RepositoryCommit> commits = commitService.getCommits(repo[0]);
+                List<RepositoryCommit> commits;
+                if(currentBranch == null) {
+                    commits = commitService.getCommits(repo[0]);
+                }
+                else{
+                    commits = commitService.getCommits(repo[0], currentBranch.getCommit().getSha(), null);
+                }
                 for (RepositoryCommit comm : commits) {
                     Log.d("GitFunctionality", comm.getCommit().getAuthor().getName() + " : " + comm.getCommit().getMessage());
                 }
@@ -342,7 +419,7 @@ public class GitFunctionality {
      * Async task to get the contents of a specific repo directory (sorted by listing directories
      * first).
      */
-    private class getDirContents extends AsyncTask<String, Void, ArrayList<RepositoryContents>> {
+    private class GetDirContents extends AsyncTask<String, Void, ArrayList<RepositoryContents>> {
         @Override
         protected ArrayList<RepositoryContents> doInBackground(String... dir) {
             try {
@@ -351,7 +428,12 @@ public class GitFunctionality {
                 ContentsService conService = new ContentsService(git.getClient());
                 ArrayList<RepositoryContents> unsorted = new ArrayList<RepositoryContents>();
                 ArrayList<RepositoryContents> sorted = new ArrayList<RepositoryContents>();
-                unsorted.addAll(conService.getContents(currentRepo, dir[0]));
+                if(currentBranch == null) {
+                    unsorted.addAll(conService.getContents(currentRepo, dir[0]));
+                }
+                else{
+                    unsorted.addAll(conService.getContents(currentRepo, dir[0], currentBranch.getName()));
+                }
                 for(int i = 0; i < unsorted.size(); i++){
                     Log.d("GitFunctionality", unsorted.get(i).getPath());
                     if(unsorted.get(i).getType().equals("dir")){
@@ -373,7 +455,7 @@ public class GitFunctionality {
     /**
      * Async task to get the names of all files changed in a selected commit
      */
-    private class getCommitFileNames extends AsyncTask<RepositoryCommit, Void, ArrayList<String>> {
+    private class GetCommitFileNames extends AsyncTask<RepositoryCommit, Void, ArrayList<String>> {
         @Override
         protected ArrayList<String> doInBackground(RepositoryCommit... r) {
             try {
@@ -397,7 +479,7 @@ public class GitFunctionality {
     /**
      * Async task to get all the comments on a selected commit
      */
-    private class getCommitComments extends AsyncTask<RepositoryCommit, Void, ArrayList<String>> {
+    private class GetCommitComments extends AsyncTask<RepositoryCommit, Void, ArrayList<String>> {
         @Override
         protected ArrayList<String> doInBackground(RepositoryCommit... r) {
             try {
@@ -419,10 +501,14 @@ public class GitFunctionality {
         }
     }
 
+<<<<<<< HEAD:app/src/main/java/com/EDA397/Navigator/NaviGitator/SupportFunctions/GitFunctionality.java
     /**
      * Async task to add a comment to a commit
      */
     private class addCommitComment extends AsyncTask<String, Void, Void> {
+=======
+    private class AddCommitComment extends AsyncTask<String, Void, Void> {
+>>>>>>> master:app/src/main/java/com/EDA397/Navigator/NaviGitator/Activities/GitFunctionality.java
         @Override
         protected Void doInBackground(String... s) {
             try {
@@ -446,7 +532,7 @@ public class GitFunctionality {
      * Async task to retrieve events received by the logged-in user (currently only retrieving
      * the latest events, using the default maximum of 30).
      */
-    private class getUserEvents extends AsyncTask<Void, Void, ArrayList<String>> {
+    private class GetUserEvents extends AsyncTask<Void, Void, ArrayList<String>> {
         @Override
         protected ArrayList<String> doInBackground(Void... v) {
             try {
@@ -470,7 +556,95 @@ public class GitFunctionality {
     }
 
     /**
+<<<<<<< HEAD:app/src/main/java/com/EDA397/Navigator/NaviGitator/SupportFunctions/GitFunctionality.java
      * Async task to get all the issues for a repository
+=======
+     * Class which gets the 30 latest events covering all the current repo's branches
+     * (filtering out any non-push events).
+     */
+    private class GetRepoEvents extends AsyncTask<Void, Void, ArrayList<PushPayload>> {
+        @Override
+        protected ArrayList<PushPayload> doInBackground(Void... v) {
+            try {
+                Log.d("GitFunctionality", "Events thread");
+                GitFunctionality git = GitFunctionality.getInstance();
+                EventService evService = new EventService(git.getClient());
+                PageIterator<Event> events = evService.pageEvents(currentRepo);
+                ArrayList <PushPayload> pushes = new ArrayList<PushPayload>();
+                for(Event e : events.next()){
+                    if(e.getType().equals("PushEvent")) {
+                        PushPayload p = (PushPayload) e.getPayload();
+                        String[] branch = p.getRef().split("/");
+                        Log.d("GitFunctionality", e.getActor().getLogin() + " pushed to " + branch[branch.length-1]);
+                        pushes.add(p);
+                    }
+                }
+                return pushes;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    private class GetRepoEvents2 extends AsyncTask<Void, Void, ArrayList<Event>> {
+        @Override
+        protected ArrayList<Event> doInBackground(Void... v) {
+            try {
+                Log.d("GitFunctionality", "Events thread");
+                GitFunctionality git = GitFunctionality.getInstance();
+                EventService evService = new EventService(git.getClient());
+                PageIterator<Event> evIter = evService.pageEvents(currentRepo);
+                ArrayList <Event> events = new ArrayList<Event>();
+                events.addAll(evIter.next());
+
+                return events;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    /**
+     * Class which checks if the files changed in the commit are amongst the ones
+     * the user is watching for changes
+     */
+    private class CheckConflicts extends AsyncTask<Commit, Void, ArrayList<String>> {
+        private Set<String> watched;
+
+        public CheckConflicts(Set<String> w) {
+            this.watched = w;
+        }
+        @Override
+        protected ArrayList<String> doInBackground(Commit... comm) {
+            try {
+                Log.d("GitFunctionality", "Conflicts thread");
+                    RepositoryCommit temp = new RepositoryCommit();
+                    temp.setSha(comm[0].getSha());
+                    GetCommitFileNames task = new GetCommitFileNames();
+                    ArrayList<String> fileNames = new ArrayList<String>();
+                    task.executeOnExecutor(THREAD_POOL_EXECUTOR, temp);
+                    for (String f : task.get()) {
+                        if (watched.contains(f)) {
+                            Log.d("Possible Conflict", f);
+                            fileNames.add(f);
+                        }
+                    }
+                return fileNames;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+    }
+
+    /**
+     * Class which gets all issues for the current repository.
+>>>>>>> master:app/src/main/java/com/EDA397/Navigator/NaviGitator/Activities/GitFunctionality.java
      */
     private class GetRepoIssues extends AsyncTask<Repository, Void, List<Issue>> {
         protected List<Issue> doInBackground(Repository... repo) {
