@@ -126,12 +126,11 @@ public class PivotalFunctionality {
 
                 //Response
                 HttpResponse resp = httpclient.execute(get);
-                Log.d("PivotalFunctionality", "RESPONSE CODE" + resp.getStatusLine().getStatusCode());
+
                 String responseString = new BasicResponseHandler().handleResponse(resp);
                 JSONObject jsonObject = new JSONObject(responseString);
                 token = jsonObject.getString("api_token");
                 if (resp.getStatusLine().getStatusCode() == 200) {
-                    Log.d("PivotalFunctionality", "Token: " + token);
                     return true;
                 } else {
                     return false;
@@ -162,14 +161,12 @@ public class PivotalFunctionality {
 
                 String responseString = new BasicResponseHandler().handleResponse(resp);
                 JSONArray jsonArray = new JSONArray(responseString);
-                //Log.d("PivotalFunctionality", "Response from get projects \n " + responseString);
 
                 List<PivotalProject> projects = new ArrayList<PivotalProject>();
                 for(int i = 0; i < jsonArray.length(); i++)
                 {
                     JSONObject json = jsonArray.getJSONObject(i);
                     projects.add(new PivotalProject(json.getString("name"), json.getInt("id")));
-                    Log.d("PivotalFunctionality","Project name: " + json.getString("name"));
                 }
                 return projects;
             } catch (Exception e) {
@@ -191,24 +188,32 @@ public class PivotalFunctionality {
             JSONObject jObj = null;
             try {
                 HttpClient httpclient = new DefaultHttpClient();
-                HttpGet get = new HttpGet("https://www.pivotaltracker.com/services/v5/projects/"+arg0[0]+"/stories");
+                HttpGet get = new HttpGet(url + "/projects/"+arg0[0]+"/stories");
                 get.setHeader("X-TrackerToken", token);
 
                 //Response
                 HttpResponse resp = httpclient.execute(get);
                 String responseString = new BasicResponseHandler().handleResponse(resp);
                 JSONArray jsonArray = new JSONArray(responseString);
-                Log.d("PivotalFunctionality", "Response \n" + responseString);
-                Log.d("PivotalFunctionality", "Stories: " + jsonArray.length());
                 List<PivotalStory> stories = new ArrayList<PivotalStory>();
                 for(int i = 0; i < jsonArray.length(); i++)
                 {
                     JSONObject json = jsonArray.getJSONObject(i);
-                    stories.add(new PivotalStory(json.getString("name"),
-                            json.getInt("id"),
-                            json.getString("description"),
-                            json.getInt("owned_by_id")));
-                    Log.d("PivotalFunctionality","Story name: " + json.getString("name"));
+                    String name = "";
+                    Integer id = 0;
+                    String description = "";
+                    Integer owner = 0;
+
+                    if (json.has("name"))
+                        name = json.getString("name");
+                    if (json.has("id"))
+                        id = json.getInt("id");
+                    if (json.has("description"))
+                        description = json.getString("description");
+                    if (json.has("owned_by_id"))
+                        owner = json.getInt("owned_by_id");
+
+                    stories.add(new PivotalStory(name, id, description, owner));
                 }
                 return stories;
             } catch (Exception e) {
