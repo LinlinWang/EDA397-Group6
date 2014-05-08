@@ -1,4 +1,4 @@
-package com.EDA397.Navigator.NaviGitator.Activities;
+package com.EDA397.Navigator.NaviGitator.Adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import com.EDA397.Navigator.NaviGitator.R;
+import com.EDA397.Navigator.NaviGitator.SupportFunctions.GitFunctionality;
+
 import org.eclipse.egit.github.core.RepositoryContents;
 import java.util.ArrayList;
 import java.util.HashSet;

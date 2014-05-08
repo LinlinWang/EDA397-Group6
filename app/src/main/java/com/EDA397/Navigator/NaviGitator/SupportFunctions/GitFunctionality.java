@@ -1,4 +1,4 @@
-package com.EDA397.Navigator.NaviGitator.Activities;
+package com.EDA397.Navigator.NaviGitator.SupportFunctions;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -193,15 +193,19 @@ public class GitFunctionality {
             return null;
         }
     }
-    public Void addCommitComment(String s) {
+
+    /**
+     * Add a comment for a commit
+     * @param s The comment to add
+     */
+    public void addCommitComment(String s) {
         try{
             Log.d("GitFunctionality", "CommitComments");
             AddCommitComment task = new AddCommitComment();
             task.executeOnExecutor(task.THREAD_POOL_EXECUTOR, s);
-            return task.get();
+            task.get();
         } catch ( Exception e) {
             e.printStackTrace();
-            return null;
         }
     }
 
@@ -491,7 +495,11 @@ public class GitFunctionality {
         }
     }
 
+    /**
+     * Async task to add a comment to a commit
+     */
     private class AddCommitComment extends AsyncTask<String, Void, Void> {
+
         @Override
         protected Void doInBackground(String... s) {
             try {
@@ -539,6 +547,7 @@ public class GitFunctionality {
     }
 
     /**
+     * Async task to get all the issues for a repository
      * Class which gets the 30 latest events covering all the current repo's branches
      * (filtering out any non-push events).
      */
