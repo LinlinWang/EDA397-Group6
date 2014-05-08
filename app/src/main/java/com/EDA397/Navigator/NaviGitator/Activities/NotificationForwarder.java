@@ -14,8 +14,23 @@ public class NotificationForwarder extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        switch(savedInstanceState.getInt("notiID")){
+            case 1:
+                NotificationVariables.nrPushes = 0;
+                break;
+            case 2:
+                NotificationVariables.nrCommitComments = 0;
+                break;
+            case 3:
+                NotificationVariables.nrIssues = 0;
+                break;
+            case 4:
+                NotificationVariables.nrIssuesComments = 0;
+                break;
+        }
         Log.d("NOTI", "----VALUE: " + NotificationVariables.nrPushes);
-        NotificationVariables.nrPushes = 0;
+
+        finish();
     }
 
 }

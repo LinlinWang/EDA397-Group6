@@ -8,9 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.IBinder;
-import android.os.Process;
 import android.support.v4.app.NotificationCompat;
-//import android.app.Notification;
 import android.widget.Toast;
 
 import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
@@ -18,10 +16,7 @@ import com.EDA397.Navigator.NaviGitator.Activities.NotificationForwarder;
 import com.EDA397.Navigator.NaviGitator.R;
 
 import org.eclipse.egit.github.core.Commit;
-import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.Event;
-import org.eclipse.egit.github.core.event.IssueCommentPayload;
-import org.eclipse.egit.github.core.event.IssuesPayload;
 import org.eclipse.egit.github.core.event.PushPayload;
 
 import java.util.ArrayList;
@@ -60,22 +55,22 @@ public class NotificationService extends Service{
             @Override
             public void run() {
                 GitFunctionality git = GitFunctionality.getInstance();
-                reset();
+                initVariables();
                 Date currentLoopDate = new Date();
                 currentLoopDate.getTime();
 
                 NotificationManager NotifyManager =
                         (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                //Using same builder for all is the cause of settings on some notifications
-                //"leaking" into others?
+                
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
+                NotificationCompat.Builder builderConflict = new NotificationCompat.Builder(getApplicationContext());
                 NotificationCompat.BigTextStyle big = new NotificationCompat.BigTextStyle();
-                builder.setStyle(big);
+                builderConflict.setStyle(big);
 
                 while(running){
                     ArrayList<Event> events = git.getRepoEvents2();
                     for(Event e : events){
-                        if(e.getCreatedAt().before(currentLoopDate)){
+                        if(e.getCreatedAt().after(currentLoopDate)){
                             if(e.getType().equals("PushEvent")){
                                 NotificationVariables.nrPushes++;
                                 pushes.add((PushPayload)e.getPayload());
@@ -91,60 +86,57 @@ public class NotificationService extends Service{
                             }
                         }
                     }
-                    //We will need sharedpreference, last notification time/date is unique per account,
-                    //If another account logs in they should get notifications.
+
                     currentLoopDate.setTime(System.currentTimeMillis());
 
                     Intent notiIntent = new Intent(getApplicationContext(), NotificationForwarder.class);
 
                     if(NotificationVariables.nrPushes > 0){
-                        builder
+                        notiIntent.putExtra("notiID", 1);
+                        Notification pushNoti = builder
                                 .setSmallIcon(R.drawable.ic_launcher)
                                 .setContentTitle(NotificationVariables.nrPushes + " new push(es)")
                                 .setContentText("")
                                 .setAutoCancel(true)
-                                .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, notiIntent, 0));
-                        big.bigText("");
-                        Notification pushNoti = builder.build();
+                                .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, notiIntent, 0))
+                                .build();
 
                         NotifyManager.notify(pushId, pushNoti);
                     }
                     if(NotificationVariables.nrCommitComments > 0){
-                        builder
+                        notiIntent.putExtra("notiID", 2);
+                        Notification commitCommentNoti = builder
                                 .setSmallIcon(R.drawable.ic_launcher)
                                 .setContentTitle(NotificationVariables.nrCommitComments + " commit comment(s)")
-                                .setContentText("")
                                 .setAutoCancel(true)
-                                .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, new Intent(), 0));
-                        big.bigText("");
-                        Notification commitCommentNoti = builder.build();
+                                .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, notiIntent, 0))
+                                .build();
 
                         NotifyManager.notify(commitCommentsId, commitCommentNoti);
                     }
                     if(NotificationVariables.nrIssues > 0){
-                        builder
+                        notiIntent.putExtra("notiID", 3);
+                        Notification issueNoti = builder
                                 .setSmallIcon(R.drawable.ic_launcher)
                                 .setContentTitle(NotificationVariables.nrIssues + " new issue(s)")
-                                .setContentText("")
                                 .setAutoCancel(true)
-                                .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, new Intent(), 0));
-                        big.bigText("");
-                        Notification issueNoti = builder.build();
+                                .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, notiIntent, 0))
+                                .build();
 
                         NotifyManager.notify(issuesId, issueNoti);
                     }
                     if(NotificationVariables.nrIssuesComments > 0){
-                        builder
+                        notiIntent.putExtra("notiID", 4);
+                        Notification issueCommentNoti = builder
                                 .setSmallIcon(R.drawable.ic_launcher)
                                 .setContentTitle(NotificationVariables.nrIssuesComments + " issue comment(s)")
-                                .setContentText("")
                                 .setAutoCancel(true)
-                                .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, new Intent(), 0));
-                        big.bigText("");
-                        Notification issueCommentNoti =  builder.build();
+                                .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, notiIntent, 0))
+                                .build();
 
                         NotifyManager.notify(issueCommentId, issueCommentNoti);
                     }
+
                     conflictCheck();
                     if(NotificationVariables.nrConflicts > 0){
                         String body = "";
@@ -152,20 +144,19 @@ public class NotificationService extends Service{
                             String [] temp = f.split("/");
                             body += temp[temp.length-1] + "\n";
                         }
-                        builder
+                        builderConflict
                                 .setSmallIcon(R.drawable.ic_launcher)
                                 .setContentTitle(conflictFiles.size() + " file conflict(s)")
                                 .setContentText(body)
                                 .setAutoCancel(true)
                                 .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, new Intent(), 0));
                         big.bigText(body);
-                        Notification conflictNoti = builder.build();
+                        Notification conflictNoti = builderConflict.build();
                         NotifyManager.notify(conflictId, conflictNoti);
                     }
 
                     try {
                         sleep(60000);
-//                        reset();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -189,7 +180,7 @@ public class NotificationService extends Service{
         thread.start();
         return super.onStartCommand(intent, flags, startId);
     }
-    private void reset(){
+    private void initVariables(){
         NotificationVariables.nrPushes = 0;
         NotificationVariables.nrCommitComments = 0;
         NotificationVariables.nrIssues = 0;
