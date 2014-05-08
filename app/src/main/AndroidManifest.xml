@@ -49,7 +49,34 @@
         </intent-filter>
     </activity>
         <activity
-            android:name=".Activities.NotificationForwarder"
+            android:name=".Forwarders.CCForwarder"
+            android:label="Repository" >
+            <intent-filter>
+                <action android:name="com.EDA397.Navigator.NaviGitator.Activities.NotificationForwarder" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Forwarders.PushForwarder"
+            android:label="Repository" >
+            <intent-filter>
+                <action android:name="com.EDA397.Navigator.NaviGitator.Activities.NotificationForwarder" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Forwarders.ICForwarder"
+            android:label="Repository" >
+            <intent-filter>
+                <action android:name="com.EDA397.Navigator.NaviGitator.Activities.NotificationForwarder" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Forwarders.IssueForwarder"
             android:label="Repository" >
             <intent-filter>
                 <action android:name="com.EDA397.Navigator.NaviGitator.Activities.NotificationForwarder" />
