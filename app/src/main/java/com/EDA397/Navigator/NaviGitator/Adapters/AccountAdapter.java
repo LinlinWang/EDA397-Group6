@@ -1,4 +1,4 @@
-package com.EDA397.Navigator.NaviGitator.Activities;
+package com.EDA397.Navigator.NaviGitator.Adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;

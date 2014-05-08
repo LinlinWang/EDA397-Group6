@@ -8,19 +8,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.IBinder;
-import android.os.Process;
 import android.support.v4.app.NotificationCompat;
-//import android.app.Notification;
 import android.widget.Toast;
 
-import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
+import com.EDA397.Navigator.NaviGitator.SupportFunctions.GitFunctionality;
 import com.EDA397.Navigator.NaviGitator.R;
 
 import org.eclipse.egit.github.core.Commit;
-import org.eclipse.egit.github.core.event.CommitCommentPayload;
 import org.eclipse.egit.github.core.event.Event;
-import org.eclipse.egit.github.core.event.IssueCommentPayload;
-import org.eclipse.egit.github.core.event.IssuesPayload;
 import org.eclipse.egit.github.core.event.PushPayload;
 
 import java.util.ArrayList;

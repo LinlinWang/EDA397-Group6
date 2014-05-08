@@ -9,23 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.ViewSwitcher;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
-import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
-import com.EDA397.Navigator.NaviGitator.Activities.RepoAdapter;
+import com.EDA397.Navigator.NaviGitator.SupportFunctions.GitFunctionality;
+import com.EDA397.Navigator.NaviGitator.Adapters.RepoAdapter;
 import com.EDA397.Navigator.NaviGitator.R;
 
-import org.eclipse.egit.github.core.Commit;
 import org.eclipse.egit.github.core.Repository;
-import org.eclipse.egit.github.core.RepositoryCommit;
-import org.eclipse.egit.github.core.event.PushPayload;
 
 /**
  * Created by QuattroX on 2014-04-09.

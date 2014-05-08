@@ -1,13 +1,10 @@
 package com.EDA397.Navigator.NaviGitator.Tests;
 
-import android.content.Context;
 import android.test.InstrumentationTestCase;
 import android.util.Log;
 
-import com.EDA397.Navigator.NaviGitator.Activities.Encrypter;
-import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
+import com.EDA397.Navigator.NaviGitator.SupportFunctions.GitFunctionality;
 
-import org.eclipse.egit.github.core.CommitFile;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryCommit;
 
@@ -35,20 +32,13 @@ public class GitFunctionalityTest extends InstrumentationTestCase {
             git.setCurrentCommit(git.getRepoCommits().get(0));
         }
     }
+
     /**
-     * Test that checks if encrypting and decrypting a String results in the original value.
-     * Works on phone but not on emulator (suspect encryption algorithm is not supported on all
-     * android versions.
+     * Test if the login functionality works
      * @throws Exception
      */
-    public void testEncryptDecrypt() throws Exception{
-        String s = "navi123";
-        String s2 = Encrypter.encrypt(s);
-        String s3 = Encrypter.decrypt(s2);
-        assertFalse(s3.equals(null));
-    }
     public void testGitLogin() throws Exception{
-        assertTrue(git.gitLogin("navigitator","navi123"));
+        assertTrue(git.gitLogin("navigitator", "navi123"));
     }
     public void testGetRepos() throws Exception{
         String s = "";

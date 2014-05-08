@@ -9,12 +9,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
-import com.EDA397.Navigator.NaviGitator.Activities.RepositoryActivity;
+import com.EDA397.Navigator.NaviGitator.SupportFunctions.GitFunctionality;
 import com.EDA397.Navigator.NaviGitator.R;
 
 import org.eclipse.egit.github.core.Issue;
-import org.eclipse.egit.github.core.RepositoryCommit;
 
 import java.util.ArrayList;
 import java.util.List;
