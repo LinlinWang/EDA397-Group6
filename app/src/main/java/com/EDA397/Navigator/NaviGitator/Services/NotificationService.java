@@ -67,6 +67,15 @@ public class NotificationService extends Service{
                 NotificationCompat.BigTextStyle big = new NotificationCompat.BigTextStyle();
                 builderConflict.setStyle(big);
 
+                Intent pushIntent = new Intent(getApplicationContext(), NotificationForwarder.class);
+                pushIntent.putExtra("notiID", 1);
+                Intent ccIntent = new Intent(getApplicationContext(), NotificationForwarder.class);
+                ccIntent.putExtra("notiID", 2);
+                Intent issueIntent = new Intent(getApplicationContext(), NotificationForwarder.class);
+                issueIntent.putExtra("notiID", 3);
+                Intent icIntent = new Intent(getApplicationContext(), NotificationForwarder.class);
+                icIntent.putExtra("notiID", 4);
+
                 while(running){
                     ArrayList<Event> events = git.getRepoEvents2();
                     for(Event e : events){
@@ -89,49 +98,46 @@ public class NotificationService extends Service{
 
                     currentLoopDate.setTime(System.currentTimeMillis());
 
-                    Intent notiIntent = new Intent(getApplicationContext(), NotificationForwarder.class);
-
                     if(NotificationVariables.nrPushes > 0){
-                        notiIntent.putExtra("notiID", 1);
                         Notification pushNoti = builder
                                 .setSmallIcon(R.drawable.ic_launcher)
                                 .setContentTitle(NotificationVariables.nrPushes + " new push(es)")
-                                .setContentText("")
                                 .setAutoCancel(true)
-                                .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, notiIntent, 0))
+                                .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, pushIntent, 0))
+                                .setDeleteIntent(PendingIntent.getActivity(NotificationService.this, 0, pushIntent, 0))
                                 .build();
 
                         NotifyManager.notify(pushId, pushNoti);
                     }
                     if(NotificationVariables.nrCommitComments > 0){
-                        notiIntent.putExtra("notiID", 2);
                         Notification commitCommentNoti = builder
                                 .setSmallIcon(R.drawable.ic_launcher)
                                 .setContentTitle(NotificationVariables.nrCommitComments + " commit comment(s)")
                                 .setAutoCancel(true)
-                                .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, notiIntent, 0))
+                                .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, ccIntent, 0))
+                                .setDeleteIntent(PendingIntent.getActivity(NotificationService.this, 0, ccIntent, 0))
                                 .build();
 
                         NotifyManager.notify(commitCommentsId, commitCommentNoti);
                     }
                     if(NotificationVariables.nrIssues > 0){
-                        notiIntent.putExtra("notiID", 3);
                         Notification issueNoti = builder
                                 .setSmallIcon(R.drawable.ic_launcher)
                                 .setContentTitle(NotificationVariables.nrIssues + " new issue(s)")
                                 .setAutoCancel(true)
-                                .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, notiIntent, 0))
+                                .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, issueIntent, 0))
+                                .setDeleteIntent(PendingIntent.getActivity(NotificationService.this, 0, issueIntent, 0))
                                 .build();
 
                         NotifyManager.notify(issuesId, issueNoti);
                     }
                     if(NotificationVariables.nrIssuesComments > 0){
-                        notiIntent.putExtra("notiID", 4);
                         Notification issueCommentNoti = builder
                                 .setSmallIcon(R.drawable.ic_launcher)
                                 .setContentTitle(NotificationVariables.nrIssuesComments + " issue comment(s)")
                                 .setAutoCancel(true)
-                                .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, notiIntent, 0))
+                                .setContentIntent(PendingIntent.getActivity(NotificationService.this, 0, icIntent, 0))
+                                .setDeleteIntent(PendingIntent.getActivity(NotificationService.this, 0, icIntent, 0))
                                 .build();
 
                         NotifyManager.notify(issueCommentId, issueCommentNoti);
