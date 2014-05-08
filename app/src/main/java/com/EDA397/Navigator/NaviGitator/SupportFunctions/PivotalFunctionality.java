@@ -70,7 +70,7 @@ public class PivotalFunctionality {
         try {
             Log.d("PivotalFunctionality", "Login");
             LoginPivotal task = new LoginPivotal();
-            task.execute(userName, password);
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR,userName, password);
             return task.get();
         } catch (Exception e) {
             e.printStackTrace();
@@ -86,7 +86,7 @@ public class PivotalFunctionality {
         try{
             Log.d("PivotalFunctionality", "getprojects");
             getProjects task = new getProjects();
-            task.execute();
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
@@ -102,7 +102,7 @@ public class PivotalFunctionality {
         try{
             Log.d("PivotalFunctionality", "getstories");
             getStories task = new getStories();
-            task.execute(project);
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR,project);
             return task.get();
         } catch ( Exception e) {
             e.printStackTrace();
