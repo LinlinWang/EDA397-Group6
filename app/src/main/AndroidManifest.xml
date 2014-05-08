@@ -40,10 +40,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.RepositoryActivity"
+        android:name=".Activities.RepositoryActivity"
+        android:label="Repository" >
+        <intent-filter>
+            <action android:name="com.EDA397.Navigator.NaviGitator.Activities.RepositoryActivity" />
+
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+    </activity>
+        <activity
+            android:name=".Activities.NotificationForwarder"
             android:label="Repository" >
             <intent-filter>
-                <action android:name="com.EDA397.Navigator.NaviGitator.Activities.RepositoryActivity" />
+                <action android:name="com.EDA397.Navigator.NaviGitator.Activities.NotificationForwarder" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>

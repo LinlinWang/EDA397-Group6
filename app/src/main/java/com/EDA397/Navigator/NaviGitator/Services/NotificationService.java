@@ -11,7 +11,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
-import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
+import com.EDA397.Navigator.NaviGitator.SupportFunctions.GitFunctionality;
 import com.EDA397.Navigator.NaviGitator.Activities.NotificationForwarder;
 import com.EDA397.Navigator.NaviGitator.R;
 
