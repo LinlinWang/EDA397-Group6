@@ -11,8 +11,11 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
+import com.EDA397.Navigator.NaviGitator.Forwarders.CCForwarder;
+import com.EDA397.Navigator.NaviGitator.Forwarders.ICForwarder;
+import com.EDA397.Navigator.NaviGitator.Forwarders.IssueForwarder;
+import com.EDA397.Navigator.NaviGitator.Forwarders.PushForwarder;
 import com.EDA397.Navigator.NaviGitator.SupportFunctions.GitFunctionality;
-import com.EDA397.Navigator.NaviGitator.Activities.NotificationForwarder;
 import com.EDA397.Navigator.NaviGitator.R;
 
 import org.eclipse.egit.github.core.Commit;
@@ -67,14 +70,10 @@ public class NotificationService extends Service{
                 NotificationCompat.BigTextStyle big = new NotificationCompat.BigTextStyle();
                 builderConflict.setStyle(big);
 
-                Intent pushIntent = new Intent(getApplicationContext(), NotificationForwarder.class);
-                pushIntent.putExtra("notiID", 1);
-                Intent ccIntent = new Intent(getApplicationContext(), NotificationForwarder.class);
-                ccIntent.putExtra("notiID", 2);
-                Intent issueIntent = new Intent(getApplicationContext(), NotificationForwarder.class);
-                issueIntent.putExtra("notiID", 3);
-                Intent icIntent = new Intent(getApplicationContext(), NotificationForwarder.class);
-                icIntent.putExtra("notiID", 4);
+                Intent pushIntent = new Intent(getApplicationContext(), PushForwarder.class);
+                Intent ccIntent = new Intent(getApplicationContext(), CCForwarder.class);
+                Intent issueIntent = new Intent(getApplicationContext(), IssueForwarder.class);
+                Intent icIntent = new Intent(getApplicationContext(), ICForwarder.class);
 
                 while(running){
                     ArrayList<Event> events = git.getRepoEvents2();
