@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.EDA397.Navigator.NaviGitator">
+    package="com.EDA397.Navigator.NaviGitator" >
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <activity
-            android:name=".Activities.MainActivity"
+            android:name="com.EDA397.Navigator.NaviGitator.Activities.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.LoginActivity"
+            android:name="com.EDA397.Navigator.NaviGitator.Activities.LoginActivity"
             android:label="@string/title_activity_login" >
             <intent-filter>
                 <action android:name="com.EDA397.Navigator.NaviGitator.Activities.LoginActivity" />
@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.AccountPickerActivity"
+            android:name="com.EDA397.Navigator.NaviGitator.Activities.AccountPickerActivity"
             android:label="@string/title_activity_account_picker" >
             <intent-filter>
                 <action android:name="com.EDA397.Navigator.NaviGitator.Activities.AccountPickerActivity" />
@@ -40,53 +40,64 @@
             </intent-filter>
         </activity>
         <activity
-        android:name=".Activities.RepositoryActivity"
-        android:label="Repository" >
-        <intent-filter>
-            <action android:name="com.EDA397.Navigator.NaviGitator.Activities.RepositoryActivity" />
-
-            <category android:name="android.intent.category.DEFAULT" />
-        </intent-filter>
-    </activity>
-        <activity
-            android:name=".Forwarders.CCForwarder"
+            android:name="com.EDA397.Navigator.NaviGitator.Activities.RepositoryActivity"
             android:label="Repository" >
             <intent-filter>
-                <action android:name="com.EDA397.Navigator.NaviGitator.Activities.NotificationForwarder" />
+                <action android:name="com.EDA397.Navigator.NaviGitator.Activities.RepositoryActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".Forwarders.PushForwarder"
+            android:name="com.EDA397.Navigator.NaviGitator.Forwarders.CCForwarder"
             android:label="Repository" >
             <intent-filter>
-                <action android:name="com.EDA397.Navigator.NaviGitator.Activities.NotificationForwarder" />
+                <action android:name="com.EDA397.Navigator.NaviGitator.Activities.CCForwarder" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".Forwarders.ICForwarder"
+            android:name="com.EDA397.Navigator.NaviGitator.Forwarders.PushForwarder"
             android:label="Repository" >
             <intent-filter>
-                <action android:name="com.EDA397.Navigator.NaviGitator.Activities.NotificationForwarder" />
+                <action android:name="com.EDA397.Navigator.NaviGitator.Activities.PushForwarder" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".Forwarders.IssueForwarder"
+            android:name="com.EDA397.Navigator.NaviGitator.Forwarders.ICForwarder"
             android:label="Repository" >
             <intent-filter>
-                <action android:name="com.EDA397.Navigator.NaviGitator.Activities.NotificationForwarder" />
+                <action android:name="com.EDA397.Navigator.NaviGitator.Activities.ICForwarder" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <service android:name="com.EDA397.Navigator.NaviGitator.Services.NotificationService"/>
+        <activity
+            android:name="com.EDA397.Navigator.NaviGitator.Forwarders.IssueForwarder"
+            android:label="Repository" >
+            <intent-filter>
+                <action android:name="com.EDA397.Navigator.NaviGitator.Activities.IssueForwarder" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <service android:name="com.EDA397.Navigator.NaviGitator.Services.NotificationService" />
+
+        <activity
+            android:name="com.EDA397.Navigator.NaviGitator.Forwarders.ConflictForwarder"
+            android:label="@string/title_activity_conflict_forwarder" >
+            <intent-filter>
+                <action android:name="com.EDA397.Navigator.NaviGitator.Activities.ConflictForwarder" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
-
     <uses-permission android:name="android.permission.INTERNET" />
+
 </manifest>

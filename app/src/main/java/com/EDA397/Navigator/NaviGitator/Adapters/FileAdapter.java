@@ -80,11 +80,13 @@ public class FileAdapter extends ArrayAdapter<RepositoryContents> {
                                     git.getCurrentRepo().getName(), new HashSet<String>()));
                             if (checked) {
                                 watched.add(p);
+                                watchEdit.putLong(p + git.getUserName(), System.currentTimeMillis());
                                 watchEdit.putStringSet(git.getUserName() +
                                         git.getCurrentRepo().getName(), watched);
                                 watchEdit.commit();
                             } else {
                                 watched.remove(p);
+                                watchEdit.remove(p + git.getUserName());
                                 watchEdit.putStringSet(git.getUserName() +
                                         git.getCurrentRepo().getName(), watched);
                                 watchEdit.commit();
