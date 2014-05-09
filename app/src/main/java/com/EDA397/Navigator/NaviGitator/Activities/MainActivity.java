@@ -1,15 +1,23 @@
 package com.EDA397.Navigator.NaviGitator.Activities;
 
 import android.app.ActionBar;
+import android.app.ActivityManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.EDA397.Navigator.NaviGitator.Adapters.MainTabsPagerAdapter;
+import com.EDA397.Navigator.NaviGitator.Datatypes.PivotalProject;
+import com.EDA397.Navigator.NaviGitator.Datatypes.PivotalStory;
 import com.EDA397.Navigator.NaviGitator.R;
 import com.EDA397.Navigator.NaviGitator.Services.NotificationService;
+import com.EDA397.Navigator.NaviGitator.SupportFunctions.GitFunctionality;
+import com.EDA397.Navigator.NaviGitator.SupportFunctions.PivotalFunctionality;
+
+import java.util.List;
 
 public class MainActivity extends FragmentActivity implements
         ActionBar.TabListener {
@@ -25,14 +33,24 @@ public class MainActivity extends FragmentActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         GitFunctionality git = GitFunctionality.getInstance();
-
+//        PivotalFunctionality pv = PivotalFunctionality.getInstance();
+//        pv.pivotalLogin("username","password");
+//        List<PivotalProject> projs = pv.getPivotalProjects();
+//        List<PivotalStory> stories = pv.getPivotalStories(1043912);
+//
+//        for(PivotalProject project : projs) {
+//            Log.d("MainActivity", "Project: " + project.getName());
+//            Log.d("MainActivity", "Project Id: " + project.getId());
+//        }
+//
+//        for(PivotalStory story : stories) {
+//            Log.d("MainActivity", "Story: " + story.getName());
+//            Log.d("MainActivity", "Story Id: " + story.getId());
+//        }
         if (git.getUserName().equals("")){
             startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.LoginActivity"));
         }
         else{
-            // Start Notification Service
-            //startService(new Intent(this, NotificationService.class));
-
             // Initilization
             viewPager = (ViewPager) findViewById(R.id.viewpager);
             actionBar = getActionBar();
@@ -88,6 +106,21 @@ public class MainActivity extends FragmentActivity implements
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
     }
     public void onBackPressed() {
+
+        if(isServiceRunning()){
+            stopService(new Intent(getApplicationContext(),
+            NotificationService.class));
+         }
+
         super.onBackPressed();
+    }
+    private boolean isServiceRunning() {
+        ActivityManager manager = (ActivityManager)getSystemService(ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (NotificationService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

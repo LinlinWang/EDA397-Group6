@@ -1,6 +1,7 @@
 package com.EDA397.Navigator.NaviGitator.Fragments;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -8,18 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.ViewSwitcher;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
-import com.EDA397.Navigator.NaviGitator.Activities.RepoAdapter;
+import com.EDA397.Navigator.NaviGitator.SupportFunctions.GitFunctionality;
+import com.EDA397.Navigator.NaviGitator.Adapters.RepoAdapter;
 import com.EDA397.Navigator.NaviGitator.R;
+
 import org.eclipse.egit.github.core.Repository;
-import org.eclipse.egit.github.core.RepositoryCommit;
 
 /**
  * Created by QuattroX on 2014-04-09.
@@ -40,7 +38,6 @@ public class MyProjectsFragment extends Fragment implements AdapterView.OnItemCl
         view = inflater.inflate(R.layout.fragment_myprojects, container, false);
 
         git = GitFunctionality.getInstance();
-
         repos = new ArrayList<Repository>();
         repos.addAll(git.getRepos());
         Log.d("MyProjectsFragment", "number of repos: " + repos.size());
@@ -59,8 +56,10 @@ public class MyProjectsFragment extends Fragment implements AdapterView.OnItemCl
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                Log.d("onItemClick", "RepoListItem: " + position);
-                git.setCurrentRepo(repos.get(position));
-                startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.RepositoryActivity"));
+        Log.d("onItemClick", "RepoListItem: " + position);
+        git.setCurrentRepo(repos.get(position));
+        git.setCurrentBranch(null);
+
+        startActivity(new Intent("com.EDA397.Navigator.NaviGitator.Activities.RepositoryActivity"));
     }
 }

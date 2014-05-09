@@ -11,8 +11,8 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.EDA397.Navigator.NaviGitator.Activities.FileAdapter;
-import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
+import com.EDA397.Navigator.NaviGitator.Adapters.FileAdapter;
+import com.EDA397.Navigator.NaviGitator.SupportFunctions.GitFunctionality;
 import com.EDA397.Navigator.NaviGitator.R;
 import org.eclipse.egit.github.core.RepositoryContents;
 import java.util.ArrayList;
@@ -58,6 +58,7 @@ public class FileWatchFragment extends Fragment implements AdapterView.OnItemCli
                         for(RepositoryContents r : repoContents){
                             if(!r.getType().equals("dir") && !temp.contains(r.getPath())){
                                 temp.add(r.getPath());
+                                watchEdit.putLong(r.getPath() + git.getUserName(), System.currentTimeMillis());
                             }
                         }
                         watchEdit.putStringSet(git.getUserName() + git.getCurrentRepo().getName(),
@@ -79,6 +80,7 @@ public class FileWatchFragment extends Fragment implements AdapterView.OnItemCli
                         for(RepositoryContents r : repoContents){
                             if(!r.getType().equals("dir") && temp.contains(r.getPath())){
                                 temp.remove(r.getPath());
+                                watchEdit.remove(r.getPath() + git.getUserName());
                             }
                         }
                         watchEdit.putStringSet(git.getUserName() + git.getCurrentRepo().getName(),

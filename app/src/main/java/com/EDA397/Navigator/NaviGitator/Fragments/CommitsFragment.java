@@ -1,6 +1,5 @@
 package com.EDA397.Navigator.NaviGitator.Fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,7 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
+import com.EDA397.Navigator.NaviGitator.SupportFunctions.GitFunctionality;
 import com.EDA397.Navigator.NaviGitator.Activities.RepositoryActivity;
 import com.EDA397.Navigator.NaviGitator.R;
 
@@ -56,11 +55,10 @@ public class CommitsFragment extends Fragment implements AdapterView.OnItemClick
 
         return view;
     }
-
-    @Override
     /**
      * Navigates to comments tab after a commit has been selected.
      */
+    @Override
     public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
         git = GitFunctionality.getInstance();
         git.setCurrentCommit(repoCommits.get(position));

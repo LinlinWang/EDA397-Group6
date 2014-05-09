@@ -2,6 +2,7 @@ package com.EDA397.Navigator.NaviGitator.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +10,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.EDA397.Navigator.NaviGitator.Activities.GitFunctionality;
+import com.EDA397.Navigator.NaviGitator.Activities.RepositoryActivity;
+import com.EDA397.Navigator.NaviGitator.SupportFunctions.GitFunctionality;
 import com.EDA397.Navigator.NaviGitator.R;
 
 import org.eclipse.egit.github.core.RepositoryBranch;
@@ -23,14 +25,14 @@ import java.util.List;
 public class BranchesFragment extends Fragment implements AdapterView.OnItemClickListener{
     private View view;
     private GitFunctionality git;
-    private List<RepositoryBranch> b;
+    private List<RepositoryBranch> branches;
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_branches, container, false);
         git = GitFunctionality.getInstance();
-        b = git.getBranches();
+        branches = git.getBranches();
         ArrayList<String> branchMsg = new ArrayList<String>();
-        for(RepositoryBranch repBr : b){
+        for(RepositoryBranch repBr : branches){
             branchMsg.add("Branch Name:" + repBr.getName());
         }
 
@@ -43,7 +45,16 @@ public class BranchesFragment extends Fragment implements AdapterView.OnItemClic
     }
 
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        git = GitFunctionality.getInstance();
+        git.setCurrentBranch(branches.get(position));
+        Fragment frg = null;
+        frg = getActivity().getSupportFragmentManager().getFragments().get(0);
+        final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+        ft.detach(frg);
+        ft.attach(frg);
+        ft.commit();
+        RepositoryActivity r = (RepositoryActivity) getActivity();
+        r.viewPager.setCurrentItem(0);
     }
 }

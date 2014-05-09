@@ -1,4 +1,4 @@
-package com.EDA397.Navigator.NaviGitator.Activities;
+package com.EDA397.Navigator.NaviGitator.Adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import com.EDA397.Navigator.NaviGitator.R;
+import com.EDA397.Navigator.NaviGitator.SupportFunctions.GitFunctionality;
+
 import org.eclipse.egit.github.core.RepositoryContents;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -78,11 +80,13 @@ public class FileAdapter extends ArrayAdapter<RepositoryContents> {
                                     git.getCurrentRepo().getName(), new HashSet<String>()));
                             if (checked) {
                                 watched.add(p);
+                                watchEdit.putLong(p + git.getUserName(), System.currentTimeMillis());
                                 watchEdit.putStringSet(git.getUserName() +
                                         git.getCurrentRepo().getName(), watched);
                                 watchEdit.commit();
                             } else {
                                 watched.remove(p);
+                                watchEdit.remove(p + git.getUserName());
                                 watchEdit.putStringSet(git.getUserName() +
                                         git.getCurrentRepo().getName(), watched);
                                 watchEdit.commit();

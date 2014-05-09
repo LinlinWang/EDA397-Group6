@@ -3,9 +3,8 @@ package com.EDA397.Navigator.NaviGitator.Activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
+import android.os.*;
 import android.view.Gravity;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -15,7 +14,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Set;
 
+import com.EDA397.Navigator.NaviGitator.Adapters.AccountAdapter;
 import com.EDA397.Navigator.NaviGitator.R;
+import com.EDA397.Navigator.NaviGitator.SupportFunctions.Encrypter;
+import com.EDA397.Navigator.NaviGitator.SupportFunctions.GitFunctionality;
 
 /**
  * Activity for choosing which saved account to log in with (if any exist)
