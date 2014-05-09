@@ -55,11 +55,10 @@ public class CommitsFragment extends Fragment implements AdapterView.OnItemClick
 
         return view;
     }
-
-    @Override
     /**
      * Navigates to comments tab after a commit has been selected.
      */
+    @Override
     public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
         git = GitFunctionality.getInstance();
         git.setCurrentCommit(repoCommits.get(position));
