@@ -8,7 +8,6 @@ import com.EDA397.Navigator.NaviGitator.Fragments.BranchesFragment;
 import com.EDA397.Navigator.NaviGitator.Fragments.CommentsFragment;
 import com.EDA397.Navigator.NaviGitator.Fragments.CommitsFragment;
 import com.EDA397.Navigator.NaviGitator.Fragments.FileWatchFragment;
-import com.EDA397.Navigator.NaviGitator.Fragments.IssuesCommentsFragment;
 import com.EDA397.Navigator.NaviGitator.Fragments.IssuesFragment;
 
 /**

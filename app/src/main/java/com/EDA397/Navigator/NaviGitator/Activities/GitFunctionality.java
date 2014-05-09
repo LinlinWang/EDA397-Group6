@@ -7,17 +7,14 @@ import org.eclipse.egit.github.core.Comment;
 import org.eclipse.egit.github.core.CommitComment;
 import org.eclipse.egit.github.core.CommitFile;
 import org.eclipse.egit.github.core.Issue;
-import org.eclipse.egit.github.core.IssueEvent;
 import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryBranch;
 import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.github.core.RepositoryContents;
-import org.eclipse.egit.github.core.RepositoryIssue;
 import org.eclipse.egit.github.core.User;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.eclipse.egit.github.core.client.PageIterator;
 import org.eclipse.egit.github.core.event.Event;
-import org.eclipse.egit.github.core.event.IssueCommentPayload;
 import org.eclipse.egit.github.core.service.CommitService;
 import org.eclipse.egit.github.core.service.ContentsService;
 import org.eclipse.egit.github.core.service.EventService;
@@ -190,6 +187,21 @@ public class GitFunctionality {
             return null;
         }
     }
+    /**
+     * Returns the comments for the currently chosen issue
+     * @return
+     */
+    public List<Comment> getIssueComments(Issue is){
+        try{
+            Log.d("GitFunctionality", "IssueComments");
+            GetIssueComments task = new GetIssueComments();
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR,is);
+            return task.get();
+        }catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     public Void addCommitComment(String s) {
         try{
             Log.d("GitFunctionality", "CommitComments");
@@ -245,17 +257,7 @@ public class GitFunctionality {
         }
     }
 
-    public List<Comment> getIssueComments(){
-        try{
-            Log.d("GitFunctionality", "IssueComments");
-            GetIssueComments task = new GetIssueComments();
-            task.execute(currentIssue);
-            return task.get();
-        }catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+
     /**
      * Async task to Authenticate a user against GitHub
      */
@@ -448,6 +450,7 @@ public class GitFunctionality {
         }
     }
 
+
     private class AddCommitComment extends AsyncTask<String, Void, Void> {
         @Override
         protected Void doInBackground(String... s) {
@@ -533,9 +536,7 @@ public class GitFunctionality {
                 for (Issue i : issues) {
                     Log.d("GitFunctionality", " : " + i.getTitle());  //get the titles of the issues for the current repository
                 }
-
                 return issues;
-
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -550,17 +551,19 @@ public class GitFunctionality {
         @Override
         protected List<Comment> doInBackground(Issue... issue) {
             try {
-                Log.d("GitFunctionality", "IssueComments thread");
+                Log.e("GitFunctionality", "IssueComments thread");
                 GitFunctionality git = GitFunctionality.getInstance();
                 IssueService issueService = new IssueService(git.getClient());
-                String issueId = String.valueOf(issue[0].getId());
-                issueService.getComments(currentRepo, issueId);
-                List<Comment> issueComments= issueService.getComments(currentRepo, issueId);
+                List<Comment> commentList = new ArrayList<Comment>() ;
 
-                for (Comment i: issueComments){
-                    Log.d("GitFunctionality", " : " + i.getBody());
+                   String issueNumber = String.valueOf(issue[0].getNumber());
+                   commentList.addAll(issueService.getComments(currentRepo, issueNumber));
+                   Log.e("GitFunctionality","issueNumber"+issueNumber);
+
+                for (Comment i: commentList){
+                    Log.e("GitFunctionality", " get issue comments: " + i.getBody()) ;
                 }
-                return  issueComments;
+                return commentList;
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
