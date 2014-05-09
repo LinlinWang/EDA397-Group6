@@ -58,6 +58,7 @@ public class FileWatchFragment extends Fragment implements AdapterView.OnItemCli
                         for(RepositoryContents r : repoContents){
                             if(!r.getType().equals("dir") && !temp.contains(r.getPath())){
                                 temp.add(r.getPath());
+                                watchEdit.putLong(r.getPath() + git.getUserName(), System.currentTimeMillis());
                             }
                         }
                         watchEdit.putStringSet(git.getUserName() + git.getCurrentRepo().getName(),
@@ -79,6 +80,7 @@ public class FileWatchFragment extends Fragment implements AdapterView.OnItemCli
                         for(RepositoryContents r : repoContents){
                             if(!r.getType().equals("dir") && temp.contains(r.getPath())){
                                 temp.remove(r.getPath());
+                                watchEdit.remove(r.getPath() + git.getUserName());
                             }
                         }
                         watchEdit.putStringSet(git.getUserName() + git.getCurrentRepo().getName(),
