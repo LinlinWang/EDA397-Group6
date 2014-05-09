@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
         android:ems="10"
-        android:id="@+id/username"
+        android:id="@+id/pivotalUsername"
         android:editable="true"
         android:hint="username" />
 
@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
-        android:id="@+id/password"
+        android:id="@+id/pivotalPassword"
         android:editable="true"
         android:hint="password" />
 
@@ -29,10 +29,10 @@
         android:id="@+id/pivoLogin"
         android:layout_gravity="center_horizontal" />
 
-    <ListView
+    <ExpandableListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/result"
+        android:id="@+id/pivotalResults"
         android:layout_gravity="center_horizontal" />
 
 </LinearLayout>
