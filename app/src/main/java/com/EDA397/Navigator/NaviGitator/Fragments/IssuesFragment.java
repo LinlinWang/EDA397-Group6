@@ -1,15 +1,20 @@
 package com.EDA397.Navigator.NaviGitator.Fragments;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.EDA397.Navigator.NaviGitator.SupportFunctions.GitFunctionality;
 import com.EDA397.Navigator.NaviGitator.Adapters.ExpandableListAdapter;
@@ -20,9 +25,7 @@ import org.eclipse.egit.github.core.Issue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by QuattroX on 2014-04-10.
@@ -51,12 +54,42 @@ public class IssuesFragment extends Fragment implements AdapterView.OnItemClickL
         listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
         // setting list adapter
         expListView.setAdapter(listAdapter);
-        expListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+
+        // Listview on child click listener
+        expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
-            public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+               // Toast.makeText(getActivity(),listDataHeader.get(groupPosition)+":"+listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition),Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder ad = new AlertDialog.Builder(getActivity());
+                //set title
+                ad.setTitle(listDataHeader.get(groupPosition));
+                //set dialog message
+                ad.setMessage(listDataChild.get(listDataHeader.get(groupPosition)).get(childPosition));
+                //close the dialog box and do nothing
+                ad.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        //Toast.makeText(getActivity(),"Cancel clicked",Toast.LENGTH_SHORT);
+                        Log.d("IssuesFragment", "Cancel Button clicked");
+                        dialog.cancel();
+                    }
+                });
+                //Edit the current comment of the issue
+                ad.setNeutralButton("Edit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Log.d("IssuesFragment", "Edit Button clicked");
+                        //do nothing now
+                    }
+                });
+
+                AlertDialog alertDialog = ad.create();
+                alertDialog.show();
                 return false;
             }
         });
+
+
         return view;
     }
     private void prepareListData() {
