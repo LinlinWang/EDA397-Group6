@@ -1,7 +1,5 @@
 package com.EDA397.Navigator.NaviGitator.Fragments;
 
-import android.app.ActivityManager;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
@@ -9,17 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
 import android.widget.Toast;
 
+import com.EDA397.Navigator.NaviGitator.Adapters.ExpandableListAdapterPivo;
 import com.EDA397.Navigator.NaviGitator.Datatypes.PivotalProject;
 import com.EDA397.Navigator.NaviGitator.Datatypes.PivotalStory;
-import com.EDA397.Navigator.NaviGitator.Services.NotificationService;
-import com.EDA397.Navigator.NaviGitator.Adapters.ExpandableListAdapter;
 import com.EDA397.Navigator.NaviGitator.R;
 import com.EDA397.Navigator.NaviGitator.SupportFunctions.PivotalFunctionality;
 
@@ -33,7 +28,7 @@ public class PivotalFragment extends Fragment implements AdapterView.OnItemClick
     private List<String> projNames;
     private PivotalFunctionality pivotal;
     private HashMap<String,List<String>> storyNames;
-    private ExpandableListAdapter listAdapter;
+    private ExpandableListAdapterPivo listAdapter;
     private ExpandableListView lv;
 
 
@@ -70,7 +65,7 @@ public class PivotalFragment extends Fragment implements AdapterView.OnItemClick
                         }
                         if (pivotal.pivotalLogin(name, pw)) {
                             getPivoData();
-                            listAdapter = new ExpandableListAdapter(getActivity(), projNames, storyNames);
+                            listAdapter = new ExpandableListAdapterPivo(getActivity(), projNames, storyNames);
                             // setting list adapter
                             lv.setAdapter(listAdapter);
                             lv.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {

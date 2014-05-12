@@ -14,17 +14,14 @@ import android.widget.TextView;
 import com.EDA397.Navigator.NaviGitator.Fragments.IssuesFragment;
 import com.EDA397.Navigator.NaviGitator.R;
 
-/**
- * Created by linlinwang on 06/05/14.
- */
-public class ExpandableListAdapter extends BaseExpandableListAdapter {
+public class ExpandableListAdapterPivo extends BaseExpandableListAdapter {
     private Context context;
     private List<String> listDataHeader; // header titles
     // child data in format of header title, child title
     private HashMap<String, List<String>> listDataChild;
 
-    public ExpandableListAdapter(Context context, List<String> listDataHeader,
-                                 HashMap<String, List<String>> listChildData) {
+    public ExpandableListAdapterPivo(Context context, List<String> listDataHeader,
+                                     HashMap<String, List<String>> listChildData) {
         this.context = context;
         this.listDataHeader = listDataHeader;
         this.listDataChild = listChildData;
