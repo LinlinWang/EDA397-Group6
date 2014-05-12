@@ -230,7 +230,7 @@ public class GitFunctionality {
         try{
             Log.d("GitFunctionality", "IssueComments");
             AddIssueComment task = new AddIssueComment();
-            task.execute(s);
+            task.executeOnExecutor(task.THREAD_POOL_EXECUTOR,s);
             return task.get();
         }catch (Exception e){
             e.printStackTrace();
@@ -580,7 +580,8 @@ public class GitFunctionality {
                 PageIterator<Event> events = evService.pageUserReceivedEvents(username);
                 ArrayList<String> news = new ArrayList<String>();
                 for (Event e : events.next()) {
-                    String s = e.getActor().getLogin() + " " + e.getType() + " " + e.getRepo().getName();
+                    String s = e.getType() + " in " + e.getRepo().getName() + "\nBy: " +
+                               e.getActor().getLogin() + "\n" + e.getCreatedAt().toString();
                     Log.d("GitFunctionality", s);
                     news.add(s);
                 }

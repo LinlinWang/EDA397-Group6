@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.EDA397.Navigator.NaviGitator.SupportFunctions.GitFunctionality;
 import com.EDA397.Navigator.NaviGitator.Activities.RepositoryActivity;
@@ -35,6 +36,14 @@ public class CommitsFragment extends Fragment implements AdapterView.OnItemClick
 
         view = inflater.inflate(R.layout.fragment_commits, container, false);
         git = GitFunctionality.getInstance();
+        TextView tv = (TextView) view.findViewById(R.id.commit_label);
+        if(git.getCurrentBranch() != null){
+            String [] temp = git.getCurrentBranch().getName().split("/");
+            tv.setText("Currrent Branch: " +  temp[temp.length-1]);
+        }
+        else{
+            tv.setText("Currrent Branch: master");
+        }
         repoCommits = git.getRepoCommits();
         ArrayList<String> commitMsg = new ArrayList<String>();
 
@@ -43,8 +52,11 @@ public class CommitsFragment extends Fragment implements AdapterView.OnItemClick
             if(title.length() > 40){
                 title = title.substring(0,36) + "...";
             }
-            commitMsg.add("Author: " + repComm.getCommit().getAuthor().getName() +
-                    "\nDate:" + repComm.getCommit().getAuthor().getDate().toString() +
+            String temp = "Author: " + repComm.getCommit().getAuthor().getName();
+            if(repComm.getCommit().getCommentCount() > 0){
+                temp += " CM: " + repComm.getCommit().getCommentCount();
+            }
+            commitMsg.add(temp + "\nDate: " + repComm.getCommit().getAuthor().getDate().toString() +
                     "\n" + title);
         }
         listView = (ListView) view.findViewById(R.id.repoCommit_list);
