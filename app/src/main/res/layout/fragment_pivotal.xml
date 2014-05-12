@@ -29,10 +29,10 @@
         android:id="@+id/pivoLogin"
         android:layout_gravity="center_horizontal" />
 
-    <ListView
+    <ExpandableListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/pivotalResult"
+        android:id="@+id/expandableListView"
         android:layout_gravity="center_horizontal" />
 
 </LinearLayout>
