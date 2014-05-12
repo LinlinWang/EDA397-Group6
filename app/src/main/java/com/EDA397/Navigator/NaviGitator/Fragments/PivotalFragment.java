@@ -101,12 +101,12 @@ public class PivotalFragment extends Fragment implements AdapterView.OnItemClick
 
         for(PivotalProject proj : projects){
             List<PivotalStory> stories = pivotal.getPivotalStories(proj.getId());
-            projNames.add(proj.getId().toString());
+            projNames.add(proj.getName());
             List<String> story = new ArrayList<String>();
             for(PivotalStory stor : stories){
                 story.add(stor.getName());
             }
-            storyNames.put(proj.getId().toString(),story);
+            storyNames.put(proj.getName(),story);
         }
 
 
