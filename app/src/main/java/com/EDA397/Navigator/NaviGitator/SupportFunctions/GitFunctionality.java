@@ -393,10 +393,10 @@ public class GitFunctionality {
                 CommitService commitService = new CommitService(git.getClient());
                 List<RepositoryCommit> commits;
                 if(currentBranch == null) {
-                    commits = (List<RepositoryCommit>) commitService.pageCommits(repo[0]).next();
+                    commits = (List<RepositoryCommit>) commitService.pageCommits(repo[0],20).next();
                 }
                 else{
-                    commits = commitService.getCommits(repo[0], currentBranch.getCommit().getSha(), null);
+                    commits = (List<RepositoryCommit>) commitService.pageCommits(repo[0], currentBranch.getCommit().getSha(), null,20).next();
                 }
                 for (RepositoryCommit comm : commits) {
                     Log.d("GitFunctionality", comm.getCommit().getAuthor().getName() + " : " + comm.getCommit().getMessage());
