@@ -33,6 +33,9 @@ public class PivotalFragment extends Fragment implements AdapterView.OnItemClick
     private List<String> projNames;
     private PivotalFunctionality pivotal;
     private HashMap<String,List<String>> storyNames;
+    private ExpandableListAdapter listAdapter;
+    private ExpandableListView lv;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,7 +58,7 @@ public class PivotalFragment extends Fragment implements AdapterView.OnItemClick
 
                         final String name = ((EditText)view.findViewById(R.id.pivotalUsername)).getText().toString().trim().toLowerCase();
                         final String pw = ((EditText)view.findViewById(R.id.pivotalPassword)).getText().toString().trim();
-                        ExpandableListView lv = (ExpandableListView)view.findViewById(R.id.expandableListView);
+                        lv = (ExpandableListView)view.findViewById(R.id.expandableListView);
                         pivotal = PivotalFunctionality.getInstance();
 
                         if(name.length() < 1 || pw.length() < 1){
@@ -66,9 +69,16 @@ public class PivotalFragment extends Fragment implements AdapterView.OnItemClick
                             toast.show();
                         }
                         if (pivotal.pivotalLogin(name, pw)) {
-
-                            lv.setAdapter(new ArrayAdapter<String>(view.getContext(),
-                                    android.R.layout.simple_list_item_1, getPivoData()));
+                            getPivoData();
+                            listAdapter = new ExpandableListAdapter(getActivity(), projNames, storyNames);
+                            // setting list adapter
+                            lv.setAdapter(listAdapter);
+                            lv.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+                                @Override
+                                public boolean onGroupClick(ExpandableListView expandableListView, View view, int i, long l) {
+                                    return false;
+                                }
+                            });
 
                         }
                         else{
@@ -83,22 +93,23 @@ public class PivotalFragment extends Fragment implements AdapterView.OnItemClick
 
     }
 
-    private List<String> getPivoData(){
+    private void getPivoData(){
         pivotal = PivotalFunctionality.getInstance();
         List<PivotalProject> projects = pivotal.getPivotalProjects();
-
+        storyNames = new HashMap<String,List<String>>();
         projNames = new ArrayList<String>();
+
         for(PivotalProject proj : projects){
             List<PivotalStory> stories = pivotal.getPivotalStories(proj.getId());
-            projNames.add(proj.getName());
+            projNames.add(proj.getId().toString());
             List<String> story = new ArrayList<String>();
             for(PivotalStory stor : stories){
                 story.add(stor.getName());
             }
-            storyNames.put(proj.getName(),story);
+            storyNames.put(proj.getId().toString(),story);
         }
 
-        return projNames;
+
     }
 
     @Override
