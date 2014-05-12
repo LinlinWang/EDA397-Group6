@@ -26,13 +26,20 @@ import java.util.List;
 public class PivotalFragment extends Fragment {
 
     private View view;
+    private List<String> projNames;
+    private PivotalFunctionality pivotal;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_pivotal, container, false);
+        PivoLogin();
 
+        return view;
+    }
+
+    private void PivoLogin(){
         Button logout = (Button) view.findViewById(R.id.pivoLogin);
         logout.setFocusableInTouchMode(false);
         logout.setFocusable(false);
@@ -43,8 +50,8 @@ public class PivotalFragment extends Fragment {
 
                         final String name = ((EditText)view.findViewById(R.id.pivotalUsername)).getText().toString().trim().toLowerCase();
                         final String pw = ((EditText)view.findViewById(R.id.pivotalPassword)).getText().toString().trim();
-                        ExpandableListView lv = (ExpandableListView)view.findViewById(R.id.pivotalResults);
-                        PivotalFunctionality pivotal = PivotalFunctionality.getInstance();
+                        ListView lv = (ListView)view.findViewById(R.id.pivotalResult);
+                        pivotal = PivotalFunctionality.getInstance();
 
                         if(name.length() < 1 || pw.length() < 1){
                             //Error handling too short/blank field.
@@ -54,13 +61,9 @@ public class PivotalFragment extends Fragment {
                             toast.show();
                         }
                         if (pivotal.pivotalLogin(name, pw)) {
-                            List<PivotalProject> projects = pivotal.getPivotalProjects();
-                            List<String> projNames = new ArrayList<String>();
-                            for(PivotalProject proj : projects){
-                                projNames.add(proj.getName());
-                            }
+
                             lv.setAdapter(new ArrayAdapter<String>(view.getContext(),
-                                    android.R.layout.expandable_list_content, projNames));
+                                    android.R.layout.simple_list_item_1, getPivoData()));
                         }
                         else{
                             Toast toast = Toast.makeText(getActivity().getApplicationContext(),
@@ -71,6 +74,16 @@ public class PivotalFragment extends Fragment {
                     }
                 }
         );
-        return view;
+
+    }
+
+    private List<String> getPivoData(){
+        pivotal = PivotalFunctionality.getInstance();
+        List<PivotalProject> projects = pivotal.getPivotalProjects();
+        projNames = new ArrayList<String>();
+        for(PivotalProject proj : projects){
+            projNames.add(proj.getName());
+        }
+        return projNames;
     }
 }
