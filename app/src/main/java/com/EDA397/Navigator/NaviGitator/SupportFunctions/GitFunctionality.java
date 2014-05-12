@@ -349,7 +349,7 @@ public class GitFunctionality {
                 Log.d("GitFunctionality", "Repo thread");
                 GitFunctionality git = GitFunctionality.getInstance();
                 RepositoryService repoService = new RepositoryService(git.getClient());
-                try {
+                /***try {
                     OrganizationService org = new OrganizationService(git.getClient());
                     //repos user owns/is member of.
                     List<Repository> repos = repoService.getRepositories();
@@ -364,7 +364,7 @@ public class GitFunctionality {
                     }
                     return repos;
                 }
-                catch (Exception e){
+                catch (Exception e){**/
                     //repos user owns/is member of.
                     List<Repository> repos = repoService.getRepositories();
 
@@ -372,7 +372,7 @@ public class GitFunctionality {
                         Log.d("GitFunctionality", repo.getName());
                     }
                     return repos;
-                }
+                //}
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -393,7 +393,7 @@ public class GitFunctionality {
                 CommitService commitService = new CommitService(git.getClient());
                 List<RepositoryCommit> commits;
                 if(currentBranch == null) {
-                    commits = commitService.getCommits(repo[0]);
+                    commits = (List<RepositoryCommit>) commitService.pageCommits(repo[0]).next();
                 }
                 else{
                     commits = commitService.getCommits(repo[0], currentBranch.getCommit().getSha(), null);
