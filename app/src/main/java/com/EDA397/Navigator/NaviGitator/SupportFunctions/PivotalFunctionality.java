@@ -203,6 +203,7 @@ public class PivotalFunctionality {
                     Integer id = 0;
                     String description = "";
                     Integer owner = 0;
+                    PivotalStory.StoryStatus status = PivotalStory.StoryStatus.noStatus;
 
                     if (json.has("name"))
                         name = json.getString("name");
@@ -212,8 +213,10 @@ public class PivotalFunctionality {
                         description = json.getString("description");
                     if (json.has("owned_by_id"))
                         owner = json.getInt("owned_by_id");
+                    if (json.has("current_state"))
+                        status = statusToEnum(json.getString("current_state"));
 
-                    stories.add(new PivotalStory(name, id, description, owner));
+                    stories.add(new PivotalStory(name, id, description, owner, status));
                 }
                 return stories;
             } catch (Exception e) {
@@ -222,5 +225,22 @@ public class PivotalFunctionality {
                 return null;
             }
         }
+    }
+    private PivotalStory.StoryStatus statusToEnum(String s){
+        if(s.equals("unscheduled"))
+            return PivotalStory.StoryStatus.unscheduled;
+        if(s.equals("unstarted"))
+            return PivotalStory.StoryStatus.unstarted;
+        if(s.equals("started"))
+            return PivotalStory.StoryStatus.started;
+        if(s.equals("accepted"))
+            return PivotalStory.StoryStatus.accepted;
+        if(s.equals("finished"))
+            return PivotalStory.StoryStatus.finished;
+        if(s.equals("delivered"))
+            return PivotalStory.StoryStatus.delivered;
+        if(s.equals("rejected"))
+            return PivotalStory.StoryStatus.rejected;
+        return PivotalStory.StoryStatus.noStatus;
     }
 }
