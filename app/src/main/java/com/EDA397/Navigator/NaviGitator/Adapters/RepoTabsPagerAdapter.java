@@ -38,6 +38,7 @@ public class RepoTabsPagerAdapter extends FragmentPagerAdapter {
             case 4:
                 // File watch fragment activity
                 return new FileWatchFragment();
+
         }
 
         return null;
