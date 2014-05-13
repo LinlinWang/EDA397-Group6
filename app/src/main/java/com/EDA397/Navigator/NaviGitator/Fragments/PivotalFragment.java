@@ -21,6 +21,9 @@ import com.EDA397.Navigator.NaviGitator.SupportFunctions.PivotalFunctionality;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+/**
+ * Fragment for displaying list of pivotaltracker stories and project
+ */
 
 public class PivotalFragment extends Fragment implements AdapterView.OnItemClickListener{
 
@@ -37,12 +40,16 @@ public class PivotalFragment extends Fragment implements AdapterView.OnItemClick
                              Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_pivotal, container, false);
-        PivoLogin();
+        pivoLogin();
 
         return view;
     }
 
-    private void PivoLogin(){
+    /**
+     * Check if password is correct to pivotaltracker
+     * If the login is correct, show an expandablelistview of the project and stories
+     */
+    private void pivoLogin(){
         Button logout = (Button) view.findViewById(R.id.pivoLogin);
         logout.setFocusableInTouchMode(false);
         logout.setFocusable(false);
@@ -88,6 +95,10 @@ public class PivotalFragment extends Fragment implements AdapterView.OnItemClick
 
     }
 
+    /**
+     * Get the pivotaltracker stories that belongs to the project
+     *
+     */
     private void getPivoData(){
         pivotal = PivotalFunctionality.getInstance();
         List<PivotalProject> projects = pivotal.getPivotalProjects();
