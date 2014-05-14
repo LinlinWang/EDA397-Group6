@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.EDA397.Navigator.NaviGitator.Fragments.MyProjectsFragment;
 import com.EDA397.Navigator.NaviGitator.Fragments.NewsFragment;
+import com.EDA397.Navigator.NaviGitator.Fragments.PivotalFragment;
 import com.EDA397.Navigator.NaviGitator.Fragments.SettingsFragment;
 
 /**
@@ -28,6 +29,9 @@ public class MainTabsPagerAdapter extends FragmentPagerAdapter {
                 // MyProjects fragment activity
                 return new MyProjectsFragment();
             case 2:
+                // Pivotal fragment activity
+                return new PivotalFragment();
+            case 3:
                 // Settings fragment activity
                 return new SettingsFragment();
         }
@@ -38,7 +42,7 @@ public class MainTabsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         // get item count - equal to number of tabs
-        return 3;
+        return 4;
     }
 
 }
