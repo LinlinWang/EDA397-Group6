@@ -577,7 +577,7 @@ public class GitFunctionality {
                 Log.d("GitFunctionality", "Events thread");
                 GitFunctionality git = GitFunctionality.getInstance();
                 EventService evService = new EventService(git.getClient());
-                PageIterator<Event> events = evService.pageUserReceivedEvents(username);
+                PageIterator<Event> events = evService.pageUserReceivedEvents(username,false,20);
                 ArrayList<String> news = new ArrayList<String>();
                 for (Event e : events.next()) {
                     String s = e.getType() + " in " + e.getRepo().getName() + "\nBy: " +

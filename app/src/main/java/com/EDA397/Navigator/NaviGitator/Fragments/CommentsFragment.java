@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -93,6 +94,12 @@ public class CommentsFragment extends Fragment implements AdapterView.OnItemClic
                                             // NOT this:
                                             git.addCommitComment(userInput.getText().toString());
                                             dialog.dismiss();
+                                            Fragment frg = null;
+                                            frg = getActivity().getSupportFragmentManager().getFragments().get(3);
+                                            final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                                            ft.detach(frg);
+                                            ft.attach(frg);
+                                            ft.commit();
                                         } else {
                                             dialog.cancel();
                                         }
