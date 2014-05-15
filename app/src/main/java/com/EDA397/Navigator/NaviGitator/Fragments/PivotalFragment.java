@@ -110,7 +110,8 @@ public class PivotalFragment extends Fragment implements AdapterView.OnItemClick
             projNames.add(proj.getName());
             List<String> story = new ArrayList<String>();
             for(PivotalStory stor : stories){
-                story.add(stor.getName() + "\n" + "Status: " + stor.getStatus().toString());
+                if((stor.getStatus().toString() == "accepted") || (stor.getStatus().toString() == "started"))
+                    story.add(stor.getName() + "\n" + "Status: " + stor.getStatus().toString());
             }
             storyNames.put(proj.getName(),story);
         }
