@@ -43,6 +43,7 @@ public class GitFunctionality {
     private static RepositoryCommit currentCommit;
     private static Issue currentIssue;
     private static RepositoryBranch currentBranch;
+    
 
     private GitFunctionality() {
             client = new GitHubClient();
