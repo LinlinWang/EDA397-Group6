@@ -543,7 +543,9 @@ public class GitFunctionality {
             return null;
         }
     }
-
+    /**
+     * Async task to add issue comments
+     */
     private class AddIssueComment extends AsyncTask<String,Void,Void>{
 
         @Override
